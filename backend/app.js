@@ -3,8 +3,7 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const path = require('path');
 
-//const stuffRouter = require('./routes/stuff')
-//const userRouter = require('./routes/user')
+const userRouter = require('./routes/user')
 
 mongoose.connect('mongodb+srv://api:wWk7QFVWsMiAzbF7@cluster0.jsudq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
   { useNewUrlParser: true, useUnifiedTopology: true })
@@ -23,9 +22,8 @@ app.use((req, res, next) => {
   }
 );
 
-/*
-app.use('/api/stuff', stuffRouter)
+
 app.use('/api/auth', userRouter)
-app.use('/images', express.static(path.join(__dirname, 'images')))
-*/
+//app.use('/images', express.static(path.join(__dirname, 'images')))
+
 module.exports = app
