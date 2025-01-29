@@ -5,7 +5,7 @@ const user = mongoose.Schema({
     email: {type: String, required: true, unique: true },
     phone: {type: String, required: true, unique: true },
     verifiedPermit: {type: Boolean, required: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
 })
 
 user.plugin(validator)

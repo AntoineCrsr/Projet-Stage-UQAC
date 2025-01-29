@@ -1,10 +1,9 @@
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+require("dotenv").config();
 
 exports.signup = (req, res, next) => {
-    console.log(req)
-    // Note: le problême de l'interface actuellement c'est que la req est pas conforme à l'objet req qu'on attend
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             const user = new User({
@@ -38,8 +37,7 @@ exports.login = (req, res, next) => {
                                 _id: user._id,
                                 token: jwt.sign(
                                     {userId: user._id},
-                                    // Note: Ceci est la clé de déchiffrement JWT, en production elle devra être un peu plus sécurisée, auquel cas modifier aussi dans le middleware auth
-                                    'RANDOM_KEY', 
+                                    process.env.JWT_KEY, 
                                     { expiresIn: '24h' }
                                 )
                             })
