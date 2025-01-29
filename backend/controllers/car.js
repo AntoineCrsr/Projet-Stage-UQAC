@@ -6,13 +6,13 @@ exports.createCar = (req, res, next) => {
     const carObject = req.body.car; // Suppose un objet "car" en json venant de la requete
     delete carObject._id;
     delete carObject._userId;
-    const thing = new Car({
+    const car = new Car({
         ...carObject,
         userId: req.auth.userId,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
   
-    thing.save()
+    car.save()
     .then(() => { res.status(201).json({message: 'Objet enregistré !'})})
     .catch(error => { res.status(400).json( { error })})
  };

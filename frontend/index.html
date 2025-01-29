@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="post" action="http://localhost:3000/api/auth/signup" style="display: flex; flex-direction: column;">
+    <form id="signupForm" method="post" action="http://localhost:3000/api/auth/signup" style="display: flex; flex-direction: column;">
         <h1>Signup</h1>
 
         <label for="email">Email:</label>
@@ -20,30 +20,22 @@
 
         <input type="submit" value="Submit">
     </form>
+    
+    <form id="loginForm" method="post" action="http://localhost:3000/api/auth/login" style="display: flex; flex-direction: column;">
+        <h1>Login</h1>
 
-    <script>
-        const form = document.querySelector("form");
+        <label for="emailLogin">Email:</label>
+        <input id="emailLogin" type="email" name="email">
 
-        form.addEventListener("submit", (e) => {
-        e.preventDefault(); // Empêche le rechargement de la page
+        <label for="passwordLogin">Password:</label>
+        <input id="passwordLogin" type="password" name="password">
 
-        const data = {
-            email: document.getElementById("email").value,
-            phone: document.getElementById("phone").value,
-            password: document.getElementById("password").value,
-        };
+        <input type="submit" value="Submit">
+    </form>
 
-        fetch("http://localhost:3000/api/auth/signup", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json", // Assurez-vous d'avoir ce header
-            },
-            body: JSON.stringify(data), // Transformez les données en JSON
-        })
-            .then((response) => response.json())
-            .then((data) => console.log("Success:", data))
-            .catch((error) => console.error("Error:", error));
-        });
-    </script>
+    <div id="formCar"></div>
+    <div id="cars"></div>
+
+    <script src="./main.js"></script>
 </body>
 </html>
