@@ -2,24 +2,38 @@ const Car = require("../models/Cars")
 const fs = require('fs');
 
 exports.createCar = (req, res, next) => {
-    console.log(req.body)
-    const carObject = req.body.car; // Suppose un objet "car" en json venant de la requete
+    let carObject = undefined;
+    // Note: si le frontend utilise un formData comme sur les tests, alors le req.body.car ne sera pas
+    // converti en JSON et il s'agira alors d'une chaine, c'est pourquoi on le convertit.
+    // Si l'objet est converti d'une façon ou d'une autre, au moins c'est géré aussi
+    if (typeof(req.body.car) === "string"){
+        carObject = JSON.parse(req.body.car);
+    }
+    else {
+        carObject = req.body.car;
+    }
     delete carObject._id;
     delete carObject._userId;
+
     const car = new Car({
-        ...carObject,
+        name: carObject.name,
+        marque: carObject.marque,
+        immatriculation: carObject.immatriculation,
         userId: req.auth.userId,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
-  
+
     car.save()
-    .then(() => { res.status(201).json({message: 'Objet enregistré !'})})
-    .catch(error => { res.status(400).json( { error })})
- };
+    .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
+    .catch(error => res.status(400).json({ error }));
+};
 
 exports.getAllCars = (req, res, next) => {
     Car.find()
-        .then(elts => res.status(200).json(elts))
+        .then(elts => {
+            console.log(elts)
+            res.status(200).json(elts)
+        })
         .catch(error => res.status(400).json({error}))
 }
 
