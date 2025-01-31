@@ -4,8 +4,8 @@ const bodyParser = require('body-parser')
 const path = require('path');
 require("dotenv").config();
 
-const userRouter = require('./routes/user')
-const carRouter = require('./routes//car')
+const userRouter = require('./components/users/userRouter')
+const carRouter = require('./components/cars/carRouter')
 
 mongoose.connect(process.env.MONGODB_URI,
   { useNewUrlParser: true, useUnifiedTopology: true })

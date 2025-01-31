@@ -1,4 +1,4 @@
-const Car = require("../models/Cars")
+const Car = require("./carModel")
 const fs = require('fs');
 
 exports.createCar = (req, res, next) => {
@@ -31,7 +31,6 @@ exports.createCar = (req, res, next) => {
 exports.getAllCars = (req, res, next) => {
     Car.find()
         .then(elts => {
-            console.log(elts)
             res.status(200).json(elts)
         })
         .catch(error => res.status(400).json({error}))
