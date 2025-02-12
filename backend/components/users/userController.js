@@ -1,23 +1,13 @@
 const User = require('./userModel')
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
+
 const userService = require("./userService")
 require("dotenv").config();
 
 exports.signup = (req, res, next) => {
-    bcrypt.hash(req.body.password, 10)
-        .then(hash => {
-            const user = new User({
-                email: req.body.email,
-                phone: req.body.phone,
-                verifiedPermit: false,
-                password: hash
-            })
-            user.save()
-                .then(() => res.status(201).json({message: "User created !"}))
-                .catch(error => res.status(400).json(error))
-        })
-        .catch(error => res.status(500).json(error))
+    userService.createUser(req.body.user)
+    .then(user => res.status(201).json({"message": "user created!", "user": user}))
+    .catch(error => res.status(500).json(error));
 }
 
 exports.login = (req, res, next) => {

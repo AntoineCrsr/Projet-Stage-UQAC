@@ -7,7 +7,7 @@ const user = mongoose.Schema({
     isStudent: {type: Boolean, required: true},
     dateBirthday: {type: Date, required: true}, // type ?
     aboutMe: {type: String, required: false},
-    alternameEmail: {type: String, required: false},
+    alternateEmail: {type: String, required: false},
     testimonial: {type: String, required: false},
     nonce: {type: String, required: false},
 
@@ -18,10 +18,8 @@ const user = mongoose.Schema({
     },
 
     phone: {
-        type: {
-            type: String, required: true, enum: ["mobile", "work", "pager", "other"]
-        },
-        prefix: { type: String, required: true, enum: ["+1", "+33", "+44", "+49", "+91"] },
+        type: { type: String, required: true, enum: ["mobile", "work", "pager", "other"]},
+        prefix: { type: String, required: true, enum: ["+1", "+33"] },
         number: { type: String, required: true },
         phoneExt: {type: String, required: false},
         phoneDescription: {type: String, required: false},
@@ -55,14 +53,6 @@ const user = mongoose.Schema({
         nbTonsOfCO2Saved: {type: Number, required: true},
     },
 })
-
-// Gestion du code de vérification nonce pour téléphone ?
-// Gestion myCars
-// Settings (preferedLangage...)
-// Invoices
-// Bank account linked, solde
-// Credit report
-// Statistics: rating, nbRides, nbMiles, nbPeopleTraveledWith, co2Saved
 
 user.plugin(validator)
 

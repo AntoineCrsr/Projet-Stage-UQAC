@@ -1,27 +1,68 @@
-exports.createUser = (req) => {
-    if (!verifyInformation)
-        throw new Error("Please verify your informations and retry.")
-    // TODO: Créer et renvoie un objet utilisateur en fonction des valeurs passées dans req,
-    // et en prenant soin de mettre les autres données aux valeurs par défaut. 
+const User = require('./userModel')
+const bcrypt = require('bcrypt')
+
+exports.createUser = (reqUser) => {
+    // Pour l'instant sans vérification de données
+    return bcrypt.hash(reqUser.password, 10)
+            .then(hash => {
+                const user = new User({
+                    email: reqUser.email,
+                    password: hash,
+                    isStudent: false,
+                    dateBirthday: reqUser.dateBirthday,
+                    aboutMe: undefined,
+                    alternateEmail: undefined,
+                    testimonial: undefined,
+                    nonce: undefined,
+
+                    name: {
+                        publicName: reqUser.name.firstName + " " + reqUser.name.lastName,
+                        firstName: reqUser.name.firstName,
+                        lastName: reqUser.name.lastName,
+                    },
+
+                    phone: {
+                        type: reqUser.phone.type,
+                        prefix: reqUser.phone.prefix,
+                        number: reqUser.phone.number,
+                        phoneExt: reqUser.phone.phoneExt,
+                        phoneDescription: reqUser.phone.phoneDescription
+                    },
+
+                    rating: {
+                        punctualityRating: undefined,
+                        securityRating: undefined,
+                        comfortRating: undefined,
+                        courtesyRating: undefined
+                    },
+
+                    parameters: {
+                        show: {
+                            showAgePublically: false,
+                            showEmailPublically: false,
+                            showPhonePublically: false,
+                        },
+                        notification: {
+                            sendNewsletter: false,
+                            remindEvaluations: false, // Envoie un mail pour rappeler d'évaluer un trajet qu'on a eu
+                            remindDeparture: false, // Envoie un mail pour vérifier l'identité de nos passagers avant d'embarquer
+                        },
+                        preferredLangage: reqUser.parameters.preferredLangage
+                    },
+
+                    statistics: {
+                        nbRidesCompleted: 0,
+                        nbKmTravelled: 0,
+                        nbPeopleTravelledWith: 0,
+                        nbTonsOfCO2Saved: 0,
+                    },
+                })
+                return user.save()
+            })
+            .catch(error => {throw error})
 }
 
-exports.verifyPhoneType = (phoneType) => {
-    // Retourne vrai si phoneType est une valeur parmis "mobile", "work", "pager", "other"
-}
-
-exports.verifyPhonePrefix = (phonePrefix) => {
-    // Req à une API ?
-}
-
-exports.verifyExistingCity = (city) => {
-    // Req à une API ?
-}
-
-exports.verifyBirthDate = (birthDate) => {
-    // Vérifie si la personne a moins de 80 ans ?
-}
-
-function verifyInformation(req) {
+function verifyInformation(inf) {
     /*
     First name,
     Last name,
