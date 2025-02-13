@@ -1,6 +1,13 @@
 const User = require('./userModel')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
+/**
+ * Create the mongoDB user with information from the data in the request, and completed with default data
+ * that can be modified in modify function
+ * @param reqUser the user transmitted from the request 
+ * @returns the promise of the user save
+ */
 exports.createUser = (reqUser) => {
     // Pour l'instant sans vérification de données
     return bcrypt.hash(reqUser.password, 10)
@@ -62,17 +69,41 @@ exports.createUser = (reqUser) => {
             .catch(error => {throw error})
 }
 
-function verifyInformation(inf) {
-    /*
-    First name,
-    Last name,
-    City,
-    Email,
-    Password,
-    Birth date,
-    Phone number (type, prefix, number, ext)
-    */
-   // TODO: Vérifie les informations données par l'utilisateur, notamment le format, l'existance de la ville,
-   // l'unicité du téléphone, validation du préfix, du type ect. 
-   return true;
+
+/**
+ * Checks if the user exists with the given email (throws an error otherwise), 
+ * and compares passwords: throws an error if they are different, and returns the data to send
+ * back to the user if correct 
+ * @param userEmail the email of the user trying to connect
+ * @param userPassword  the password of the user trying to connect
+ * @returns the data to send back to the user
+ */
+exports.verifyUserLogin = (userEmail, userPassword) => {
+    const messageError = "Incorrect login or password"
+    return User.findOne({email: userEmail})
+        .then(user => {
+            if (user === null) {
+                throw new Error("User not found.")
+            } 
+            else {
+                bcrypt.compare(userPassword, user.password)
+                    .then(valid => {
+                        if (!valid) {
+                            throw new Error(messageError)
+                        }
+                        else {
+                            return {
+                                _id: user._id,
+                                token: jwt.sign(
+                                    {userId: user._id},
+                                    process.env.JWT_KEY, 
+                                    { expiresIn: '24h' }
+                                )
+                            }
+                        }
+                    })
+                    .catch(error => { throw error })
+            }
+        })
+        .catch(error => { throw error })
 }
