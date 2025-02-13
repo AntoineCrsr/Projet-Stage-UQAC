@@ -86,7 +86,7 @@ exports.verifyUserLogin = (userEmail, userPassword) => {
                 throw new Error("User not found.")
             } 
             else {
-                bcrypt.compare(userPassword, user.password)
+                return bcrypt.compare(userPassword, user.password)
                     .then(valid => {
                         if (!valid) {
                             throw new Error(messageError)

@@ -8,8 +8,10 @@ exports.signup = (req, res, next) => {
 }
 
 exports.login = (req, res, next) => {
-    userService.verifyUserLogin(req.body.user.email, req.body.user.password)
+    const test = userService.verifyUserLogin(req.body.user.email, req.body.user.password)
+    test
         .then(data => {
+            console.log(data)
             res.status(200).json(data)
         })
         .catch(error => res.status(500).json(error))
