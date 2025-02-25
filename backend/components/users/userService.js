@@ -1,6 +1,5 @@
 const User = require('./userModel')
 const bcrypt = require('bcrypt')
-const { error } = require('console')
 const jwt = require('jsonwebtoken')
 
 /**

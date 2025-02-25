@@ -5,6 +5,7 @@ const path = require('path');
 require("dotenv").config();
 
 const userRouter = require('./components/users/userRouter')
+const journeyRouter = require('./components/journeys/journeyRouter')
 const carRouter = require('./components/cars/carRouter')
 
 mongoose.connect(process.env.MONGODB_URI,
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 
 
 app.use('/api/auth', userRouter)
+app.use('/api/journey', journeyRouter)
 app.use('/api/car', carRouter)
 app.use('/images', express.static(path.join(__dirname, 'images')))
 

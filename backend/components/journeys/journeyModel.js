@@ -11,7 +11,7 @@ const journey = mongoose.Schema({
         city: { type: String, required: true },
         adress: { type: String, required: true }
     },
-    date: { type: Date, required: true },
+    date: { type: String, required: true },
     seats: {
         total: { type: Number, required: true },
         left: { type: Number, required: true },
@@ -22,6 +22,7 @@ const journey = mongoose.Schema({
     ]
     // Maybe add payment type one day
     // Also considering the preferences such as smoking, animals etc.
+    // Desc / commentaire
     // Maybe also driver license ?
 })
 
