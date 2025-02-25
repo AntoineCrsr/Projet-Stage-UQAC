@@ -1,5 +1,6 @@
 const User = require('./userModel')
 const bcrypt = require('bcrypt')
+const { error } = require('console')
 const jwt = require('jsonwebtoken')
 
 /**
@@ -9,7 +10,7 @@ const jwt = require('jsonwebtoken')
  * @returns the promise of the user save
  */
 exports.createUser = (reqUser) => {
-    // Pour l'instant sans vérification de données
+    // Pour l'instant sans vérification de validité de données (TODO?)
     return bcrypt.hash(reqUser.password, 10)
             .then(hash => {
                 const user = new User({
@@ -65,6 +66,11 @@ exports.createUser = (reqUser) => {
                     },
                 })
                 return user.save()
+                    .then(userData => {
+                        userData.password = undefined
+                        return userData
+                    })
+                    .catch(error => {throw error})
             })
             .catch(error => {throw error})
 }
@@ -76,7 +82,7 @@ exports.createUser = (reqUser) => {
  * back to the user if correct 
  * @param userEmail the email of the user trying to connect
  * @param userPassword  the password of the user trying to connect
- * @returns the data to send back to the user
+ * @returns the data to send back to the user, including the JWT token
  */
 exports.verifyUserLogin = (userEmail, userPassword) => {
     const messageError = "Incorrect login or password"
