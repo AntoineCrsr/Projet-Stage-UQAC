@@ -67,12 +67,19 @@ exports.modifyOneJourney = (newJourneyId, newJourney, userAuthId) => {
 }
 
 
+/**
+ * Supprime la journey en vérifiant que l'utilisateur qui le demande
+ * en soit le propriétaire
+ * @param {*} journeyId 
+ * @param {*} userAuthId 
+ * @returns 
+ */
 exports.deleteOneJourney = (journeyId, userAuthId) => {
-    return Journey.findOne(journeyId)
+    return Journey.findOne({_id: journeyId})
         .then(journey => {
             if (journey.ownerId != userAuthId)
                 throw new Error("You can't delete a journey that you don't own")
-            return Journey.deleteOne(journeyId)
+            return Journey.deleteOne({_id: journeyId})
         })
         .catch(error => {throw error})
 }

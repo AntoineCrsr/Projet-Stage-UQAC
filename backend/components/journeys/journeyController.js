@@ -52,10 +52,13 @@ exports.modifyOneJourney = (req, res, next) => {
 }
 
 /**
+ * Supprime la journey selon journeyService
+ * 200 Si ça a marché
+ * 400 Sinon
  */
 exports.deleteOneJourney = (req, res, next) => {
     journeyService.deleteOneJourney(req.params.id, req.auth.userId)
         .then(() => res.status(200).json({"message": "The journey has been deleted."}))
-        .catch(error => res.status(400).json(error))
+        .catch(error => {res.status(400).json(error); console.log(error)})
 }
 
