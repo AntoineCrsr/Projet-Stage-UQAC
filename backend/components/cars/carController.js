@@ -1,82 +1,70 @@
-const Car = require("./carModel")
-const fs = require('fs');
+const carService = require("./carService")
 
+/**
+ * Crée une voiture selon carService
+ * 201 Si la création a marché
+ * 400 Sinon
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.createCar = (req, res, next) => {
-    let carObject = undefined;
-    // Note: si le frontend utilise un formData comme sur les tests, alors le req.body.car ne sera pas
-    // converti en JSON et il s'agira alors d'une chaine, c'est pourquoi on le convertit.
-    // Si l'objet est converti d'une façon ou d'une autre, au moins c'est géré aussi
-    if (typeof(req.body.car) === "string"){
-        carObject = JSON.parse(req.body.car);
-    }
-    else {
-        carObject = req.body.car;
-    }
-    delete carObject._id;
-    delete carObject._userId;
-
-    const car = new Car({
-        name: carObject.name,
-        marque: carObject.marque,
-        immatriculation: carObject.immatriculation,
-        userId: req.auth.userId,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    });
-
-    car.save()
-    .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
-    .catch(error => res.status(400).json({ error }));
+    carService.createCar(req.body.car, req.auth.userId, req.file, req.protocol, req.get('host'))
+        .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
+        .catch(error => res.status(400).json({ error }));
 };
 
+
+/**
+ * Renvoie toutes les voitures
+ * TEMP -- faire ça pour un utilisateur donné
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.getAllCars = (req, res, next) => {
-    Car.find()
-        .then(elts => {
-            res.status(200).json(elts)
-        })
+    carService.getAllCars()
+        .then(elts => res.status(200).json(elts))
         .catch(error => res.status(400).json({error}))
 }
 
+
+/**
+ * Renvoie une voiture selon son id dans /api/car/id
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.getOneCar = (req, res, next) => {
-    Car.findOne({ _id: req.params.id })
+    carService.getOneCar(req.params.id )
         .then(car => res.status(200).json(car))
         .catch(error => res.status(404).json({ error }));
 }
 
+/**
+ * Modifie une voiture selon carService
+ * 200 si modifié
+ * 401 sinon
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.modifyOneCar = (req, res, next) => {
-    const carObject = req.file ? {
-        ...JSON.parse(req.body.thing),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : { ...req.body };
-  
-    delete carObject._userId;
-    Car.findOne({_id: req.params.id})
-        .then((car) => {
-            if (car.userId != req.auth.userId) {
-                res.status(401).json({ message : 'Not authorized'});
-            } else {
-                Car.updateOne({ _id: req.params.id}, { ...carObject, _id: req.params.id})
-                .then(() => res.status(200).json({message : 'Objet modifié!'}))
-                .catch(error => res.status(401).json({ error }));
-            }
-        })
-        .catch((error) => {
-            res.status(400).json({ error });
-        });
+    console.log(req.body.car)
+    carService.modifyOneCar(req.params.id, req.auth.userId, req.file, req.body.car, req.protocol)
+        .then(() => res.status(200).json({message : 'Objet modifié!'}))
+        .catch(error => res.status(401).json({ error }));
  };
 
+
+/**
+ * Supprime une voiture selon carService
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.deleteOneCar = (req, res, next) => {
-    Car.findOne({_id: req.params.id})
-        .then(car => {
-            if (req.auth.userId !== car.userId) {
-                res.status(401).json({message: "Unauthorized"})
-            } else {
-                const filename = car.imageUrl.split('/images/')[1];
-                fs.unlink(`images/${filename}`, () => {
-                    Car.deleteOne({_id: req.params.id})
-                        .then(() => { res.status(200).json({message: 'Objet supprimé !'})})
-                        .catch(error => res.status(401).json({ error }));
-                });
-            }
-        })
-        .catch(error => res.status(500).json(error))
+    carService.deleteOneCar(req.params.id, req.auth.userId)
+        .then(() => { res.status(200).json({message: 'Objet supprimé !'})})
+        .catch(error => {res.status(401).json({ error }); console.log(error)});
 }

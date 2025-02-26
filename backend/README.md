@@ -17,6 +17,7 @@ Pour l'instant, on peut:
 > Signup
 > Login
 > Créer, modifier, supprimer des trajets
+> Créer, modifier, supprimer des voitures
 
 En cours:
-> Création des voitures
+> Ajout d'images sur les voitures
