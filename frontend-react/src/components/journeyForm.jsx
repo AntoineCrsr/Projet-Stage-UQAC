@@ -8,7 +8,7 @@ const JourneyForm = () => {
   const [suggestionsDepart, setSuggestionsDepart] = useState([]);
   const [suggestionsArrivee, setSuggestionsArrivee] = useState([]);
 
-  // Fonction pour filtrer les suggestions
+  // Fonction pour filtrer une tentative de suggestions en attendant le lien avec le backend 
   const handleChange = (value, setValue, setSuggestions) => {
     setValue(value);
     if (value.length > 1) {
@@ -35,7 +35,7 @@ const JourneyForm = () => {
               handleChange(e.target.value, setDepart, setSuggestionsDepart)
             }
           />
-          {suggestionsDepart.length > 0 && (
+          {suggestionsDepart.length > 0 && (// entative de suggestions en attendant le lien avec le backend 
             <ul className="suggestions">
               {suggestionsDepart.map((ville, index) => (
                 <li key={index} onClick={() => setDepart(ville)}>
