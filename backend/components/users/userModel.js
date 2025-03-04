@@ -12,25 +12,25 @@ const user = mongoose.Schema({
     nonce: {type: String, required: false},
 
     name: {
-        publicName: {type: String, required: true},    
+        publicName: {type: String, required: true},
         firstName: {type: String, required: true, unique: false},
         lastName: {type: String, required: true, unique: false},
     },
 
     phone: {
         // Vérification du préfixe et du type avec des enums
-        type: { type: String, required: true, enum: ["mobile", "work", "pager", "other"]},
-        prefix: { type: String, required: true, enum: ["+1", "+33"] },
+        type: { type: String, required: true, enum: { values: ["mobile", "work", "pager", "other"], message: '{VALUE} is not valid answer'}},
+        prefix: { type: String, required: true, enum: { values: ["+1", "+33"], message: '{VALUE} is not yet supported'} },
         number: { type: String, required: true },
         phoneExt: {type: String, required: false},
         phoneDescription: {type: String, required: false},
     },
 
     rating: {
-        punctualityRating: {type: Number, required: false},
-        securityRating: {type: Number, required: false},
-        comfortRating: {type: Number, required: false},
-        courtesyRating: {type: Number, required: false},
+        punctualityRating: {type: Number, required: false, min: 0, max: 5},
+        securityRating: {type: Number, required: false, min: 0, max: 5},
+        comfortRating: {type: Number, required: false, min: 0, max: 5},
+        courtesyRating: {type: Number, required: false, min: 0, max: 5},
     },
 
     parameters: {
@@ -48,10 +48,10 @@ const user = mongoose.Schema({
     },
 
     statistics: {
-        nbRidesCompleted: {type: Number, required: true},
-        nbKmTravelled: {type: Number, required: true},
-        nbPeopleTravelledWith: {type: Number, required: true},
-        nbTonsOfCO2Saved: {type: Number, required: true},
+        nbRidesCompleted: {type: Number, required: true, min: 0},
+        nbKmTravelled: {type: Number, required: true, min: 0},
+        nbPeopleTravelledWith: {type: Number, required: true, min: 0},
+        nbTonsOfCO2Saved: {type: Number, required: true, min: 0},
     },
 })
 
