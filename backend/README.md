@@ -20,7 +20,8 @@ Pour l'instant, on peut:
 > Créer, modifier, supprimer des voitures
 
 En cours:
-> Ajout d'images sur les voitures
+> MongoDB verification des data
+> Ajout d'image sur les users (profile picture)
 
 
 Les routes:

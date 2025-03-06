@@ -10,7 +10,12 @@ require("dotenv").config();
  * @param {*} next 
  */
 exports.signup = (req, res, next) => {
-    userService.createUser(req.body.user)
+    if (typeof req.body.user == "string") { // Formdata avec image (body multipart)
+        user = JSON.parse(req.body.user)
+    } else { // Body json 
+        user = req.body.user
+    }
+    userService.createUser(user)
     .then(user => res.status(201).json({"message": "user created!", "user": user}))
     .catch(error => res.status(500).json(error));
 }

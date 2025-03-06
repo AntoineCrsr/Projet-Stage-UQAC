@@ -21,6 +21,7 @@ exports.createUser = (reqUser) => {
                     alternateEmail: undefined,
                     testimonial: undefined,
                     nonce: undefined,
+                    imageUrl: undefined,
 
                     name: {
                         publicName: reqUser.name.firstName + " " + reqUser.name.lastName,

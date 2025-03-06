@@ -10,6 +10,7 @@ const user = mongoose.Schema({
     alternateEmail: {type: String, required: false},
     testimonial: {type: String, required: false},
     nonce: {type: String, required: false},
+    imageUrl: {type: String, required: false},
 
     name: {
         publicName: {type: String, required: true},
