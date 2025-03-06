@@ -1,26 +1,32 @@
 const Car = require("./carModel")
 const fs = require('fs');
 
-exports.createCar = (carReq, userAuthId, fileReq, protocolReq, reqHost) => {
-    let imgUrl = fileReq ? `${protocolReq}://${reqHost}/images/${fileReq.filename}` : null;
-    // Note: si le frontend utilise un formData comme sur les tests, alors le req.body.car ne sera pas
-    // converti en JSON et il s'agira alors d'une chaine, c'est pourquoi on le convertit.
-    // Si l'objet est converti d'une façon ou d'une autre, au moins c'est géré aussi
-    
-    delete carReq._id;
-    delete carReq._userId;
 
+/**
+ * 
+ * @param {*} car l'entrée utilisateur parsée de car en js 
+ * @param {*} userAuthId 
+ * @param {*} fileReq 
+ * @param {*} protocolReq 
+ * @param {*} reqHost 
+ * @returns la promise du save du de la voiture
+ */
+exports.createCar = (carJson, userAuthId, fileReq, protocolReq, reqHost) => {
+    let imgUrl = fileReq ? `${protocolReq}://${reqHost}/images/${fileReq.filename}` : null;
+    
+    delete carJson._id;
+    delete carJson._userId;
 
     const car = new Car({
         userId: userAuthId,
-        carType: carReq.carType,
-        manufacturer: carReq.manufacturer,
-        year: carReq.year,
-        model: carReq.model,
-        color: carReq.color,
-        licensePlate: carReq.licensePlate,
-        airConditioner: carReq.airConditioner,
-        name: carReq.name,
+        carType: carJson.carType,
+        manufacturer: carJson.manufacturer,
+        year: carJson.year,
+        model: carJson.model,
+        color: carJson.color,
+        licensePlate: carJson.licensePlate,
+        airConditioner: carJson.airConditioner,
+        name: carJson.name,
         
         imageUrl: imgUrl
     });

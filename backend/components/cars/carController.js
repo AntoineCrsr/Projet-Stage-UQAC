@@ -9,10 +9,11 @@ const carService = require("./carService")
  * @param {*} next 
  */
 exports.createCar = (req, res, next) => {
-    carService.createCar(req.body.car, req.auth.userId, req.file, req.protocol, req.get('host'))
+    car = JSON.parse(req.body.car)
+    carService.createCar(car, req.auth.userId, req.file, req.protocol, req.get('host'))
         .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
         .catch(error => res.status(400).json({ error }));
-};
+}
 
 
 /**
