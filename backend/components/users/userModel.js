@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('mongoose-unique-validator')
 
 const user = mongoose.Schema({
-    email: {type: String, required: true, unique: true}, // Clé primaire
+    email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     isStudent: {type: Boolean, required: true},
     dateBirthday: {type: Date, required: true}, 
@@ -22,7 +22,7 @@ const user = mongoose.Schema({
         // Vérification du préfixe et du type avec des enums
         type: { type: String, required: true, enum: { values: ["mobile", "work", "pager", "other"], message: '{VALUE} is not valid answer'}},
         prefix: { type: String, required: true, enum: { values: ["+1", "+33"], message: '{VALUE} is not yet supported'} },
-        number: { type: String, required: true },
+        number: { type: String, required: true, unique: true },
         phoneExt: {type: String, required: false},
         phoneDescription: {type: String, required: false},
     },

@@ -113,3 +113,95 @@ exports.verifyUserLogin = (userEmail, userPassword) => {
         })
         .catch(error => { throw error })
 }
+
+
+exports.modifyUser = (newUser, userId) => {
+    // Appelle la fonction associée pour chaque groupe de données (rootInfo, name, phone, ratings, parameters, statistics)
+    // Avant tout ça, récupère le user pour éviter de faire 36 appels
+    return User.findOne({email: userEmail})
+        .then(user => {
+            if (user === null || user.id !== userId) {
+                throw new Error("User not found.")
+            }
+
+            // Ne gère pas une modification complète, seulement une modification spécifique à domaine (modif email,
+            // password, phone, rating etc.)
+            
+            // Division des modifications et ordre de priorité:
+            // 1. Email
+            // 2. Password
+            // 3. publicName + firstName + lastName + isStudent + dateBirthday + aboutMe + alternateEmail + testimonial + imageUrl
+            // 4. Phone
+            // 5. Rating
+            // 6. Parameters
+            // 7. Statistics
+
+            if (newUser.email !== undefined) {
+                updateEmail(user, newUser.email)
+            }
+            else if (newUser.password !== undefined) {
+                updatePassword(user, newUser.password)
+            }
+            else if (
+                newUser.name !== undefined
+                && isStudent !== undefined
+                && dateBirthday !== undefined
+                && aboutMe !== undefined
+                && alternateEmail !== undefined
+                && testimonial !== undefined
+                && imageUrl !== undefined
+            ) {
+                updateRootInfo(user, newUser) // Améliorer les params
+            }
+            else if (newUser.phone !== undefined) {
+                updatePhone(user, newUser.phone)
+            }
+            else if (newUser.rating !== undefined) {
+                updateRating(user, newUser.rating)
+            }
+            else if (newUser.parameters !== undefined) {
+                updateParameters(user, newUser.parameters)
+            }
+            else if (newUser.statistics !== undefined) {
+                updateStatistics(user, newUser.statistics)
+            }
+            else {
+                // Erreur missing fields
+            }
+
+            return user.save()
+        })
+}
+
+
+function updateRootInfo(user, rootInfo) {
+
+}
+
+function updateName(user, nameInfo) {
+
+}
+
+function updatePhone(user, phoneInfo) {
+
+}
+
+function updateRating(user, ratingInfo) {
+
+}
+
+function updateParameters(user, parameterInfo) {
+
+}
+
+function updateStatistics(user, statisticInfo) {
+
+}
+
+function updateEmail(user, email) {
+    // TODO
+}
+
+function updatePassword(user, password) {
+    // TODO
+}
