@@ -17,8 +17,7 @@ exports.createCar = (req, res, next) => {
     }
     
     carService.createCar(car, req.auth.userId, req.file, req.protocol, req.get('host'))
-        .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
-        .catch(error => res.status(400).json({ error }));
+        .then((servResp) => res.status(servResp.http_code).json(servResp.result))
 }
 
 
@@ -31,8 +30,7 @@ exports.createCar = (req, res, next) => {
  */
 exports.getAllCars = (req, res, next) => {
     carService.getAllCars()
-        .then(elts => res.status(200).json(elts))
-        .catch(error => res.status(400).json({error}))
+        .then(servResp => res.status(servResp.http_code).json(servResp.result))
 }
 
 
@@ -44,14 +42,11 @@ exports.getAllCars = (req, res, next) => {
  */
 exports.getOneCar = (req, res, next) => {
     carService.getOneCar(req.params.id )
-        .then(car => res.status(200).json(car))
-        .catch(error => res.status(404).json({ error }));
+        .then(servResp => res.status(servResp.http_code).json(servResp.result))
 }
 
 /**
  * Modifie une voiture selon carService
- * 200 si modifié
- * 401 sinon
  * @param {*} req 
  * @param {*} res 
  * @param {*} next 
@@ -59,8 +54,7 @@ exports.getOneCar = (req, res, next) => {
 exports.modifyOneCar = (req, res, next) => {
     console.log(req.body.car)
     carService.modifyOneCar(req.params.id, req.auth.userId, req.file, req.body.car, req.protocol)
-        .then(() => res.status(200).json({message : 'Objet modifié!'}))
-        .catch(error => res.status(401).json({ error }));
+        .then((servResp) => res.status(servResp.http_code).json(servResp.result))
  };
 
 
@@ -72,6 +66,5 @@ exports.modifyOneCar = (req, res, next) => {
  */
 exports.deleteOneCar = (req, res, next) => {
     carService.deleteOneCar(req.params.id, req.auth.userId)
-        .then(() => { res.status(200).json({message: 'Objet supprimé !'})})
-        .catch(error => {res.status(401).json({ error }); console.log(error)});
+        .then((servResp) => res.status(servResp.http_code).json(servResp.result))
 }
