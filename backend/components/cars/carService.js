@@ -3,6 +3,29 @@ const Car = require("./carModel")
 const fs = require('fs');
 
 
+function verifyCarInformation(carJson) {
+    console.log(carJson)
+    if (
+        carJson.carType == undefined
+        || carJson.manufacturer == undefined
+        || carJson.year == undefined
+        || carJson.model == undefined
+        || carJson.color
+        || carJson.licensePlate == undefined
+        || carJson.airConditioner == undefined
+        || carJson.name == undefined
+    ) {
+        return new Service_Response(undefined, 400, true, {
+            "errors": {
+                "car": {
+                    "code": "missing-fields",
+                    "name": "La requete ne dispose pas des attributs nécessaires (carType, manufacturer, year, model, color, licensePlate, airConditioner, name)"
+                }
+            }
+        })
+    }
+    return new Service_Response(undefined)
+}
 
 /**
  * 
@@ -11,13 +34,16 @@ const fs = require('fs');
  * @param {*} fileReq 
  * @param {*} protocolReq 
  * @param {*} reqHost 
- * @returns la promise du save du de la voiture
+ * @returns
  */
 exports.createCar = async (carJson, userAuthId, fileReq, protocolReq, reqHost) => {
     let imgUrl = fileReq ? `${protocolReq}://${reqHost}/images/${fileReq.filename}` : null;
     
     delete carJson._id;
     delete carJson._userId;
+
+    carVerification = verifyCarInformation(carJson)
+    if (carVerification.hasError) return carVerification
 
     const car = new Car({
         userId: userAuthId,
@@ -34,15 +60,15 @@ exports.createCar = async (carJson, userAuthId, fileReq, protocolReq, reqHost) =
     });
 
     return await car.save()
-        .then(() => new Service_Response(undefined, 201))
-        .catch(error => new Service_Response(undefined, 400, true))
+        .then(() => (new Service_Response(undefined, 201)).setLocation('/car/' + car.id))
+        .catch(error => new Service_Response(undefined, 400, true, error))
 };
 
 
 exports.getAllCars = async () => {
     return await Car.find()
         .then(cars => new Service_Response(cars))
-        .catch(error => new Service_Response(undefined, 500, true))
+        .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
 
@@ -53,26 +79,30 @@ exports.getOneCar = async (carId) => {
                 return new Service_Response(car, 302)
             return new Service_Response(undefined, 404, true)
         })
-        .catch(error => new Service_Response(undefined, 400, true))
+        .catch(error => new Service_Response(undefined, 400, true, error))
 }
 
 
 exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol) => {
     carReq.imageUrl = reqFile ? `${reqProtocol}://${req.get('host')}/images/${reqFile.filename}` : null
-  
+
     delete carReq._userId;
     return await Car.findOne({_id: id})
         .then((car) => {
             if (car.userId != userAuthId) {
                 return new Service_Response(undefined, 401, true)
             } else {
+                // Vérification d'erreur:
+                carVerification = verifyCarInformation(car)
+                if (carVerification.has_error) return carVerification
+
                 Car.updateOne({ _id: id}, { ...carObject, _id: id})
-                    .then(() => new Service_Response(undefined))
-                    .catch(error => new Service_Response(undefined, 400, true))
+                    .then(() => (new Service_Response(undefined)).setLocation('/car/' + car.id))
+                    .catch(error => new Service_Response(undefined, 400, true, error))
             }
         })
         .catch((error) => {
-            return new Service_Response(undefined, 400)
+            return new Service_Response(undefined, 400, true, error)
         });
  };
 
@@ -89,8 +119,8 @@ exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol) => {
                 }
                 Car.deleteOne({_id: id})
                     .then(() => new Service_Response(undefined))
-                    .catch(error => new Service_Response(undefined, 400))
+                    .catch(error => new Service_Response(undefined, 400, true, error))
             }
         })
-        .catch(error => new Service_Response(undefined, 400, true))
+        .catch(error => new Service_Response(undefined, 400, true, error))
 }
