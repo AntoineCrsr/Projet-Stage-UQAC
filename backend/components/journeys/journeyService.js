@@ -1,5 +1,50 @@
 const Journey = require("./journeyModel")
+const Service_Response = require("../workspace/service_response.js")
 
+
+let unauthorizedError = {
+    "errors": {
+        "journey": {
+            "code": "Unauthorized",
+            "name": "L'utilisateur cherchant éditer le trajet n'en est pas le propriétaire."
+        }
+    }
+}
+
+
+function verifyJourneyInformation(journeyJson, userId) {
+    // Présence de tous les champs nécessaires
+    if (
+        starting == undefined
+        || arrival == undefined
+        || date == undefined
+        || seats == undefined
+        || price == undefined
+    ) {
+        return new Service_Response(undefined, 401, true, {
+            "errors": {
+                "journey": {
+                    "code": "missing-fields",
+                    "name": "La requete ne dispose pas des attributs nécessaires (starting, arrival, date, seats, price)"
+                }
+            }
+        })
+    }
+
+    if (
+        seats < 0
+        || price < 0
+    ) {
+        return new Service_Response(undefined, 401, true, {
+            "errors": {
+                "journey": {
+                    "code": "bad-values",
+                    "name": "Les valeurs 'seats' ou 'price' doivent être >= 0."
+                }
+            }
+        })
+    }
+}
 
 /**
  * Crée une journey et retourne la promise de sa création
@@ -7,7 +52,7 @@ const Journey = require("./journeyModel")
  * @param {*} userId 
  * @returns {Promise}
  */
-exports.createJourney = (reqJourney, userId) => {
+exports.createJourney = async (reqJourney, userId) => {
     const journey = new Journey({
         ownerId: userId,
         starting: reqJourney.starting,
@@ -17,7 +62,9 @@ exports.createJourney = (reqJourney, userId) => {
         price: reqJourney.price,
         passengers: []
     })
-    return journey.save()
+    return await journey.save()
+        .then(() => (new Service_Response(undefined, 201)).setLocation('/journey/' + journey.id))
+        .catch(error => new Service_Response(undefined, 400, true, error))
 }
 
 
@@ -25,12 +72,10 @@ exports.createJourney = (reqJourney, userId) => {
  * Retourne les derniers journeys avec une limite de *limit*, trié par ordre décroissant
  * des dates
  */
-exports.getLastJourneys = (limit) => {
-    return Journey.find().sort({ date: -1 }).limit(limit)
-        .then(elts => {
-            return elts
-        })
-        .catch(error => {throw error})
+exports.getLastJourneys = async (limit) => {
+    return await Journey.find().sort({ date: -1 }).limit(limit)
+        .then(elts => new Service_Response(elts))
+        .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
 
@@ -39,8 +84,10 @@ exports.getLastJourneys = (limit) => {
  * @param {*} journeyId 
  * @returns {Promise} 
  */
-exports.getOneJourney = (journeyId) => {
-    return Journey.findOne({_id: journeyId})
+exports.getOneJourney = async (journeyId) => {
+    return await Journey.findOne({_id: journeyId})
+        .then(journey => new Service_Response(journey))
+        .catch(error => new Service_Response(undefined, 404, true, error))
 }
 
 
@@ -54,16 +101,18 @@ exports.getOneJourney = (journeyId) => {
  * @param {*} userAuthId 
  * @returns {Promise}
  */
-exports.modifyOneJourney = (newJourneyId, newJourney, userAuthId) => {
-    return this.getOneJourney(newJourneyId)
+exports.modifyOneJourney = async (newJourneyId, newJourney, userAuthId) => {
+    return await this.getOneJourney(newJourneyId)
         .then(currentJourney => {
             delete newJourney._id
             delete newJourney.ownerId
             if (currentJourney.ownerId != userAuthId)
-                throw new Error("You can't modify a journey that you don't own")
+                return new Service_Response(undefined, 401, true, unauthorizedError)
             return Journey.updateOne({ _id: newJourneyId }, { ...newJourney, _id: newJourneyId })
+                .then(() => (new Service_Response(undefined)).setLocation('/journey/' + journey.id))
+                .catch(error => new Service_Response(undefined, 500, true, error))
         })
-        .catch(error => {throw error})
+        .catch(error => new Service_Response(undefined, 404, true, error))
 }
 
 
@@ -74,12 +123,14 @@ exports.modifyOneJourney = (newJourneyId, newJourney, userAuthId) => {
  * @param {*} userAuthId 
  * @returns 
  */
-exports.deleteOneJourney = (journeyId, userAuthId) => {
-    return Journey.findOne({_id: journeyId})
+exports.deleteOneJourney = async (journeyId, userAuthId) => {
+    return await Journey.findOne({_id: journeyId})
         .then(journey => {
             if (journey.ownerId != userAuthId)
-                throw new Error("You can't delete a journey that you don't own")
+                return new Service_Response(undefined, 401, true, unauthorizedError)
             return Journey.deleteOne({_id: journeyId})
+                .then(() => new Service_Response(undefined))
+                .catch(error => new Service_Response(undefined, 500, true, error))
         })
-        .catch(error => {throw error})
+        .catch(error => new Service_Response(undefined, 500, true, error))
 }

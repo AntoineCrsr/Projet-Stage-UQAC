@@ -92,10 +92,6 @@ exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol) => {
             if (car.userId != userAuthId) {
                 return new Service_Response(undefined, 401, true)
             } else {
-                // Vérification d'erreur:
-                carVerification = verifyCarInformation(car)
-                if (carVerification.has_error) return carVerification
-
                 Car.updateOne({ _id: id}, { ...carObject, _id: id})
                     .then(() => (new Service_Response(undefined)).setLocation('/car/' + car.id))
                     .catch(error => new Service_Response(undefined, 400, true, error))

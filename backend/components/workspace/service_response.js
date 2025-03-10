@@ -11,6 +11,19 @@ class Service_Response {
         this.location = "/api" + location
         return this
     }
+
+    // Fonction pour renvoyer une response avec gestion d'erreur adapté à service_response
+    // Et SANS header location
+    buildSimpleResponse(res) {
+        if (this.has_error) res.status(this.http_code).json(this.error_object)
+        else res.status(this.http_code).json(this.result)
+    }
+
+    // Même chose mais AVEC le header Location
+    buildLocationResponse(res) {
+        if (this.has_error) res.status(this.http_code).json(this.error_object)
+        else res.status(this.http_code).location(this.location).json(this.result)
+    }
 }
 
 module.exports = Service_Response
