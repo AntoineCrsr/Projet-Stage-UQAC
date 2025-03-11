@@ -53,10 +53,9 @@ exports.getOneCar = (req, res, next) => {
  * @param {*} next 
  */
 exports.modifyOneCar = (req, res, next) => {
-    console.log(req.body.car)
     carService.modifyOneCar(req.params.id, req.auth.userId, req.file, req.body.car, req.protocol)
         .then(service_response => service_response.buildLocationResponse(res))
- }
+}
 
 
 /**

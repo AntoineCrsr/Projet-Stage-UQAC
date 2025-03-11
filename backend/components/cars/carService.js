@@ -92,14 +92,12 @@ exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol) => {
             if (car.userId != userAuthId) {
                 return new Service_Response(undefined, 401, true)
             } else {
-                Car.updateOne({ _id: id}, { ...carObject, _id: id})
+                return Car.updateOne({ _id: id}, { ...carReq, _id: id})
                     .then(() => (new Service_Response(undefined)).setLocation('/car/' + car.id))
                     .catch(error => new Service_Response(undefined, 400, true, error))
             }
         })
-        .catch((error) => {
-            return new Service_Response(undefined, 400, true, error)
-        });
+        .catch((error) => new Service_Response(undefined, 400, true, error));
  };
 
 
@@ -113,10 +111,10 @@ exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol) => {
                     const filename = car.imageUrl.split('/images/')[1];
                     fs.unlink(`images/${filename}`);
                 }
-                Car.deleteOne({_id: id})
+                return Car.deleteOne({_id: id})
                     .then(() => new Service_Response(undefined))
                     .catch(error => new Service_Response(undefined, 400, true, error))
             }
         })
-        .catch(error => new Service_Response(undefined, 400, true, error))
+        .catch(error => new Service_Response(undefined, 404, true, error))
 }
