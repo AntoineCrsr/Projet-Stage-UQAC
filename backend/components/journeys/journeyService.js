@@ -103,16 +103,21 @@ exports.getOneJourney = async (journeyId) => {
  */
 exports.modifyOneJourney = async (newJourneyId, newJourney, userAuthId) => {
     return await this.getOneJourney(newJourneyId)
-        .then(currentJourney => {
+        .then(currentJourneyResp => {
+            if (currentJourneyResp.has_error) 
+                return currentJourneyResp
+            
             delete newJourney._id
             delete newJourney.ownerId
+
+            currentJourney = currentJourneyResp.result
+            
             if (currentJourney.ownerId != userAuthId)
                 return new Service_Response(undefined, 401, true, unauthorizedError)
             return Journey.updateOne({ _id: newJourneyId }, { ...newJourney, _id: newJourneyId })
-                .then(() => (new Service_Response(undefined)).setLocation('/journey/' + journey.id))
+                .then(() => (new Service_Response(undefined)).setLocation('/journey/' + newJourneyId))
                 .catch(error => new Service_Response(undefined, 500, true, error))
         })
-        .catch(error => new Service_Response(undefined, 404, true, error))
 }
 
 

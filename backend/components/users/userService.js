@@ -1,16 +1,17 @@
 const User = require('./userModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const Service_Response = require("../workspace/service_response.js")
 
 /**
  * Create the mongoDB user with information from the data in the request, and completed with default data
  * that can be modified in modify function
  * @param reqUser the user transmitted from the request 
- * @returns the promise of the user save
+ * @returns 
  */
-exports.createUser = (reqUser) => {
+exports.createUser = async (reqUser) => {
     // Pour l'instant sans vérification de validité de données (TODO?)
-    return bcrypt.hash(reqUser.password, 10)
+    return await bcrypt.hash(reqUser.password, 10)
             .then(hash => {
                 const user = new User({
                     email: reqUser.email,
@@ -68,11 +69,11 @@ exports.createUser = (reqUser) => {
                 return user.save()
                     .then(userData => {
                         userData.password = undefined
-                        return userData
+                        return new Service_Response(userData, 201)
                     })
-                    .catch(error => {throw error})
+                    .catch(error => new Service_Response(undefined, 400, true, error))
             })
-            .catch(error => {throw error})
+            .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
 
@@ -84,44 +85,58 @@ exports.createUser = (reqUser) => {
  * @param userPassword  the password of the user trying to connect
  * @returns the data to send back to the user, including the JWT token
  */
-exports.verifyUserLogin = (userEmail, userPassword) => {
-    const messageError = "Incorrect login or password"
-    return User.findOne({email: userEmail})
+exports.verifyUserLogin = async (userEmail, userPassword) => {
+    const errorObject = new Service_Response(undefined, 403, true, {
+        "errors": {
+            "user": {
+                "code": "Wrong login or password",
+                "name": "La paire login / mot de passe est incorrecte."
+            }
+        }
+    })
+    return await User.findOne({email: userEmail})
         .then(user => {
             if (user === null) {
-                throw new Error("User not found.")
+                return errorObject
             } 
             else {
                 return bcrypt.compare(userPassword, user.password)
                     .then(valid => {
                         if (!valid) {
-                            throw new Error(messageError)
+                            return new Service_Response(undefined, 403, true, errorObject)
                         }
                         else {
-                            return {
+                            return new Service_Response({
                                 _id: user._id,
                                 token: jwt.sign(
                                     {userId: user._id},
                                     process.env.JWT_KEY, 
                                     { expiresIn: '24h' }
                                 )
-                            }
+                            })
                         }
                     })
-                    .catch(error => { throw error })
+                    .catch(error => new Service_Response(undefined, 500, true, error))
             }
         })
-        .catch(error => { throw error })
+        .catch(error => new Service_Response(undefined, 400, true, error))
 }
 
 
-exports.modifyUser = (newUser, userId) => {
+exports.modifyUser = async (newUser, userId) => {
     // Appelle la fonction associée pour chaque groupe de données (rootInfo, name, phone, ratings, parameters, statistics)
     // Avant tout ça, récupère le user pour éviter de faire 36 appels
-    return User.findOne({email: userEmail})
+    return await User.findOne({email: userEmail})
         .then(user => {
             if (user === null || user.id !== userId) {
-                throw new Error("User not found.")
+                return new Service_Response(undefined, 404, true, {
+                    "errors": {
+                        "user": {
+                            "code": "Not found",
+                            "name": "L'utilisateur n'a pas été trouvé."
+                        }
+                    }
+                })
             }
 
             // Ne gère pas une modification complète, seulement une modification spécifique à domaine (modif email,
@@ -166,19 +181,24 @@ exports.modifyUser = (newUser, userId) => {
                 updateStatistics(user, newUser.statistics)
             }
             else {
-                // Erreur missing fields
+                return new Service_Response(undefined, 400, true, {
+                    "errors": {
+                        "user": {
+                            "code": "missing-fields",
+                            "name": "Certains attributs de la requête sont peut-être manquants."
+                        }
+                    }
+                })
             }
 
             return user.save()
+                .then(() => new Service_Response(undefined, 200))
+                .catch(error => new Service_Response(undefined, 500, true, error))
         })
 }
 
 
 function updateRootInfo(user, rootInfo) {
-
-}
-
-function updateName(user, nameInfo) {
 
 }
 

@@ -20,11 +20,8 @@ Pour l'instant, on peut:
 > Créer, modifier, supprimer des voitures
 
 En cours:
-> Sur les requetes qui renvoient un message seul, renvoyer un header location
-> Remplacer le système d'erreur par un retour à base d'objet
-> Sur les requetes de type POST ou PUT, ajouter un header location
-> Ajout d'image sur les users (profile picture)
 > Modification user (update des statistiques par exemple)
+> Ajout d'image sur les users (profile picture)
 
 TODO:
 > Ajout d'un état pour les journeys (en_attente, en_cours, done)

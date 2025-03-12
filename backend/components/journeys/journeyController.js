@@ -21,7 +21,7 @@ exports.createJourney = (req, res, next) => {
  */
 exports.getLastJourneys = (req, res, next) => {
     journeyService.getLastJourneys(20)
-        .then(service_response => service_response.buildLocationResponse(res))
+        .then(service_response => service_response.buildSimpleResponse(res))
 }
 
 /**
@@ -29,7 +29,7 @@ exports.getLastJourneys = (req, res, next) => {
  */
 exports.getOneJourney = (req, res, next) => {
     journeyService.getOneJourney(req.params.id)
-        .then(service_response => service_response.buildLocationResponse(res))
+        .then(service_response => service_response.buildSimpleResponse(res))
 }
 
 /**
@@ -45,6 +45,6 @@ exports.modifyOneJourney = (req, res, next) => {
  */
 exports.deleteOneJourney = (req, res, next) => {
     journeyService.deleteOneJourney(req.params.id, req.auth.userId)
-        .then(service_response => service_response.buildLocationResponse(res))
+        .then(service_response => service_response.buildSimpleResponse(res))
 }
 
