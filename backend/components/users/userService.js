@@ -127,7 +127,7 @@ exports.modifyUser = async (newUser, userId) => {
     // Appelle la fonction associée pour chaque groupe de données (rootInfo, name, phone, ratings, parameters, statistics)
     // Avant tout ça, récupère le user pour éviter de faire 36 appels
     return await User.findOne({email: userEmail})
-        .then(user => {
+        .then(async user => {
             if (user === null || user.id !== userId) {
                 return new Service_Response(undefined, 404, true, {
                     "errors": {
@@ -155,10 +155,13 @@ exports.modifyUser = async (newUser, userId) => {
                 updateEmail(user, newUser.email)
             }
             else if (newUser.password !== undefined) {
-                updatePassword(user, newUser.password)
+                await updatePassword(user, newUser.password)
             }
             else if (
                 newUser.name !== undefined
+                && newUser.name.publicName !== undefined
+                && newUser.name.firstName !== undefined
+                && newUser.name.lastName !== undefined
                 && isStudent !== undefined
                 && dateBirthday !== undefined
                 && aboutMe !== undefined
@@ -168,7 +171,14 @@ exports.modifyUser = async (newUser, userId) => {
             ) {
                 updateRootInfo(user, newUser) // Améliorer les params
             }
-            else if (newUser.phone !== undefined) {
+            else if (
+                newUser.phone !== undefined
+                && newUser.phone.type !== undefined
+                && newUser.phone.prefix !== undefined
+                && newUser.phone.number !== undefined
+                && newUser.phone.phoneExt !== undefined
+                && newUser.phone.phoneDescription !== undefined
+            ) {
                 updatePhone(user, newUser.phone)
             }
             else if (newUser.rating !== undefined) {
@@ -192,36 +202,99 @@ exports.modifyUser = async (newUser, userId) => {
             }
 
             return user.save()
-                .then(() => new Service_Response(undefined, 200))
+                .then(() => (new Service_Response(user, 200)))
                 .catch(error => new Service_Response(undefined, 500, true, error))
         })
 }
 
 
 function updateRootInfo(user, rootInfo) {
-
+   // TODO vérifications
+   user.name = rootInfo.name
+   user.isStudent = rootInfo.isStudent
+   user.dateBirthday = rootInfo.dateBirthday
+   user.aboutMe = rootInfo.aboutMe
+   user.alternateEmail = rootInfo.alternateEmail
+   user.testimonial = rootInfo.testimonial
+   // Image non gérée
 }
+
 
 function updatePhone(user, phoneInfo) {
-
+    // TODO Verification d'info 
+    user.phone = phoneInfo
 }
+
 
 function updateRating(user, ratingInfo) {
-
+    // Caclule les nouvelles statistiques en supposant vraie la formule suivante:
+    // newRating = (previous * nbPrevious + newBornRating) / nbPreviousRating+1
+    // nbRating += 1
+    // TODO Verification d'info 
+    nbRating = user.rating.nbRating
+    newPunctualityRating = ((user.rating.punctualityRating * nbRating) + ratingInfo.punctualityRating)/(nbRating+1)
+    newSecurityRating = ((user.rating.securityRating * nbRating) + ratingInfo.securityRating)/(nbRating+1)
+    newComfortRating = ((user.rating.comfortRating * nbRating) + ratingInfo.comfortRating)/(nbRating+1)
+    newCourtesyRating = ((user.rating.courtesyRating * nbRating) + ratingInfo.courtesyRating)/(nbRating+1)
+    
+    user.rating.punctualityRating = newPunctualityRating
+    user.rating.securityRating = newSecurityRating
+    user.rating.comfortRating = newComfortRating
+    user.rating.courtesyRating = newCourtesyRating
+    user.rating.nbRating++
 }
+
 
 function updateParameters(user, parameterInfo) {
+    // TODO Verification d'info
+    if (parameterInfo.show !== undefined) {
+        if (parameterInfo.show.showAgePublically !== undefined) {
+            user.parameters.show.showAgePublically = parameterInfo.show.showAgePublically
+        }
+        if (parameterInfo.show.showEmailPublically !== undefined) {
+            user.parameters.show.showEmailPublically = parameterInfo.show.showEmailPublically
+        }
+        if (parameterInfo.show.showPhonePublically !== undefined) {
+            user.parameters.show.showPhonePublically = parameterInfo.show.showPhonePublically
+        }
+    }
 
-}
+    if (parameterInfo.notification !== undefined) {
+        if (parameterInfo.sendNewsletter !== undefined) {
+            user.parameters.notification.sendNewsletter = parameterInfo.notification.sendNewsletter
+        }
+        if (parameterInfo.remindEvaluations !== undefined) {
+            user.parameters.notification.remindEvaluations = parameterInfo.notification.remindEvaluations
+        }
+        if (parameterInfo.remindDeparture !== undefined) {
+            user.parameters.notification.remindDeparture = parameterInfo.notification.remindDeparture
+        }
+    }
 
-function updateStatistics(user, statisticInfo) {
-
+    if (parameterInfo.preferredLangage !== undefined) {
+        user.parameters.preferredLangage = parameterInfo.preferredLangage
+    }
 }
 
 function updateEmail(user, email) {
+    // TODO Verification d'info 
+    user.email = email
+    sendEmailValidation()
+}
+
+async function updatePassword(user, password) {
+    await bcrypt.hash(password, 10)
+        .then(hash => {
+            user.password = hash
+        })
+}
+
+function sendEmailValidation() {
     // TODO
 }
 
-function updatePassword(user, password) {
-    // TODO
-}
+/*
+Chaque fonction doit:
+1. Vérifier les infos
+2. Modifier le user
+*/

@@ -20,7 +20,7 @@ Pour l'instant, on peut:
 > Créer, modifier, supprimer des voitures
 
 En cours:
-> Modification user (update des statistiques par exemple)
+> Modification user (update des statistiques par exemple) à TESTER
 > Ajout d'image sur les users (profile picture)
 
 TODO:

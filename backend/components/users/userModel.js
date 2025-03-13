@@ -32,6 +32,7 @@ const user = mongoose.Schema({
         securityRating: {type: Number, required: false, min: 0, max: 5},
         comfortRating: {type: Number, required: false, min: 0, max: 5},
         courtesyRating: {type: Number, required: false, min: 0, max: 5},
+        nbRating: {type: Number, required: false, min: 0}
     },
 
     parameters: {
