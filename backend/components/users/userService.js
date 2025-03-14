@@ -42,7 +42,8 @@ exports.createUser = async (reqUser) => {
                         punctualityRating: undefined,
                         securityRating: undefined,
                         comfortRating: undefined,
-                        courtesyRating: undefined
+                        courtesyRating: undefined,
+                        nbRating: 0
                     },
 
                     parameters: {
@@ -123,10 +124,20 @@ exports.verifyUserLogin = async (userEmail, userPassword) => {
 }
 
 
-exports.modifyUser = async (newUser, userId) => {
+exports.modifyUser = async (newUser, userId, userAuthId) => {
     // Appelle la fonction associée pour chaque groupe de données (rootInfo, name, phone, ratings, parameters, statistics)
     // Avant tout ça, récupère le user pour éviter de faire 36 appels
-    return await User.findOne({email: userEmail})
+    if (userId !== userAuthId) {
+        return new Service_Response(undefined, 401, true, {
+            "errors": {
+                "user": {
+                    "code": "Not authorized",
+                    "name": "L'utilisateur connecté tente de modifier un autre utilisateur."
+                }
+            }
+        })
+    }
+    return await User.findOne({_id: userId})
         .then(async user => {
             if (user === null || user.id !== userId) {
                 return new Service_Response(undefined, 404, true, {
@@ -162,12 +173,13 @@ exports.modifyUser = async (newUser, userId) => {
                 && newUser.name.publicName !== undefined
                 && newUser.name.firstName !== undefined
                 && newUser.name.lastName !== undefined
-                && isStudent !== undefined
-                && dateBirthday !== undefined
+                && newUser.isStudent !== undefined
+                && newUser.dateBirthday !== undefined
+                /*
                 && aboutMe !== undefined
                 && alternateEmail !== undefined
                 && testimonial !== undefined
-                && imageUrl !== undefined
+                && imageUrl !== undefined*/
             ) {
                 updateRootInfo(user, newUser) // Améliorer les params
             }
@@ -176,8 +188,6 @@ exports.modifyUser = async (newUser, userId) => {
                 && newUser.phone.type !== undefined
                 && newUser.phone.prefix !== undefined
                 && newUser.phone.number !== undefined
-                && newUser.phone.phoneExt !== undefined
-                && newUser.phone.phoneDescription !== undefined
             ) {
                 updatePhone(user, newUser.phone)
             }
@@ -231,7 +241,19 @@ function updateRating(user, ratingInfo) {
     // newRating = (previous * nbPrevious + newBornRating) / nbPreviousRating+1
     // nbRating += 1
     // TODO Verification d'info 
+    console.log("rating:")
+    console.log(user.rating)
+
     nbRating = user.rating.nbRating
+
+    // Si on n'a jamais eu d'avis, on doit setup un nombre pour qu'il prenne le type
+    if (nbRating == 0) {
+        user.rating.punctualityRating = 0
+        user.rating.securityRating = 0
+        user.rating.comfortRating = 0
+        user.rating.courtesyRating = 0
+    }
+
     newPunctualityRating = ((user.rating.punctualityRating * nbRating) + ratingInfo.punctualityRating)/(nbRating+1)
     newSecurityRating = ((user.rating.securityRating * nbRating) + ratingInfo.securityRating)/(nbRating+1)
     newComfortRating = ((user.rating.comfortRating * nbRating) + ratingInfo.comfortRating)/(nbRating+1)

@@ -36,6 +36,6 @@ exports.login = (req, res, next) => {
  * @param {*} next 
  */
 exports.modify = (req, res, next) => {
-    userService.modifyUser()
+    userService.modifyUser(req.body.user, req.params.id, req.auth.userId)
         .then(service_response => service_response.buildSimpleResponse(res))
 }
