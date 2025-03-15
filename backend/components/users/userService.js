@@ -139,7 +139,7 @@ exports.verifyUserLogin = async (userEmail, userPassword) => {
  * @param userAuthId  L'id de l'utilisateur du token JWT
  * @returns un Service_Response adapté
  * */
-exports.modifyUser = async (newUser, userId, userAuthId) => {
+exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, reqHost) => {
     // Appelle la fonction associée pour chaque groupe de données (rootInfo, name, phone, ratings, parameters, statistics)
     // Avant tout ça, récupère le user pour éviter de faire 36 appels
     if (userId !== userAuthId) {
@@ -166,14 +166,18 @@ exports.modifyUser = async (newUser, userId, userAuthId) => {
             }
 
             // Vérifie et dirige les infos
-            if (newUser.email !== undefined) {
+            if (reqFile !== undefined) {
+                updateImage(user, reqFile, reqProtocol, reqHost)
+            }
+            else if (newUser !== undefined && newUser.email !== undefined) {
                 updateEmail(user, newUser.email)
             }
-            else if (newUser.password !== undefined) {
+            else if (newUser !== undefined && newUser.password !== undefined) {
                 await updatePassword(user, newUser.password)
             }
             else if (
-                newUser.name !== undefined
+                newUser !== undefined 
+                && newUser.name !== undefined
                 && newUser.name.publicName !== undefined
                 && newUser.name.firstName !== undefined
                 && newUser.name.lastName !== undefined
@@ -183,17 +187,18 @@ exports.modifyUser = async (newUser, userId, userAuthId) => {
                 updateRootInfo(user, newUser) // Améliorer les params
             }
             else if (
-                newUser.phone !== undefined
+                newUser !== undefined 
+                && newUser.phone !== undefined
                 && newUser.phone.type !== undefined
                 && newUser.phone.prefix !== undefined
                 && newUser.phone.number !== undefined
             ) {
                 updatePhone(user, newUser.phone)
             }
-            else if (newUser.rating !== undefined) {
+            else if (newUser !== undefined && newUser.rating !== undefined) {
                 updateRating(user, newUser.rating)
             }
-            else if (newUser.parameters !== undefined) {
+            else if (newUser !== undefined && newUser.parameters !== undefined) {
                 updateParameters(user, newUser.parameters)
             }
             else {
@@ -303,6 +308,10 @@ async function updatePassword(user, password) {
         .then(hash => {
             user.password = hash
         })
+}
+
+function updateImage(user, reqFile, reqProtocol, reqHost) {
+    user.imageUrl = `${reqProtocol}://${reqHost}/images/${reqFile.filename}`
 }
 
 function sendEmailValidation() {

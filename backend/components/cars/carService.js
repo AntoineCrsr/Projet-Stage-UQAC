@@ -83,16 +83,17 @@ exports.getOneCar = async (carId) => {
 }
 
 
-exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol) => {
-    carReq.imageUrl = reqFile ? `${reqProtocol}://${req.get('host')}/images/${reqFile.filename}` : null
+exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol, reqHost) => {
+    let newCarReq = typeof carReq == "string" ? JSON.parse(carReq) : {...carReq}
+    if (reqFile !== undefined) newCarReq.imageUrl = `${reqProtocol}://${reqHost}/images/${reqFile.filename}` 
 
-    delete carReq._userId;
+    delete newCarReq._userId;
     return await Car.findOne({_id: id})
         .then((car) => {
             if (car.userId != userAuthId) {
                 return new Service_Response(undefined, 401, true)
             } else {
-                return Car.updateOne({ _id: id}, { ...carReq, _id: id})
+                return Car.updateOne({ _id: id}, { ...newCarReq, _id: id})
                     .then(() => (new Service_Response(undefined)).setLocation('/car/' + car.id))
                     .catch(error => new Service_Response(undefined, 400, true, error))
             }
