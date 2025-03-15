@@ -124,6 +124,21 @@ exports.verifyUserLogin = async (userEmail, userPassword) => {
 }
 
 
+/**
+ * Ne gère pas une modification complète, seulement une modification spécifique à domaine (modif email,
+ * password, phone, rating)
+ * Division des modifications et ordre de priorité:
+ * 1. Email
+ * 2. Password
+ * 3. publicName + firstName + lastName + isStudent + dateBirthday + aboutMe + alternateEmail + testimonial + imageUrl
+ * 4. Phone
+ * 5. Rating
+ * 6. Parameters
+ * @param newUser L'utilisateur passé dans la requete
+ * @param userId  L'id de l'utilisateur de la requete PUT
+ * @param userAuthId  L'id de l'utilisateur du token JWT
+ * @returns un Service_Response adapté
+ * */
 exports.modifyUser = async (newUser, userId, userAuthId) => {
     // Appelle la fonction associée pour chaque groupe de données (rootInfo, name, phone, ratings, parameters, statistics)
     // Avant tout ça, récupère le user pour éviter de faire 36 appels
@@ -150,18 +165,7 @@ exports.modifyUser = async (newUser, userId, userAuthId) => {
                 })
             }
 
-            // Ne gère pas une modification complète, seulement une modification spécifique à domaine (modif email,
-            // password, phone, rating etc.)
-            
-            // Division des modifications et ordre de priorité:
-            // 1. Email
-            // 2. Password
-            // 3. publicName + firstName + lastName + isStudent + dateBirthday + aboutMe + alternateEmail + testimonial + imageUrl
-            // 4. Phone
-            // 5. Rating
-            // 6. Parameters
-            // 7. Statistics
-
+            // Vérifie et dirige les infos
             if (newUser.email !== undefined) {
                 updateEmail(user, newUser.email)
             }
@@ -175,11 +179,6 @@ exports.modifyUser = async (newUser, userId, userAuthId) => {
                 && newUser.name.lastName !== undefined
                 && newUser.isStudent !== undefined
                 && newUser.dateBirthday !== undefined
-                /*
-                && aboutMe !== undefined
-                && alternateEmail !== undefined
-                && testimonial !== undefined
-                && imageUrl !== undefined*/
             ) {
                 updateRootInfo(user, newUser) // Améliorer les params
             }
@@ -196,9 +195,6 @@ exports.modifyUser = async (newUser, userId, userAuthId) => {
             }
             else if (newUser.parameters !== undefined) {
                 updateParameters(user, newUser.parameters)
-            }
-            else if (newUser.statistics !== undefined) {
-                updateStatistics(user, newUser.statistics)
             }
             else {
                 return new Service_Response(undefined, 400, true, {
@@ -241,8 +237,6 @@ function updateRating(user, ratingInfo) {
     // newRating = (previous * nbPrevious + newBornRating) / nbPreviousRating+1
     // nbRating += 1
     // TODO Verification d'info 
-    console.log("rating:")
-    console.log(user.rating)
 
     nbRating = user.rating.nbRating
 
@@ -282,13 +276,13 @@ function updateParameters(user, parameterInfo) {
     }
 
     if (parameterInfo.notification !== undefined) {
-        if (parameterInfo.sendNewsletter !== undefined) {
+        if (parameterInfo.notification.sendNewsletter !== undefined) {
             user.parameters.notification.sendNewsletter = parameterInfo.notification.sendNewsletter
         }
-        if (parameterInfo.remindEvaluations !== undefined) {
+        if (parameterInfo.notification.remindEvaluations !== undefined) {
             user.parameters.notification.remindEvaluations = parameterInfo.notification.remindEvaluations
         }
-        if (parameterInfo.remindDeparture !== undefined) {
+        if (parameterInfo.notification.remindDeparture !== undefined) {
             user.parameters.notification.remindDeparture = parameterInfo.notification.remindDeparture
         }
     }
