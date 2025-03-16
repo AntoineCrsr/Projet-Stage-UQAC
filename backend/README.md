@@ -20,8 +20,7 @@ Pour l'instant, on peut:
 > Créer, modifier, supprimer des voitures
 
 En cours:
-> Modification user (update des statistiques par exemple) à TESTER
-> Ajout d'image sur les users (profile picture)
+> Validation d'email et de téléphone
 
 TODO:
 > Ajout d'un état pour les journeys (en_attente, en_cours, done)

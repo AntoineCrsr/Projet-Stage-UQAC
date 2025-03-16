@@ -2,6 +2,8 @@ const User = require('./userModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const Service_Response = require("../workspace/service_response.js")
+const emailSender = require("../workspace/emailSender")
+const crypto = require('crypto');
 
 /**
  * Create the mongoDB user with information from the data in the request, and completed with default data
@@ -227,7 +229,6 @@ function updateRootInfo(user, rootInfo) {
    user.aboutMe = rootInfo.aboutMe
    user.alternateEmail = rootInfo.alternateEmail
    user.testimonial = rootInfo.testimonial
-   // Image non gérée
 }
 
 
@@ -300,7 +301,9 @@ function updateParameters(user, parameterInfo) {
 function updateEmail(user, email) {
     // TODO Verification d'info 
     user.email = email
-    sendEmailValidation()
+    let nonce = crypto.randomBytes(16).toString('base64');
+    user.nonce = nonce;
+    sendEmailValidation(email, nonce)
 }
 
 async function updatePassword(user, password) {
@@ -314,12 +317,6 @@ function updateImage(user, reqFile, reqProtocol, reqHost) {
     user.imageUrl = `${reqProtocol}://${reqHost}/images/${reqFile.filename}`
 }
 
-function sendEmailValidation() {
-    // TODO
+function sendEmailValidation(email) {
+    emailSender.sendEmail(email, `Email verification", "Hi !\n\nHere is your secret code to validate your email: ${nonce}\n\nHave a good day !`)
 }
-
-/*
-Chaque fonction doit:
-1. Vérifier les infos
-2. Modifier le user
-*/
