@@ -5,6 +5,13 @@ const Service_Response = require("../workspace/service_response.js")
 const emailSender = require("../workspace/emailSender")
 const crypto = require('crypto');
 
+exports.getUser = async (userId) => {
+    return await User.findOne({_id: userId})
+        .then(user => new Service_Response(user, 302))
+        .catch(error => new Service_Response(undefined, 404, true))
+}
+
+
 /**
  * Create the mongoDB user with information from the data in the request, and completed with default data
  * that can be modified in modify function
@@ -23,7 +30,6 @@ exports.createUser = async (reqUser) => {
                     aboutMe: undefined,
                     alternateEmail: undefined,
                     testimonial: undefined,
-                    nonce: undefined,
                     imageUrl: undefined,
 
                     name: {
@@ -68,9 +74,16 @@ exports.createUser = async (reqUser) => {
                         nbPeopleTravelledWith: 0,
                         nbTonsOfCO2Saved: 0,
                     },
+
+                    emailNonce: "000",
+                    phoneNonce: "000",
+                    hasVerifiedEmail: false,
+                    hasVerifiedPhone: false
                 })
                 return user.save()
                     .then(userData => {
+                        sendEmailValidation(userData.email, userData.emailNonce)
+                        sendPhoneValidation(userData.phone.number, userData.phoneNonce)
                         userData.password = undefined
                         return new Service_Response(userData, 201)
                     })
@@ -220,6 +233,78 @@ exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, r
         })
 }
 
+exports.verifyNonce = async (userInfo, userAuthId) => {
+    let missingFieldError = new Service_Response(undefined, 400, true, {
+        "errors": {
+            "user": {
+                "code": "missing-fields",
+                "name": "Certains attributs de la requête sont peut-être manquants."
+            }
+        }
+    })
+    let incorrectNonceError = new Service_Response(undefined, 400, true, {
+        "errors": {
+            "user": {
+                "code": "incorrect nonce",
+                "name": "La nonce donnée est incorrecte."
+            }
+        }
+    })
+    let nonceAlreadyVerified = new Service_Response(undefined, 400, true, {
+        "errors": {
+            "user": {
+                "code": "nonce already verified",
+                "name": "La nonce a déjà été vérifiée."
+            }
+        }
+    })
+    let validationConfirmed = new Service_Response(undefined)
+    // Vérification de données transmises
+    if (userInfo !== undefined) {
+        // Vérification connexion
+        if (userAuthId == undefined) {
+            return new Service_Response(undefined, 401, true)
+        }
+        // Récupération de l'objet user
+        return await User.findOne({_id: userAuthId})
+            .then(user => {
+                // Vérification du téléphone
+                if (userInfo.phoneNonce !== undefined) {
+                    // Nonce déjà vérifiée:
+                    if (user.hasVerifiedPhone) return nonceAlreadyVerified
+                    // Non vérifiée, et identicité:
+                    if (user.phoneNonce == userInfo.phoneNonce) {
+                        user.phoneNonce = undefined
+                        user.hasVerifiedPhone = true
+                        return user.save()
+                            .then(() => validationConfirmed)
+                            .catch(error => new Service_Response(undefined, 500, true, error))
+                    }
+                    return incorrectNonceError
+                }
+                // Vérification de l'email
+                else if (userInfo.emailNonce !== undefined) {
+                    // Nonce déjà vérifiée:
+                    if (user.hasVerifiedEmail) return nonceAlreadyVerified
+                    // Non vérifiée, et identicité:
+                    if (user.emailNonce == userInfo.emailNonce) {
+                        user.emailNonce = undefined
+                        user.hasVerifiedEmail = true
+                        return user.save()
+                            .then(() => validationConfirmed)
+                            .catch(error => new Service_Response(undefined, 500, true, error))
+                    }
+                    return incorrectNonceError
+                }
+                // Si aucun des attributs ne correspond...
+                return missingFieldError
+            })
+    }
+    else {
+        return missingFieldError
+    }
+}
+
 
 function updateRootInfo(user, rootInfo) {
    // TODO vérifications
@@ -235,6 +320,10 @@ function updateRootInfo(user, rootInfo) {
 function updatePhone(user, phoneInfo) {
     // TODO Verification d'info 
     user.phone = phoneInfo
+    user.hasVerifiedPhone = false
+    let nonce = "000";
+    user.phoneNonce = nonce
+    sendPhoneValidation(phoneInfo.number, nonce)
 }
 
 
@@ -301,8 +390,9 @@ function updateParameters(user, parameterInfo) {
 function updateEmail(user, email) {
     // TODO Verification d'info 
     user.email = email
-    let nonce = crypto.randomBytes(16).toString('base64');
-    user.nonce = nonce;
+    let nonce = "000";
+    user.emailNonce = nonce
+    user.hasVerifiedEmail = false
     sendEmailValidation(email, nonce)
 }
 
@@ -317,6 +407,8 @@ function updateImage(user, reqFile, reqProtocol, reqHost) {
     user.imageUrl = `${reqProtocol}://${reqHost}/images/${reqFile.filename}`
 }
 
-function sendEmailValidation(email) {
+function sendEmailValidation(email, nonce) {
     emailSender.sendEmail(email, `Email verification", "Hi !\n\nHere is your secret code to validate your email: ${nonce}\n\nHave a good day !`)
 }
+
+function sendPhoneValidation(phone, nonce) {}

@@ -6,8 +6,10 @@ const auth = require('../users/userAuth')
 
 // Setup des routes
 
+router.get('/:id', controller.getUser)
 router.post('/login', controller.login)
 router.post('/signup', controller.signup)
+router.post('/verify', auth, controller.verify)
 router.put('/:id', auth, multer, controller.modify)
 
 module.exports = router

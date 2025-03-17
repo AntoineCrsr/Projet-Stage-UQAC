@@ -9,7 +9,6 @@ const user = mongoose.Schema({
     aboutMe: {type: String, required: false},
     alternateEmail: {type: String, required: false},
     testimonial: {type: String, required: false},
-    nonce: {type: String, required: false},
     imageUrl: {type: String, required: false},
 
     name: {
@@ -55,6 +54,11 @@ const user = mongoose.Schema({
         nbPeopleTravelledWith: {type: Number, required: true, min: 0},
         nbTonsOfCO2Saved: {type: Number, required: true, min: 0},
     },
+
+    hasVerifiedEmail: {type: Boolean, required: true},
+    hasVerifiedPhone: {type: Boolean, required: true},
+    emailNonce: {type: String, required: false},
+    phoneNonce: {type: String, required: false},
 })
 
 user.plugin(validator)
