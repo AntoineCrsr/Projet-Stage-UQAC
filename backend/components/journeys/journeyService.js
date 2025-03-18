@@ -60,7 +60,8 @@ exports.createJourney = async (reqJourney, userId) => {
         date: reqJourney.date,
         seats: reqJourney.seats,
         price: reqJourney.price,
-        passengers: []
+        passengers: [],
+        state: "w" // w = waiting, d = done
     })
     return await journey.save()
         .then(() => (new Service_Response(undefined, 201)).setLocation('/journey/' + journey.id))
@@ -72,7 +73,7 @@ exports.createJourney = async (reqJourney, userId) => {
  * Retourne les derniers journeys avec une limite de *limit*, trié par ordre décroissant
  * des dates
  */
-exports.getLastJourneys = async (limit) => {
+exports.getLastJourneys = async (limit=50) => {
     return await Journey.find().sort({ date: -1 }).limit(limit)
         .then(elts => new Service_Response(elts))
         .catch(error => new Service_Response(undefined, 500, true, error))
@@ -86,8 +87,11 @@ exports.getLastJourneys = async (limit) => {
  */
 exports.getOneJourney = async (journeyId) => {
     return await Journey.findOne({_id: journeyId})
-        .then(journey => new Service_Response(journey))
-        .catch(error => new Service_Response(undefined, 404, true, error))
+        .then(journey => {
+            if (journey == null) return new Service_Response(undefined, 404, true, error)
+            return new Service_Response(journey)
+        })
+        .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
 

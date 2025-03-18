@@ -20,10 +20,10 @@ Pour l'instant, on peut:
 > Créer, modifier, supprimer des voitures
 
 En cours:
-> Validation d'email et de téléphone
+> Vérification des données avant insertion (validité syntaxique et validité logique)
+> Sécurisation (avis donnables qu'une fois par journey, à déterminer le reste)
 
 TODO:
-> Ajout d'un état pour les journeys (en_attente, en_cours, done)
 > Lors de la modification de l'état d'une journey à 'done', update les statistiques du conducteur / passagers
 > Vérifier les adresses avec l'API google maps?
 

@@ -19,7 +19,8 @@ const journey = mongoose.Schema({
     price: { type: Number, required: true },
     passengers: [
         { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },
-    ]
+    ],
+    state: { type: String, required: true }
     // Maybe add payment type one day
     // Also considering the preferences such as smoking, animals etc.
     // Desc / commentaire
