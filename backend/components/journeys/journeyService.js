@@ -43,11 +43,15 @@ exports.getLastJourneys = async (limit=50) => {
 
 
 /**
- * Retourne une promise de la journey dont l'id est passé en paramètre
+ * Renvoie la journey dont l'id est en paramètre, dans un Service_Response
  * @param {number} journeyId 
  * @returns {Promise} 
  */
 exports.getOneJourney = async (journeyId) => {
+    const getOneJourneyError = JourneyErrorManager.getOneError(journeyId)
+    if (getOneJourneyError.hasError) 
+        return new Service_Response(undefined, 400, true, getOneJourneyError.error)
+
     return await JourneySeeker.getOneJourney(journeyId)
         .then(journey => {
             if (journey == null) return new Service_Response(undefined, 404, true, error)
@@ -56,31 +60,28 @@ exports.getOneJourney = async (journeyId) => {
         .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
-// LA
 /**
  * Modifie la journey à newJourneyId
  * NE TIENT PAS COMPTE DE newJourney.id
  * Envoie une erreur si l'utilisateur connecté n'est pas ownerId
  * Return la promise de l'update
- * @param {*} newJourneyId 
- * @param {*} newJourney 
- * @param {*} userAuthId 
- * @returns {Promise}
+ * @param {string} newJourneyId 
+ * @param {object} newJourney 
+ * @param {string} userAuthId 
+ * @returns {Service_Response}
  */
 exports.modifyOneJourney = async (newJourneyId, newJourney, userAuthId) => {
-    return await this.getOneJourney(newJourneyId)
+    // Utilise le service pour éviter la répétition de code
+    return await JourneySeeker.getOneJourney(journeyId)
         .then(currentJourneyResp => {
             if (currentJourneyResp.has_error) 
                 return currentJourneyResp
-            
-            delete newJourney._id
-            delete newJourney.ownerId
 
-            currentJourney = currentJourneyResp.result
+            // Vérification de la validité des données
+            const modifyError = JourneyErrorManager.getModifyError(newJourney, userAuthId, currentJourneyResp.result.ownerId)
+            if (modifyError.hasError) return new Service_Response(undefined, 400, true, modifyError.error)
             
-            if (currentJourney.ownerId != userAuthId)
-                return new Service_Response(undefined, 401, true, unauthorizedError)
-            return Journey.updateOne({ _id: newJourneyId }, { ...newJourney, _id: newJourneyId })
+            return JourneyFactory.updateJourney(newJourneyId, newJourney)
                 .then(() => (new Service_Response(undefined)).setLocation('/journey/' + newJourneyId))
                 .catch(error => new Service_Response(undefined, 500, true, error))
         })
@@ -97,9 +98,9 @@ exports.modifyOneJourney = async (newJourneyId, newJourney, userAuthId) => {
 exports.deleteOneJourney = async (journeyId, userAuthId) => {
     return await Journey.findOne({_id: journeyId})
         .then(journey => {
-            if (journey.ownerId != userAuthId)
-                return new Service_Response(undefined, 401, true, unauthorizedError)
-            return Journey.deleteOne({_id: journeyId})
+            const authError = JourneyErrorManager.verifyAuthentication(journey.ownerId, userAuthId)
+            if (authError.hasError) return new Service_Response(undefined, 401, true, authError.error)
+            return JourneyFactory.deleteJourney(journeyId)
                 .then(() => new Service_Response(undefined))
                 .catch(error => new Service_Response(undefined, 500, true, error))
         })

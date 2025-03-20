@@ -7,11 +7,19 @@
             }
         }
     },
-    "missingFields": {
+    "missingArg": {
         "errors": {
             "journey": {
                 "code": "missing-fields",
                 "name": "La requete ne dispose pas des attributs nécessaires (starting, arrival, date, seats, price)"
+            }
+        }
+    },
+    "missingId": {
+        "errors": {
+            "journey": {
+                "code": "missing-fields",
+                "name": "Il est nécessaire de renseigner une id pour obtenir la requete visée."
             }
         }
     },
@@ -28,6 +36,14 @@
             "journey": {
                 "code": "type-error",
                 "name": "Les types des variables ne correspondent pas aux attendus."
+            }
+        }
+    },
+    "nullError": {
+        "errors": {
+            "journey": {
+                "code": "type-error",
+                "name": "Les variables ne peuvent pas être nulles."
             }
         }
     }

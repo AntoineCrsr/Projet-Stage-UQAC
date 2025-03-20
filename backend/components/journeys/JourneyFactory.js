@@ -20,3 +20,21 @@ exports.createJourney = (userId, starting, arrival, date, seats, price) => {
         state: "w" // w = waiting, d = done
     })
 }
+
+/**
+ * @param {number} journeyId 
+ * @param {object} newJourney 
+ * @returns {Promise}
+ */
+exports.updateJourney = (journeyId, newJourney) => {
+    delete newJourney._id
+    delete newJourney.ownerId
+    return Journey.updateOne({ _id: journeyId }, { ...newJourney, _id: journeyId })
+}
+
+
+exports.deleteJourney = (journeyId) => {
+    return Journey.deleteOne({_id: journeyId})
+    // Peut-être prévenir les passagers que la journey a été supp / annulée
+    // Sinon considérer que tu ne peux pas la supp, seulement la passer dans l'état annuler ?
+} 
