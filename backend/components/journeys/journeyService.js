@@ -1,68 +1,29 @@
 const Journey = require("./journeyModel")
 const Service_Response = require("../workspace/service_response.js")
-
-
-let unauthorizedError = {
-    "errors": {
-        "journey": {
-            "code": "Unauthorized",
-            "name": "L'utilisateur cherchant éditer le trajet n'en est pas le propriétaire."
-        }
-    }
-}
-
-
-function verifyJourneyInformation(journeyJson, userId) {
-    // Présence de tous les champs nécessaires
-    if (
-        starting == undefined
-        || arrival == undefined
-        || date == undefined
-        || seats == undefined
-        || price == undefined
-    ) {
-        return new Service_Response(undefined, 401, true, {
-            "errors": {
-                "journey": {
-                    "code": "missing-fields",
-                    "name": "La requete ne dispose pas des attributs nécessaires (starting, arrival, date, seats, price)"
-                }
-            }
-        })
-    }
-
-    if (
-        seats < 0
-        || price < 0
-    ) {
-        return new Service_Response(undefined, 401, true, {
-            "errors": {
-                "journey": {
-                    "code": "bad-values",
-                    "name": "Les valeurs 'seats' ou 'price' doivent être >= 0."
-                }
-            }
-        })
-    }
-}
+const JourneyErrorManager = require("./JourneyError/JourneyErrorManager.js")
+const JourneyFactory = require("./JourneyFactory.js")
+const JourneySeeker = require("./JourneySeeker.js")
 
 /**
- * Crée une journey et retourne la promise de sa création
+ * Le role de ce service est de :
+ * 1. Lancer la vérifaction des données avec JourneyErrorManager
+ * 2. Lancer l'opération avec le ou les classes adaptées
+ */
+
+
+
+
+/**
+ * Vérifie les données et renvoie la Journey dans un Service_Response
  * @param {*} reqJourney 
- * @param {*} userId 
- * @returns {Promise}
+ * @param {string} userId 
+ * @returns {Service_Response}
  */
 exports.createJourney = async (reqJourney, userId) => {
-    const journey = new Journey({
-        ownerId: userId,
-        starting: reqJourney.starting,
-        arrival: reqJourney.arrival,
-        date: reqJourney.date,
-        seats: reqJourney.seats,
-        price: reqJourney.price,
-        passengers: [],
-        state: "w" // w = waiting, d = done
-    })
+    const creationError = JourneyErrorManager.getCreationError(reqJourney)
+    if (creationError.hasError) return new Service_Response(undefined, 400, true, creationError.error)
+
+    const journey = JourneyFactory.createJourney(userId, reqJourney.starting, reqJourney.arrival, reqJourney.date, reqJourney.seats, reqJourney.price)
     return await journey.save()
         .then(() => (new Service_Response(undefined, 201)).setLocation('/journey/' + journey.id))
         .catch(error => new Service_Response(undefined, 400, true, error))
@@ -70,11 +31,12 @@ exports.createJourney = async (reqJourney, userId) => {
 
 
 /**
- * Retourne les derniers journeys avec une limite de *limit*, trié par ordre décroissant
- * des dates
+ * Renvoie les dernières journeys dans la limite du paramètre limite (50 si non renseigné)
+ * @param {number} limit 
+ * @returns {Service_Response}
  */
 exports.getLastJourneys = async (limit=50) => {
-    return await Journey.find().sort({ date: -1 }).limit(limit)
+    return await JourneySeeker.getLastJourneys(limit)
         .then(elts => new Service_Response(elts))
         .catch(error => new Service_Response(undefined, 500, true, error))
 }
@@ -82,11 +44,11 @@ exports.getLastJourneys = async (limit=50) => {
 
 /**
  * Retourne une promise de la journey dont l'id est passé en paramètre
- * @param {*} journeyId 
+ * @param {number} journeyId 
  * @returns {Promise} 
  */
 exports.getOneJourney = async (journeyId) => {
-    return await Journey.findOne({_id: journeyId})
+    return await JourneySeeker.getOneJourney(journeyId)
         .then(journey => {
             if (journey == null) return new Service_Response(undefined, 404, true, error)
             return new Service_Response(journey)
@@ -94,7 +56,7 @@ exports.getOneJourney = async (journeyId) => {
         .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
-
+// LA
 /**
  * Modifie la journey à newJourneyId
  * NE TIENT PAS COMPTE DE newJourney.id

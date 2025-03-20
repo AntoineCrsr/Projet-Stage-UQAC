@@ -1,0 +1,34 @@
+{
+    "unauthorizedError": {
+        "errors": {
+            "journey": {
+                "code": "Unauthorized",
+                "name": "L'utilisateur cherchant éditer le trajet n'en est pas le propriétaire."
+            }
+        }
+    },
+    "missingFields": {
+        "errors": {
+            "journey": {
+                "code": "missing-fields",
+                "name": "La requete ne dispose pas des attributs nécessaires (starting, arrival, date, seats, price)"
+            }
+        }
+    },
+    "badValues": {
+        "errors": {
+            "journey": {
+                "code": "bad-values",
+                "name": "Les valeurs 'seats' ou 'price' doivent être >= 0."
+            }
+        }
+    },
+    "typeError": {
+        "errors": {
+            "journey": {
+                "code": "type-error",
+                "name": "Les types des variables ne correspondent pas aux attendus."
+            }
+        }
+    }
+}
