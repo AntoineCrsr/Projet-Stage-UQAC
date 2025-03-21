@@ -11,11 +11,9 @@ const JourneySeeker = require("./JourneySeeker.js")
  */
 
 
-
-
 /**
  * Vérifie les données et renvoie la Journey dans un Service_Response
- * @param {*} reqJourney 
+ * @param {object} reqJourney 
  * @param {string} userId 
  * @returns {Service_Response}
  */
@@ -62,9 +60,6 @@ exports.getOneJourney = async (journeyId) => {
 
 /**
  * Modifie la journey à newJourneyId
- * NE TIENT PAS COMPTE DE newJourney.id
- * Envoie une erreur si l'utilisateur connecté n'est pas ownerId
- * Return la promise de l'update
  * @param {string} newJourneyId 
  * @param {object} newJourney 
  * @param {string} userAuthId 
@@ -72,13 +67,13 @@ exports.getOneJourney = async (journeyId) => {
  */
 exports.modifyOneJourney = async (newJourneyId, newJourney, userAuthId) => {
     // Utilise le service pour éviter la répétition de code
-    return await JourneySeeker.getOneJourney(journeyId)
+    return await this.getOneJourney(newJourneyId)
         .then(currentJourneyResp => {
             if (currentJourneyResp.has_error) 
                 return currentJourneyResp
 
             // Vérification de la validité des données
-            const modifyError = JourneyErrorManager.getModifyError(newJourney, userAuthId, currentJourneyResp.result.ownerId)
+            const modifyError = JourneyErrorManager.getModifyError(newJourney, userAuthId, currentJourneyResp.result.ownerId, currentJourneyResp.result.seats)
             if (modifyError.hasError) return new Service_Response(undefined, 400, true, modifyError.error)
             
             return JourneyFactory.updateJourney(newJourneyId, newJourney)
@@ -91,9 +86,9 @@ exports.modifyOneJourney = async (newJourneyId, newJourney, userAuthId) => {
 /**
  * Supprime la journey en vérifiant que l'utilisateur qui le demande
  * en soit le propriétaire
- * @param {*} journeyId 
- * @param {*} userAuthId 
- * @returns 
+ * @param {string} journeyId 
+ * @param {string} userAuthId 
+ * @returns  {Service_Response}
  */
 exports.deleteOneJourney = async (journeyId, userAuthId) => {
     return await Journey.findOne({_id: journeyId})
