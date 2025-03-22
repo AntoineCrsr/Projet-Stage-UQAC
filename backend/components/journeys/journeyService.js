@@ -1,4 +1,4 @@
-const Journey = require("./journeyModel")
+const Journey = require("./journeyModel.js")
 const Service_Response = require("../workspace/service_response.js")
 const JourneyErrorManager = require("./JourneyError/JourneyErrorManager.js")
 const JourneyFactory = require("./JourneyFactory.js")
@@ -9,7 +9,6 @@ const JourneySeeker = require("./JourneySeeker.js")
  * 1. Lancer la vérifaction des données avec JourneyErrorManager
  * 2. Lancer l'opération avec le ou les classes adaptées
  */
-
 
 /**
  * Vérifie les données et renvoie la Journey dans un Service_Response
@@ -52,7 +51,7 @@ exports.getOneJourney = async (journeyId) => {
 
     return await JourneySeeker.getOneJourney(journeyId)
         .then(journey => {
-            if (journey == null) return new Service_Response(undefined, 404, true, error)
+            if (journey == null) return new Service_Response(undefined, 404, true)
             return new Service_Response(journey)
         })
         .catch(error => new Service_Response(undefined, 500, true, error))

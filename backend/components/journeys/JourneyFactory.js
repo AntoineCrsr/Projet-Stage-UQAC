@@ -33,6 +33,10 @@ exports.updateJourney = (journeyId, newJourney) => {
 }
 
 
+/**
+ * @param {string} journeyId 
+ * @returns {Promise}
+ */
 exports.deleteJourney = (journeyId) => {
     return Journey.deleteOne({_id: journeyId})
     // Peut-être prévenir les passagers que la journey a été supp / annulée

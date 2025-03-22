@@ -1,8 +1,12 @@
 const errorTable = require("./JourneyErrors.json")
 const ErrorReport = require("./ErrorReport")
 
+/**
+ * Teste les erreurs possibles de req pour réussir la création future de l'objet
+ * @param {object} req 
+ * @returns {ErrorReport}
+ */
 exports.getCreationError = (req) => {
-    console.log(req)
     // Présence de tous les champs nécessaires
     if (
         req.starting == undefined
@@ -58,6 +62,7 @@ exports.getCreationError = (req) => {
 
 
 /**
+ * Teste les erreurs pour le get d'une journey
  * @param {string} id 
  * @returns {ErrorReport}
  */
@@ -77,10 +82,10 @@ exports.getOneError = (id) => {
 
 
 /**
- * 
+ * Teste l'authentifaication
  * @param {string} ownerId 
  * @param {string} userAuthId 
- * @returns 
+ * @returns {ErrorReport}
  */
 exports.verifyAuthentication = (ownerId, userAuthId) => {
     if (ownerId != userAuthId) {
@@ -91,7 +96,7 @@ exports.verifyAuthentication = (ownerId, userAuthId) => {
 
 
 /**
- * 
+ * Cherche des erreurs avant la modification de l'objet
  * @param {object} req 
  * @param {string} userAuthId 
  * @param {string} ownerId 

@@ -1,12 +1,11 @@
-require("dotenv").config();
 const journeyService = require("./journeyService")
 
 /**
  * Créer un Journey selon journeyService
  * Nécessite le token JWT, preuve de la connexion du user
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
+ * @param {object} req 
+ * @param {object} res 
+ * @param {Function} next 
  */
 exports.createJourney = (req, res, next) => {
     journeyService.createJourney(req.body.journey, req.auth.userId)
@@ -15,9 +14,9 @@ exports.createJourney = (req, res, next) => {
 
 /**
  * Renvoie un tableau des (au plus) 20 derniers journeys
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
+ * @param {object} req 
+ * @param {object} res 
+ * @param {Function} next 
  */
 exports.getLastJourneys = (req, res, next) => {
     journeyService.getLastJourneys(20)
@@ -26,6 +25,9 @@ exports.getLastJourneys = (req, res, next) => {
 
 /**
  * Renvoie la journey dont l'id est à /api/journey/id
+ * @param {object} req 
+ * @param {object} res 
+ * @param {Function} next 
  */
 exports.getOneJourney = (req, res, next) => {
     journeyService.getOneJourney(req.params.id)
@@ -34,6 +36,9 @@ exports.getOneJourney = (req, res, next) => {
 
 /**
  * Modifie la journey selon journeyService, à l'id passée en param à /api/journey/id
+ * @param {object} req 
+ * @param {object} res 
+ * @param {Function} next 
  */
 exports.modifyOneJourney = (req, res, next) => {
     journeyService.modifyOneJourney(req.params.id, req.body.journey, req.auth.userId)
@@ -42,6 +47,9 @@ exports.modifyOneJourney = (req, res, next) => {
 
 /**
  * Supprime la journey selon journeyService
+ * @param {object} req 
+ * @param {object} res 
+ * @param {Function} next 
  */
 exports.deleteOneJourney = (req, res, next) => {
     journeyService.deleteOneJourney(req.params.id, req.auth.userId)
