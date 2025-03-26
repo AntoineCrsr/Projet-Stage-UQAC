@@ -1,5 +1,6 @@
 const ErrorReport = require("../../workspace/ErrorReport")
 const EmailVerifier = require("./emailVerifier")
+const errorTable = require("./UserErrors.json")
 
 /**
  * 
@@ -40,4 +41,44 @@ exports.userCreationError = (req) => {
     // Bon sens des valeurs
     if (!EmailVerifier.verifyEmail(req.email))
         return new ErrorReport(true, errorTable["badEmail"])
+}
+
+
+/**
+ * 
+ * @param {any} userEmail 
+ * @param {any} userPassword 
+ * @returns {ErrorReport}
+ */
+exports.userLoginInput = (userEmail, userPassword) => {
+    if (userEmail == undefined
+        || userPassword == undefined
+    )
+        return new ErrorReport(true, errorTable["loginBadArgs"])
+
+    if (typeof(userEmail) !== "string"
+    || typeof(userPassword) !== "string") 
+        return new ErrorReport(true, errorTable["loginBadArgs"])
+    
+}
+
+
+/**
+ * 
+ * @param {any} user 
+ * @returns {ErrorReport}
+ */
+exports.getErrorForNullUserLogin = (user) => {
+    if (user == null) return new ErrorReport(true, errorTable["badLoginPassword"])
+    return new ErrorReport(false)
+} 
+
+/**
+ * 
+ * @param {any} token 
+ * @returns {ErrorReport}
+ */
+exports.getErrorForNullTokenLogin = (token) => {
+    if (token == null) return new ErrorReport(true, errorTable["badLoginPassword"])
+        return new ErrorReport(false)
 }

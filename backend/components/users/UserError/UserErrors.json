@@ -1,7 +1,7 @@
 {
     "missingId": {
         "errors": {
-            "journey": {
+            "user": {
                 "code": "missing-fields",
                 "name": "Il est nécessaire de renseigner une id pour obtenir la requete visée."
             }
@@ -9,7 +9,7 @@
     },
     "typeError": {
         "errors": {
-            "journey": {
+            "user": {
                 "code": "type-error",
                 "name": "Les types des variables ne correspondent pas aux attendus."
             }
@@ -17,7 +17,7 @@
     },
     "missingArg": {
         "errors": {
-            "journey": {
+            "user": {
                 "code": "missing-fields",
                 "name": "La requete ne dispose pas des attributs nécessaires (email, password, ?preferredLangage)"
             }
@@ -25,9 +25,25 @@
     },
     "badEmail": {
         "errors": {
-            "journey": {
+            "user": {
                 "code": "bad-values",
                 "name": "L'email doit contenir un '@'"
+            }
+        }
+    },
+    "loginBadArgs": {
+        "errors": {
+            "user": {
+                "code": "bad-values",
+                "name": "La requête de login doit contenir un email (string) et un password (string)"
+            }
+        }
+    },
+    "badLoginPassword": {
+        "errors": {
+            "user": {
+                "code": "Wrong login or password",
+                "name": "La paire login / mot de passe est incorrecte."
             }
         }
     }

@@ -7,6 +7,7 @@ const Service_Response = require("../workspace/service_response.js")
 const emailSender = require("../workspace/emailSender")
 
 const UserErrorManager = require("./UserError/UserErrorManager.js")
+const UserConnexionManager = require("./UserConnexionManager.js")
 
 
 /**
@@ -33,7 +34,6 @@ exports.createUser = async (reqUser) => {
     const reqError = UserErrorManager.userCreationError(reqUser)
     if (reqError.hasError) return new Service_Response(undefined, 400, true, reqError.error)
 
-    // Pour l'instant sans vérification de validité de données (TODO?)
     UserFactory.createUser(reqUser.email, reqUser.password, reqUser.preferredLangage)
         .then(user => {
             return user.save()
@@ -47,46 +47,34 @@ exports.createUser = async (reqUser) => {
 
 
 /**
- * Checks if the user exists with the given email (throws an error otherwise), 
- * and compares passwords: throws an error if they are different, and returns the data to send
- * back to the user if correct 
- * @param userEmail the email of the user trying to connect
- * @param userPassword  the password of the user trying to connect
- * @returns the data to send back to the user, including the JWT token
+ * 
+ * @param {string} userEmail 
+ * @param {string} userPassword 
+ * @returns {Service_Response}
  */
 exports.verifyUserLogin = async (userEmail, userPassword) => {
-    const errorObject = new Service_Response(undefined, 403, true, {
-        "errors": {
-            "user": {
-                "code": "Wrong login or password",
-                "name": "La paire login / mot de passe est incorrecte."
-            }
-        }
-    })
-    return await User.findOne({email: userEmail})
+    const inputError = UserErrorManager.userLoginInput(userEmail, userPassword)
+    if (inputError.hasError) return new Service_Response(undefined, 400, true, inputError.error)
+
+    return await UserSeeker.getOneUserByEmail(userEmail)
         .then(user => {
-            if (user === null) {
-                return errorObject
-            } 
-            else {
-                return bcrypt.compare(userPassword, user.password)
-                    .then(valid => {
-                        if (!valid) {
-                            return new Service_Response(undefined, 403, true, errorObject)
-                        }
-                        else {
-                            return new Service_Response({
-                                _id: user._id,
-                                token: jwt.sign(
-                                    {userId: user._id},
-                                    process.env.JWT_KEY, 
-                                    { expiresIn: '24h' }
-                                )
-                            })
-                        }
-                    })
-                    .catch(error => new Service_Response(undefined, 500, true, error))
-            }
+            // Vérification que l'utilisateur existe
+            const isUserNullReport = UserErrorManager.getErrorForNullUserLogin(user)
+            if (isUserNullReport.hasError) return new Service_Response(undefined, 403, true, isUserNullReport.error)
+            
+            const token = UserConnexionManager.getToken(user.password, userPassword)
+            // Vérification couple login / mdp
+            const tokenError = UserErrorManager.getErrorForNullTokenLogin(token)
+            if (tokenError.hasError) return new Service_Response(undefined, 403, true, tokenError.error)
+            
+            return new Service_Response({
+                _id: user._id,
+                token: jwt.sign(
+                    {userId: user._id},
+                    process.env.JWT_KEY, 
+                    { expiresIn: '24h' }
+                )
+            })
         })
         .catch(error => new Service_Response(undefined, 400, true, error))
 }

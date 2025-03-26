@@ -22,6 +22,7 @@ Pour l'instant, on peut:
 En cours:
 > Vérification des données avant insertion (validité syntaxique et validité logique)
 --> Modification de la création du user en plusieurs étapes
+--> Scinder user en deux controleurs: auth (création / login) et user (modification / get)
 > Sécurisation (avis donnables qu'une fois par journey, à déterminer le reste)
 
 TODO:
