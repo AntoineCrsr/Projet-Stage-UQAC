@@ -63,6 +63,7 @@ exports.verifyUserLogin = async (userEmail, userPassword) => {
             if (isUserNullReport.hasError) return new Service_Response(undefined, 403, true, isUserNullReport.error)
             
             const token = UserConnexionManager.getToken(user.password, userPassword)
+
             // Vérification couple login / mdp
             const tokenError = UserErrorManager.getErrorForNullTokenLogin(token)
             if (tokenError.hasError) return new Service_Response(undefined, 403, true, tokenError.error)
@@ -81,91 +82,39 @@ exports.verifyUserLogin = async (userEmail, userPassword) => {
 
 
 /**
- * Ne gère pas une modification complète, seulement une modification spécifique à domaine (modif email,
- * password, phone, rating)
- * Division des modifications et ordre de priorité:
- * 1. Email
- * 2. Password
- * 3. publicName + firstName + lastName + isStudent + dateBirthday + aboutMe + alternateEmail + testimonial + imageUrl
- * 4. Phone
- * 5. Rating
- * 6. Parameters
- * @param newUser L'utilisateur passé dans la requete
- * @param userId  L'id de l'utilisateur de la requete PUT
- * @param userAuthId  L'id de l'utilisateur du token JWT
- * @returns un Service_Response adapté
- * */
+ * 
+ * @param {object} newUser 
+ * @param {string} userId 
+ * @param {string} userAuthId 
+ * @param {object} reqFile 
+ * @param {string} reqProtocol 
+ * @param {string} reqHost 
+ * @returns {Service_Response}
+ */
 exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, reqHost) => {
-    // Appelle la fonction associée pour chaque groupe de données (rootInfo, name, phone, ratings, parameters, statistics)
-    // Avant tout ça, récupère le user pour éviter de faire 36 appels
-    if (userId !== userAuthId) {
-        return new Service_Response(undefined, 401, true, {
-            "errors": {
-                "user": {
-                    "code": "Not authorized",
-                    "name": "L'utilisateur connecté tente de modifier un autre utilisateur."
-                }
-            }
-        })
-    }
-    return await User.findOne({_id: userId})
-        .then(async user => {
-            if (user === null || user.id !== userId) {
-                return new Service_Response(undefined, 404, true, {
-                    "errors": {
-                        "user": {
-                            "code": "Not found",
-                            "name": "L'utilisateur n'a pas été trouvé."
-                        }
-                    }
-                })
-            }
+    // Vérification des arguments
+    const inputError = UserErrorManager.getModificationError(newUser, userId, userAuthId, reqFile, reqProtocol, reqHost)
+    if (inputError.hasError) return new Service_Response(undefined, 400, true, inputError.error)
 
+    // Vérification des droits
+    let unauthorizedError = UserErrorManager.verifyAuthentication(userId, userAuthId)
+    if (unauthorizedError.hasError) return new Service_Response(undefined, 401, true, unauthorizedError.error)
+
+    return await UserSeeker.getOneUser(userId)
+        .then(async user => {
+            // 404
+            if (user == null) return new Service_Response(undefined, 404, true)
+            
             // Vérifie et dirige les infos
-            if (reqFile !== undefined) {
-                updateImage(user, reqFile, reqProtocol, reqHost)
-            }
-            else if (newUser !== undefined && newUser.email !== undefined) {
-                updateEmail(user, newUser.email)
-            }
-            else if (newUser !== undefined && newUser.password !== undefined) {
-                await updatePassword(user, newUser.password)
-            }
-            else if (
-                newUser !== undefined 
-                && newUser.name !== undefined
-                && newUser.name.publicName !== undefined
-                && newUser.name.firstName !== undefined
-                && newUser.name.lastName !== undefined
-                && newUser.isStudent !== undefined
-                && newUser.dateBirthday !== undefined
-            ) {
-                updateRootInfo(user, newUser) // Améliorer les params
-            }
-            else if (
-                newUser !== undefined 
-                && newUser.phone !== undefined
-                && newUser.phone.type !== undefined
-                && newUser.phone.prefix !== undefined
-                && newUser.phone.number !== undefined
-            ) {
-                updatePhone(user, newUser.phone)
-            }
-            else if (newUser !== undefined && newUser.rating !== undefined) {
-                updateRating(user, newUser.rating)
-            }
-            else if (newUser !== undefined && newUser.parameters !== undefined) {
-                updateParameters(user, newUser.parameters)
-            }
-            else {
-                return new Service_Response(undefined, 400, true, {
-                    "errors": {
-                        "user": {
-                            "code": "missing-fields",
-                            "name": "Certains attributs de la requête sont peut-être manquants."
-                        }
-                    }
-                })
+            if (reqFile !== undefined) UserFactory.modifyProfilePicture(user, reqFile, reqProtocol, reqHost)
+            else if (newUser.email != undefined) UserFactory.modifyEmail(user, email)
+            else if (newUser.password != undefined) UserFactory.modifyPassword(user, password)
+            else if (newUser.name != undefined) UserFactory.modifyName(user, newUser.firstName, newUser.lastName, newUser.publicName)
+            else if (newUser.phone != undefined) UserFactory.modifyPhone(user, newUser.phone.type, newUser.phone.prefix, newUser.phone.number, newUser.phone.phoneExt, newUser.phone.phoneDescription)
+            else if (newUser.parameters != undefined) {
+                if (newUser.parameters.show != undefined) UserFactory.modifyShowParameter(newUser.parameters.show.showAgePublically, newUser.parameters.show.showEmailPublically, newUser.parameters.show.showPhonePublically)
+                if (newUser.parameters.notification != undefined) UserFactory.modifyNotificationParameter(newUser.parameters.notification.sendNewsletter, newUser.parameters.notification.remindEvaluations, newUser.parameters.notification.remindDeparture)
+                if (newUser.parameters.preferredLangage != undefined) UserFactory.modifyPreferredLangage(user, newUser.parameters.preferredLangage)
             }
 
             return user.save()
@@ -173,183 +122,3 @@ exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, r
                 .catch(error => new Service_Response(undefined, 500, true, error))
         })
 }
-
-exports.verifyNonce = async (userInfo, userAuthId) => {
-    let missingFieldError = new Service_Response(undefined, 400, true, {
-        "errors": {
-            "user": {
-                "code": "missing-fields",
-                "name": "Certains attributs de la requête sont peut-être manquants."
-            }
-        }
-    })
-    let incorrectNonceError = new Service_Response(undefined, 400, true, {
-        "errors": {
-            "user": {
-                "code": "incorrect nonce",
-                "name": "La nonce donnée est incorrecte."
-            }
-        }
-    })
-    let nonceAlreadyVerified = new Service_Response(undefined, 400, true, {
-        "errors": {
-            "user": {
-                "code": "nonce already verified",
-                "name": "La nonce a déjà été vérifiée."
-            }
-        }
-    })
-    let validationConfirmed = new Service_Response(undefined)
-    // Vérification de données transmises
-    if (userInfo !== undefined) {
-        // Vérification connexion
-        if (userAuthId == undefined) {
-            return new Service_Response(undefined, 401, true)
-        }
-        // Récupération de l'objet user
-        return await User.findOne({_id: userAuthId})
-            .then(user => {
-                // Vérification du téléphone
-                if (userInfo.phoneNonce !== undefined) {
-                    // Nonce déjà vérifiée:
-                    if (user.hasVerifiedPhone) return nonceAlreadyVerified
-                    // Non vérifiée, et identicité:
-                    if (user.phoneNonce == userInfo.phoneNonce) {
-                        user.phoneNonce = undefined
-                        user.hasVerifiedPhone = true
-                        return user.save()
-                            .then(() => validationConfirmed)
-                            .catch(error => new Service_Response(undefined, 500, true, error))
-                    }
-                    return incorrectNonceError
-                }
-                // Vérification de l'email
-                else if (userInfo.emailNonce !== undefined) {
-                    // Nonce déjà vérifiée:
-                    if (user.hasVerifiedEmail) return nonceAlreadyVerified
-                    // Non vérifiée, et identicité:
-                    if (user.emailNonce == userInfo.emailNonce) {
-                        user.emailNonce = undefined
-                        user.hasVerifiedEmail = true
-                        return user.save()
-                            .then(() => validationConfirmed)
-                            .catch(error => new Service_Response(undefined, 500, true, error))
-                    }
-                    return incorrectNonceError
-                }
-                // Si aucun des attributs ne correspond...
-                return missingFieldError
-            })
-    }
-    else {
-        return missingFieldError
-    }
-}
-
-
-function updateRootInfo(user, rootInfo) {
-   // TODO vérifications
-   user.name = rootInfo.name
-   user.isStudent = rootInfo.isStudent
-   user.dateBirthday = rootInfo.dateBirthday
-   user.aboutMe = rootInfo.aboutMe
-   user.alternateEmail = rootInfo.alternateEmail
-   user.testimonial = rootInfo.testimonial
-}
-
-
-function updatePhone(user, phoneInfo) {
-    // TODO Verification d'info 
-    user.phone = phoneInfo
-    user.hasVerifiedPhone = false
-    let nonce = "000";
-    user.phoneNonce = nonce
-    sendPhoneValidation(phoneInfo.number, nonce)
-}
-
-
-function updateRating(user, ratingInfo) {
-    // Caclule les nouvelles statistiques en supposant vraie la formule suivante:
-    // newRating = (previous * nbPrevious + newBornRating) / nbPreviousRating+1
-    // nbRating += 1
-    // TODO Verification d'info 
-
-    nbRating = user.rating.nbRating
-
-    // Si on n'a jamais eu d'avis, on doit setup un nombre pour qu'il prenne le type
-    if (nbRating == 0) {
-        user.rating.punctualityRating = 0
-        user.rating.securityRating = 0
-        user.rating.comfortRating = 0
-        user.rating.courtesyRating = 0
-    }
-
-    newPunctualityRating = ((user.rating.punctualityRating * nbRating) + ratingInfo.punctualityRating)/(nbRating+1)
-    newSecurityRating = ((user.rating.securityRating * nbRating) + ratingInfo.securityRating)/(nbRating+1)
-    newComfortRating = ((user.rating.comfortRating * nbRating) + ratingInfo.comfortRating)/(nbRating+1)
-    newCourtesyRating = ((user.rating.courtesyRating * nbRating) + ratingInfo.courtesyRating)/(nbRating+1)
-    
-    user.rating.punctualityRating = newPunctualityRating
-    user.rating.securityRating = newSecurityRating
-    user.rating.comfortRating = newComfortRating
-    user.rating.courtesyRating = newCourtesyRating
-    user.rating.nbRating++
-}
-
-
-function updateParameters(user, parameterInfo) {
-    // TODO Verification d'info
-    if (parameterInfo.show !== undefined) {
-        if (parameterInfo.show.showAgePublically !== undefined) {
-            user.parameters.show.showAgePublically = parameterInfo.show.showAgePublically
-        }
-        if (parameterInfo.show.showEmailPublically !== undefined) {
-            user.parameters.show.showEmailPublically = parameterInfo.show.showEmailPublically
-        }
-        if (parameterInfo.show.showPhonePublically !== undefined) {
-            user.parameters.show.showPhonePublically = parameterInfo.show.showPhonePublically
-        }
-    }
-
-    if (parameterInfo.notification !== undefined) {
-        if (parameterInfo.notification.sendNewsletter !== undefined) {
-            user.parameters.notification.sendNewsletter = parameterInfo.notification.sendNewsletter
-        }
-        if (parameterInfo.notification.remindEvaluations !== undefined) {
-            user.parameters.notification.remindEvaluations = parameterInfo.notification.remindEvaluations
-        }
-        if (parameterInfo.notification.remindDeparture !== undefined) {
-            user.parameters.notification.remindDeparture = parameterInfo.notification.remindDeparture
-        }
-    }
-
-    if (parameterInfo.preferredLangage !== undefined) {
-        user.parameters.preferredLangage = parameterInfo.preferredLangage
-    }
-}
-
-function updateEmail(user, email) {
-    // TODO Verification d'info 
-    user.email = email
-    let nonce = "000";
-    user.emailNonce = nonce
-    user.hasVerifiedEmail = false
-    sendEmailValidation(email, nonce)
-}
-
-async function updatePassword(user, password) {
-    await bcrypt.hash(password, 10)
-        .then(hash => {
-            user.password = hash
-        })
-}
-
-function updateImage(user, reqFile, reqProtocol, reqHost) {
-    user.imageUrl = `${reqProtocol}://${reqHost}/images/${reqFile.filename}`
-}
-
-function sendEmailValidation(email, nonce) {
-    emailSender.sendEmail(email, `Email verification", "Hi !\n\nHere is your secret code to validate your email: ${nonce}\n\nHave a good day !`)
-}
-
-function sendPhoneValidation(phone, nonce) {}

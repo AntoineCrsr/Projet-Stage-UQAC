@@ -1,4 +1,12 @@
 {
+    "unauthorizedError": {
+        "errors": {
+            "user": {
+                "code": "unauthorized",
+                "name": "Vous n'êtes pas autorisé à modifier un compte dont vous n'êtes pas le propriétaire."
+            }
+        }
+    },
     "missingId": {
         "errors": {
             "user": {
@@ -23,11 +31,35 @@
             }
         }
     },
+    "missingLogin": {
+        "errors": {
+            "user": {
+                "code": "missing-action",
+                "name": "Vous devez être connecté pour effectuer cette action."
+            }
+        }
+    },
+    "missingArgModify": {
+        "errors": {
+            "user": {
+                "code": "missing-fields",
+                "name": "Votre requête ne contient aucun attribut."
+            }
+        }
+    },
     "badEmail": {
         "errors": {
             "user": {
                 "code": "bad-values",
-                "name": "L'email doit contenir un '@'"
+                "name": "L'email doit contenir un '@'."
+            }
+        }
+    },
+    "badPhone": {
+        "errors": {
+            "user": {
+                "code": "bad-values",
+                "name": "Le téléphone fourni est invalide."
             }
         }
     },
@@ -35,7 +67,7 @@
         "errors": {
             "user": {
                 "code": "bad-values",
-                "name": "La requête de login doit contenir un email (string) et un password (string)"
+                "name": "La requête de login doit contenir un email (string) et un password (string)."
             }
         }
     },
