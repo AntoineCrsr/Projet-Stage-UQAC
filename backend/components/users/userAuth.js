@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken')
 /**
  * Décode la requete incluant un token JWT et stocke
  * l'id utilisateur dans req.auth, puis lance le prochain middleware
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
+ * @param {object} req 
+ * @param {object} res 
+ * @param {Function} next 
  */
 module.exports = (req, res, next) => {
     try {

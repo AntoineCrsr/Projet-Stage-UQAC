@@ -1,95 +1,48 @@
 const User = require('./userModel')
+const UserSeeker = require("./userSeeker.js")
+const UserFactory = require("./userFactory.js")
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const Service_Response = require("../workspace/service_response.js")
 const emailSender = require("../workspace/emailSender")
-const crypto = require('crypto');
 
+const UserErrorManager = require("./UserError/UserErrorManager.js")
+
+
+/**
+ * 
+ * @param {string} userId 
+ * @returns {Service_Response}
+ */
 exports.getUser = async (userId) => {
-    return await User.findOne({_id: userId})
+    const reqError = UserErrorManager.getOneUserError(userId)
+    if (reqError.hasError) 
+        return new Service_Response(undefined, 400, true, reqError.error)
+
+    return await UserSeeker.getOneUser(userId)
         .then(user => new Service_Response(user, 302))
-        .catch(error => new Service_Response(undefined, 404, true))
+        .catch(error => new Service_Response(undefined, 404, true, error))
 }
 
 
 /**
- * Create the mongoDB user with information from the data in the request, and completed with default data
- * that can be modified in modify function
- * @param reqUser the user transmitted from the request 
- * @returns 
+ * @param {object} reqUser
+ * @returns {Service_Response}
  */
 exports.createUser = async (reqUser) => {
+    const reqError = UserErrorManager.userCreationError(reqUser)
+    if (reqError.hasError) return new Service_Response(undefined, 400, true, reqError.error)
+
     // Pour l'instant sans vérification de validité de données (TODO?)
-    return await bcrypt.hash(reqUser.password, 10)
-            .then(hash => {
-                const user = new User({
-                    email: reqUser.email,
-                    password: hash,
-                    isStudent: false,
-                    dateBirthday: reqUser.dateBirthday,
-                    aboutMe: undefined,
-                    alternateEmail: undefined,
-                    testimonial: undefined,
-                    imageUrl: undefined,
-
-                    name: {
-                        publicName: reqUser.name.firstName + " " + reqUser.name.lastName,
-                        firstName: reqUser.name.firstName,
-                        lastName: reqUser.name.lastName,
-                    },
-
-                    phone: {
-                        type: reqUser.phone.type,
-                        prefix: reqUser.phone.prefix,
-                        number: reqUser.phone.number,
-                        phoneExt: reqUser.phone.phoneExt,
-                        phoneDescription: reqUser.phone.phoneDescription
-                    },
-
-                    rating: {
-                        punctualityRating: undefined,
-                        securityRating: undefined,
-                        comfortRating: undefined,
-                        courtesyRating: undefined,
-                        nbRating: 0
-                    },
-
-                    parameters: {
-                        show: {
-                            showAgePublically: false,
-                            showEmailPublically: false,
-                            showPhonePublically: false,
-                        },
-                        notification: {
-                            sendNewsletter: false,
-                            remindEvaluations: false, // Envoie un mail pour rappeler d'évaluer un trajet qu'on a eu
-                            remindDeparture: false, // Envoie un mail pour vérifier l'identité de nos passagers avant d'embarquer
-                        },
-                        preferredLangage: reqUser.parameters.preferredLangage
-                    },
-
-                    statistics: {
-                        nbRidesCompleted: 0,
-                        nbKmTravelled: 0,
-                        nbPeopleTravelledWith: 0,
-                        nbTonsOfCO2Saved: 0,
-                    },
-
-                    emailNonce: "000",
-                    phoneNonce: "000",
-                    hasVerifiedEmail: false,
-                    hasVerifiedPhone: false
-                })
-                return user.save()
-                    .then(userData => {
-                        sendEmailValidation(userData.email, userData.emailNonce)
-                        sendPhoneValidation(userData.phone.number, userData.phoneNonce)
-                        userData.password = undefined
-                        return new Service_Response(userData, 201)
-                    })
-                    .catch(error => new Service_Response(undefined, 400, true, error))
-            })
-            .catch(error => new Service_Response(undefined, 500, true, error))
+    UserFactory.createUser(reqUser.email, reqUser.password, reqUser.preferredLangage)
+        .then(user => {
+            return user.save()
+                .then(userData =>
+                    (new Service_Response(undefined, 201)).setLocation("/api/user/" + userData._id)
+                )
+                .catch(error => new Service_Response(undefined, 400, true, error))
+        })
+        .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
 

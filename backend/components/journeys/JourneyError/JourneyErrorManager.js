@@ -1,5 +1,5 @@
 const errorTable = require("./JourneyErrors.json")
-const ErrorReport = require("./ErrorReport")
+const ErrorReport = require("../../workspace/ErrorReport")
 
 /**
  * Teste les erreurs possibles de req pour réussir la création future de l'objet

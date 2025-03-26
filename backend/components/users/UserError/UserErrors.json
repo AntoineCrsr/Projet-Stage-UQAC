@@ -1,0 +1,34 @@
+{
+    "missingId": {
+        "errors": {
+            "journey": {
+                "code": "missing-fields",
+                "name": "Il est nécessaire de renseigner une id pour obtenir la requete visée."
+            }
+        }
+    },
+    "typeError": {
+        "errors": {
+            "journey": {
+                "code": "type-error",
+                "name": "Les types des variables ne correspondent pas aux attendus."
+            }
+        }
+    },
+    "missingArg": {
+        "errors": {
+            "journey": {
+                "code": "missing-fields",
+                "name": "La requete ne dispose pas des attributs nécessaires (email, password, ?preferredLangage)"
+            }
+        }
+    },
+    "badEmail": {
+        "errors": {
+            "journey": {
+                "code": "bad-values",
+                "name": "L'email doit contenir un '@'"
+            }
+        }
+    }
+}
