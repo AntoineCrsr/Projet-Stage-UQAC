@@ -1,4 +1,5 @@
 const User = require("./userModel")
+const bcrypt = require("bcrypt")
 
 /**
  * 
@@ -13,8 +14,20 @@ exports.createUser = async (email, password, preferredLangage="FR") => {
                 email: email,
                 password: hash,
                 isStudent: false,
+                dateBirthday: null, 
+                aboutMe: null,
+                alternateEmail: null,
+                testimonial: null,
+                imageUrl: null,
+
+                name: null,
+                phone: null,
 
                 rating: {
+                    punctualityRating: null,
+                    securityRating: null,
+                    comfortRating: null,
+                    courtesyRating: null,
                     nbRating: 0
                 },
 
@@ -40,7 +53,9 @@ exports.createUser = async (email, password, preferredLangage="FR") => {
                 },
 
                 hasVerifiedEmail: false,
-                hasVerifiedPhone: false
+                hasVerifiedPhone: false,
+                emailNonce: null,
+                phoneNonce: null
             })
         })
 }

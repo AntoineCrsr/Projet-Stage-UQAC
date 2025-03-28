@@ -1,10 +1,6 @@
-const User = require('./userModel')
 const UserSeeker = require("./userSeeker.js")
 const UserFactory = require("./userFactory.js")
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 const Service_Response = require("../workspace/service_response.js")
-const emailSender = require("../workspace/emailSender")
 
 const UserErrorManager = require("./UserError/UserErrorManager.js")
 const UserConnexionManager = require("./UserConnexionManager.js")
@@ -22,7 +18,7 @@ exports.getUser = async (userId) => {
 
     return await UserSeeker.getOneUser(userId)
         .then(user => new Service_Response(user, 302))
-        .catch(error => new Service_Response(undefined, 404, true, error))
+        .catch(error => new Service_Response(undefined, 404, true))
 }
 
 
@@ -34,11 +30,11 @@ exports.createUser = async (reqUser) => {
     const reqError = UserErrorManager.userCreationError(reqUser)
     if (reqError.hasError) return new Service_Response(undefined, 400, true, reqError.error)
 
-    UserFactory.createUser(reqUser.email, reqUser.password, reqUser.preferredLangage)
+    return await UserFactory.createUser(reqUser.email, reqUser.password, reqUser.preferredLangage)
         .then(user => {
             return user.save()
                 .then(userData =>
-                    (new Service_Response(undefined, 201)).setLocation("/api/user/" + userData._id)
+                    (new Service_Response(undefined, 201)).setLocation("/user/" + userData._id)
                 )
                 .catch(error => new Service_Response(undefined, 400, true, error))
         })
@@ -62,20 +58,18 @@ exports.verifyUserLogin = async (userEmail, userPassword) => {
             const isUserNullReport = UserErrorManager.getErrorForNullUserLogin(user)
             if (isUserNullReport.hasError) return new Service_Response(undefined, 403, true, isUserNullReport.error)
             
-            const token = UserConnexionManager.getToken(user.password, userPassword)
-
-            // Vérification couple login / mdp
-            const tokenError = UserErrorManager.getErrorForNullTokenLogin(token)
-            if (tokenError.hasError) return new Service_Response(undefined, 403, true, tokenError.error)
-            
-            return new Service_Response({
-                _id: user._id,
-                token: jwt.sign(
-                    {userId: user._id},
-                    process.env.JWT_KEY, 
-                    { expiresIn: '24h' }
-                )
-            })
+            return UserConnexionManager.getToken(user.password, userPassword)
+                .then(token => {
+                    // Vérification couple login / mdp
+                    const tokenError = UserErrorManager.getErrorForNullTokenLogin(token)
+                    if (tokenError.hasError) return new Service_Response(undefined, 403, true, tokenError.error)
+                    
+                    return new Service_Response({
+                        _id: user._id,
+                        token: token
+                    })
+                })
+                .catch(error => new Service_Response(undefined, 500, true, error))
         })
         .catch(error => new Service_Response(undefined, 400, true, error))
 }
@@ -105,12 +99,13 @@ exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, r
             // 404
             if (user == null) return new Service_Response(undefined, 404, true)
             
-            // Vérifie et dirige les infos
+            // Direction du traitement des infos
             if (reqFile !== undefined) UserFactory.modifyProfilePicture(user, reqFile, reqProtocol, reqHost)
             else if (newUser.email != undefined) UserFactory.modifyEmail(user, email)
             else if (newUser.password != undefined) UserFactory.modifyPassword(user, password)
             else if (newUser.name != undefined) UserFactory.modifyName(user, newUser.firstName, newUser.lastName, newUser.publicName)
             else if (newUser.phone != undefined) UserFactory.modifyPhone(user, newUser.phone.type, newUser.phone.prefix, newUser.phone.number, newUser.phone.phoneExt, newUser.phone.phoneDescription)
+            else if (newUser.dateBirthday != undefined) UserFactory.modifyBirth(user, newUser.dateBirthday)
             else if (newUser.parameters != undefined) {
                 if (newUser.parameters.show != undefined) UserFactory.modifyShowParameter(newUser.parameters.show.showAgePublically, newUser.parameters.show.showEmailPublically, newUser.parameters.show.showPhonePublically)
                 if (newUser.parameters.notification != undefined) UserFactory.modifyNotificationParameter(newUser.parameters.notification.sendNewsletter, newUser.parameters.notification.remindEvaluations, newUser.parameters.notification.remindDeparture)

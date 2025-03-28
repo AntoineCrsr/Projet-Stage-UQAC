@@ -26,7 +26,7 @@ exports.signup = (req, res, next) => {
         user = req.body.user
     }
     userService.createUser(user)
-        .then(service_response => service_response.buildSimpleResponse(res))
+        .then(service_response => service_response.buildLocationResponse(res))
 }
 
 /**

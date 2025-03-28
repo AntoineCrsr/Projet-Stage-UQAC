@@ -20,16 +20,22 @@ Pour l'instant, on peut:
 > Créer, modifier, supprimer des voitures
 
 En cours:
+> Réparation MDP verif
 > Vérification des données avant insertion (validité syntaxique et validité logique)
 --> Modification de la création du user en plusieurs étapes
 --> Scinder user en deux controleurs: auth (création / login) et user (modification / get)
 > Sécurisation (avis donnables qu'une fois par journey, à déterminer le reste)
 
 TODO:
+> Login error si le signup est incomplet, IDEM pour la création de journeys etc. 
+> Faire en sorte que le register renvoie un token de login
+> Enlever l'attribut unique de email dans le modèle, et faire une classe de vérification dans la database IDEM pour le téléphone
 > Lors de la modification de l'état d'une journey à 'done', update les statistiques du conducteur / passagers
 > Vérifier les adresses avec l'API google maps?
 > Test de Journey incluant les erreurs
 
+Questionnement:
+> Pour enregistrer les infos, on doit pas laisser le user utiliser son compte s'il n'a pas de profil complet. Du coup comment gérer ça au niveau du login, est-ce que je dois laisser le login se faire (et peut-être mettre un "isUserValid" ?) 
 
 
 

@@ -25,15 +25,17 @@ exports.getOneUserError = (userId) => {
 
 exports.userCreationError = (req) => {
     // Présence de tous les champs nécessaires
-    if (req.email == undefined
+    if (req == undefined
+        || typeof(req) !== "object"
+        || req.email == undefined
         || req.password == undefined
     ) {
         return new ErrorReport(true, errorTable["missingArg"])
     }
 
     // Type des valeurs
-    if (typeof(req.email !== "string") 
-        || typeof(req.password !== "string")
+    if (typeof(req.email) !== "string"
+        || typeof(req.password) !== "string"
         || (req.preferredLangage != undefined && typeof(req.preferredLangage) !== "string")
     ) {
         return new ErrorReport(true, errorTable["typeError"])
@@ -42,6 +44,8 @@ exports.userCreationError = (req) => {
     // Bon sens des valeurs
     if (!EmailVerifier.verifyEmail(req.email))
         return new ErrorReport(true, errorTable["badEmail"])
+
+    return new ErrorReport(false)
 }
 
 
@@ -61,6 +65,7 @@ exports.userLoginInput = (userEmail, userPassword) => {
     || typeof(userPassword) !== "string") 
         return new ErrorReport(true, errorTable["loginBadArgs"])
     
+    return new ErrorReport(false)
 }
 
 
