@@ -20,8 +20,19 @@ exports.createUser = async (email, password, preferredLangage="FR") => {
                 testimonial: null,
                 imageUrl: null,
 
-                name: null,
-                phone: null,
+                name: {
+                    publicName: null,
+                    firstName: null,
+                    lastName: null
+                },
+
+                phone: {
+                    type: null,
+                    prefix: null,
+                    number: null,
+                    phoneExt: null,
+                    phoneDescription: null
+                },
 
                 rating: {
                     punctualityRating: null,
@@ -72,7 +83,7 @@ exports.createUser = async (email, password, preferredLangage="FR") => {
 exports.modifyName = (user, firstName, lastName, publicName) => {
     user.name.firstName = firstName
     user.name.lastName = lastName
-    if (publicName != null) user.name.publicName = firstName + " " + lastName
+    if (publicName == null) user.name.publicName = firstName + " " + lastName
     else user.name.publicName = publicName
     return user
 }

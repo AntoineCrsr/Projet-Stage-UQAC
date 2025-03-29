@@ -3,12 +3,12 @@ const jwt = require('jsonwebtoken')
 
 /**
  * 
- * @param {string} registredPassword 
+ * @param {User} user 
  * @param {string} reqPassword 
  * @returns {?object}
  */
-exports.getToken = async (registredPassword, reqPassword) => {
-    return await bcrypt.compare(registredPassword, reqPassword)
+exports.getToken = async (user, reqPassword) => {
+    return await bcrypt.compare(reqPassword, user.password)
         .then(valid => {
             if (!valid) {
                 return null

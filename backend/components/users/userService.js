@@ -33,8 +33,14 @@ exports.createUser = async (reqUser) => {
     return await UserFactory.createUser(reqUser.email, reqUser.password, reqUser.preferredLangage)
         .then(user => {
             return user.save()
-                .then(userData =>
-                    (new Service_Response(undefined, 201)).setLocation("/user/" + userData._id)
+                .then(userData => {
+                        return this.verifyUserLogin(reqUser.email, reqUser.password)
+                            .then(loginResponse => {
+                                if (loginResponse.has_error) return new Service_Response(undefined, 500, true, loginResponse.error_object)
+                                return loginResponse.setLocation("/auth/" + userData._id)
+                            })
+                            .catch(error => new Service_Response(undefined, 500, true, error))
+                    }
                 )
                 .catch(error => new Service_Response(undefined, 400, true, error))
         })
@@ -58,7 +64,7 @@ exports.verifyUserLogin = async (userEmail, userPassword) => {
             const isUserNullReport = UserErrorManager.getErrorForNullUserLogin(user)
             if (isUserNullReport.hasError) return new Service_Response(undefined, 403, true, isUserNullReport.error)
             
-            return UserConnexionManager.getToken(user.password, userPassword)
+            return UserConnexionManager.getToken(user, userPassword)
                 .then(token => {
                     // Vérification couple login / mdp
                     const tokenError = UserErrorManager.getErrorForNullTokenLogin(token)
@@ -98,12 +104,11 @@ exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, r
         .then(async user => {
             // 404
             if (user == null) return new Service_Response(undefined, 404, true)
-            
             // Direction du traitement des infos
             if (reqFile !== undefined) UserFactory.modifyProfilePicture(user, reqFile, reqProtocol, reqHost)
-            else if (newUser.email != undefined) UserFactory.modifyEmail(user, email)
-            else if (newUser.password != undefined) UserFactory.modifyPassword(user, password)
-            else if (newUser.name != undefined) UserFactory.modifyName(user, newUser.firstName, newUser.lastName, newUser.publicName)
+            else if (newUser.email != undefined) UserFactory.modifyEmail(user, newUser.email)
+            else if (newUser.password != undefined) UserFactory.modifyPassword(user, newUser.password)
+            else if (newUser.name != undefined) UserFactory.modifyName(user, newUser.name.firstName, newUser.name.lastName, newUser.name.publicName)
             else if (newUser.phone != undefined) UserFactory.modifyPhone(user, newUser.phone.type, newUser.phone.prefix, newUser.phone.number, newUser.phone.phoneExt, newUser.phone.phoneDescription)
             else if (newUser.dateBirthday != undefined) UserFactory.modifyBirth(user, newUser.dateBirthday)
             else if (newUser.parameters != undefined) {
