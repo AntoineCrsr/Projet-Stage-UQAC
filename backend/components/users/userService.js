@@ -107,13 +107,17 @@ exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, r
             // Direction du traitement des infos
             if (reqFile !== undefined) UserFactory.modifyProfilePicture(user, reqFile, reqProtocol, reqHost)
             else if (newUser.email != undefined) UserFactory.modifyEmail(user, newUser.email)
-            else if (newUser.password != undefined) UserFactory.modifyPassword(user, newUser.password)
+            else if (newUser.password != undefined) await UserFactory.modifyPassword(user, newUser.password)
             else if (newUser.name != undefined) UserFactory.modifyName(user, newUser.name.firstName, newUser.name.lastName, newUser.name.publicName)
             else if (newUser.phone != undefined) UserFactory.modifyPhone(user, newUser.phone.type, newUser.phone.prefix, newUser.phone.number, newUser.phone.phoneExt, newUser.phone.phoneDescription)
             else if (newUser.dateBirthday != undefined) UserFactory.modifyBirth(user, newUser.dateBirthday)
+            else if (newUser.aboutMe != undefined) UserFactory.modifyAboutMe(user, newUser.aboutMe)
+            else if (newUser.alternateEmail != undefined) UserFactory.modifyAlternateEmail(user, newUser.alternateEmail)
+            else if (newUser.testimonial != undefined) UserFactory.modifyTestimonial(user, newUser.testimonial)
+            else if (newUser.isStudent != undefined) UserFactory.modifyIsStudent(user, newUser.isStudent)
             else if (newUser.parameters != undefined) {
-                if (newUser.parameters.show != undefined) UserFactory.modifyShowParameter(newUser.parameters.show.showAgePublically, newUser.parameters.show.showEmailPublically, newUser.parameters.show.showPhonePublically)
-                if (newUser.parameters.notification != undefined) UserFactory.modifyNotificationParameter(newUser.parameters.notification.sendNewsletter, newUser.parameters.notification.remindEvaluations, newUser.parameters.notification.remindDeparture)
+                if (newUser.parameters.show != undefined) UserFactory.modifyShowParameter(user, newUser.parameters.show.showAgePublically, newUser.parameters.show.showEmailPublically, newUser.parameters.show.showPhonePublically)
+                if (newUser.parameters.notification != undefined) UserFactory.modifyNotificationParameter(user, newUser.parameters.notification.sendNewsletter, newUser.parameters.notification.remindEvaluations, newUser.parameters.notification.remindDeparture)
                 if (newUser.parameters.preferredLangage != undefined) UserFactory.modifyPreferredLangage(user, newUser.parameters.preferredLangage)
             }
 

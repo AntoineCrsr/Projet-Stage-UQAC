@@ -93,9 +93,11 @@ exports.modifyName = (user, firstName, lastName, publicName) => {
  * 
  * @param {User} user 
  * @param {string} dateBirthday 
+ * @returns {User}
  */
 exports.modifyBirth = (user, dateBirthday) => {
     user.dateBirthday = dateBirthday
+    return user
 }
 
 
@@ -167,6 +169,7 @@ exports.modifyPassword = async (user, password) => {
             user.password = hash
             return user
         })
+        .catch(error => console.error(error))
 }
 
 
@@ -189,7 +192,7 @@ exports.modifyPreferredLangage = (user, preferredLangage) => {
  * @param {Boolean} showPhonePublically 
  * @returns {User}
  */
-exports.modifyShowParameter = (showAgePublically, showEmailPublically, showPhonePublically) => {
+exports.modifyShowParameter = (user, showAgePublically, showEmailPublically, showPhonePublically) => {
     if (showAgePublically != undefined) user.parameters.show.showAgePublically = showAgePublically
     if (showEmailPublically != undefined) user.parameters.show.showEmailPublically = showEmailPublically
     if (showPhonePublically != undefined) user.parameters.show.showPhonePublically = showPhonePublically
@@ -203,9 +206,46 @@ exports.modifyShowParameter = (showAgePublically, showEmailPublically, showPhone
  * @param {Boolean} remindDeparture 
  * @returns {User}
  */
-exports.modifyNotificationParameter = (sendNewsletter, remindEvaluations, remindDeparture) => {
+exports.modifyNotificationParameter = (user, sendNewsletter, remindEvaluations, remindDeparture) => {
     if (sendNewsletter != undefined) user.parameters.notification.sendNewsletter = sendNewsletter
     if (remindEvaluations != undefined) user.parameters.notification.remindEvaluations = remindEvaluations
     if (remindDeparture != undefined) user.parameters.notification.remindDeparture = remindDeparture
+    return user
+}
+
+
+
+/**
+ * 
+ * @param {User} user 
+ * @param {string} aboutMe 
+ * @returns {User}
+ */
+exports.modifyAboutMe = (user, aboutMe) => {
+    user.aboutMe = aboutMe
+    return user
+}
+
+
+/**
+ * 
+ * @param {User} user 
+ * @param {string} alternateEmail 
+ * @returns {User}
+ */
+exports.modifyAlternateEmail = (user, alternateEmail) => {
+    user.alternateEmail = alternateEmail
+    return user
+}
+
+
+/**
+ * 
+ * @param {User} user 
+ * @param {string} testimonial 
+ * @returns {User}
+ */
+exports.modifyTestimonial = (user, testimonial) => {
+    user.testimonial = testimonial
     return user
 }

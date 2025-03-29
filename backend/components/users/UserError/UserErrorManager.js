@@ -120,6 +120,9 @@ exports.getModificationError = (newUser, userId, userAuthId, reqFile, reqProtoco
         && newUser.isStudent == undefined
         && newUser.parameters == undefined
         && newUser.dateBirthday == undefined
+        && newUser.aboutMe == undefined
+        && newUser.alternateEmail == undefined
+        && newUser.testimonial == undefined
     ) return new ErrorReport(true, errorTable["missingArgModify"])
     
     // Type des paramètres
@@ -131,6 +134,9 @@ exports.getModificationError = (newUser, userId, userAuthId, reqFile, reqProtoco
         && (newUser.isStudent == undefined && typeof(newUser.isStudent) !== "boolean")
         && (newUser.parameters == undefined && typeof(newUser.parameters) !== "object")
         && (newUser.dateBirthday == undefined && typeof(newUser.dateBirthday) !== "string")
+        && (newUser.aboutMe == undefined && typeof(newUser.aboutMe) !== "string")
+        && (newUser.alternateEmail == undefined && typeof(newUser.alternateEmail) !== "string")
+        && (newUser.testimonial == undefined && typeof(newUser.testimonial) !== "string")
     ) return new ErrorReport(true, errorTable["typeError"])
     
     // Vérification de l'email
