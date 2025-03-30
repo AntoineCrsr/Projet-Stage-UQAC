@@ -51,7 +51,7 @@
         "errors": {
             "user": {
                 "code": "bad-values",
-                "name": "L'email doit contenir un '@'."
+                "name": "L'email n'est pas valide."
             }
         }
     },

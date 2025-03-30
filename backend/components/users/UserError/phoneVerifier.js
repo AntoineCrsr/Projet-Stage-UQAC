@@ -1,3 +1,5 @@
+const requirements = require("./requirements.json")
+
 /**
  * Retourne vrai si le format du téléphone est valide
  * @param {object} phone 
@@ -8,15 +10,11 @@ exports.verifyPhone = (phone) => {
     if (phone.prefix == undefined || phone.number == undefined) return false
 
     // Vérification du préfixe
-    if (phone.prefix.length < 2
-        || phone.prefix.length > 4
-        || phone.prefix.indexOf("+") !== 0
-        || isNaN(phone.prefix.substring(1))
-    ) return false
+    if (!requirements.phone.prefix.includes(phone.prefix)) return false
 
     // Format du numéro
-    if (phone.number.length < 9
-        || phone.number.length > 11
+    if (phone.number.length < requirements.phone.number.sizeMin
+        || phone.number.length > requirements.phone.number.sizeMax
         || isNaN(phone.number)
     ) return false
 

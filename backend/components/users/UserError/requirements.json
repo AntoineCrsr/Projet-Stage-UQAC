@@ -1,0 +1,26 @@
+{
+    "phone": {
+        "type": [
+            "mobile",
+            "work"
+        ],
+        "prefix": [
+            "+1", "+33"
+        ],
+        "number": {
+            "sizeMin": 9,
+            "sizeMax": 11
+        }
+    },
+    "email": {
+        "containsAtLeast": [
+            ".",
+            "@"
+        ],
+        "suffix": [
+            "fr",
+            "com",
+            "ca"
+        ]
+    }
+}
