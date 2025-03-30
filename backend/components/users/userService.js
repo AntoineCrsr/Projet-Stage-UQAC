@@ -122,7 +122,41 @@ exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, r
             }
 
             return user.save()
-                .then(() => (new Service_Response(user, 200)))
+                .then(() => (new Service_Response(undefined, 200).setLocation("/auth/" + user._id)))
                 .catch(error => new Service_Response(undefined, 500, true, error))
         })
+}
+
+
+/**
+ * 
+ * @param {object} reqUser 
+ * @param {string} userId 
+ * @param {string} userAuthId 
+ * @param {string} forAttribute 
+ * @returns {Service_Response}
+ */
+exports.verifyNonce = async (reqUser, userId, userAuthId, forAttribute) => {
+    const nonceVerifError = UserErrorManager.getNonceVerifError(reqUser, userId, userAuthId)
+    if (nonceVerifError.hasError) 
+        return new Service_Response(undefined, 400, true, nonceVerifError.error)
+
+    return await UserSeeker.getOneUser(userId)
+        .then(user => {
+            const nonceToVerify = forAttribute === "email" ? user.emailNonce : user.phoneNonce
+            const isNonceCorrect = UserErrorManager.getNonceEqualsError(nonceToVerify, reqUser.nonce)
+            if (isNonceCorrect.hasError) 
+                return new Service_Response(undefined, 400, true, isNonceCorrect.error)
+            
+            if (forAttribute === "email") 
+                UserFactory.validateNonceEmail(user)
+            
+            else if (forAttribute === "phone") 
+                UserFactory.validateNoncePhone(user)
+
+            return user.save()
+                .then(() => (new Service_Response(undefined, 200).setLocation("/auth/" + user._id)))
+                .catch(error => new Service_Response(undefined, 500, true, error))
+        })
+    
 }

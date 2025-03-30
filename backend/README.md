@@ -20,13 +20,13 @@ Pour l'instant, on peut:
 > Créer, modifier, supprimer des voitures
 
 En cours:
-> Vérification des données avant insertion (validité syntaxique et validité logique)
---> Pour le type de téléphone
---> Autres choses ?
+> Nonce email + phone
+> Modifier controleur pour passer req au service et non user.email qui peut planter
 > Sécurisation (avis donnables qu'une fois par journey, à déterminer le reste)
 
 TODO:
 > Login error si le signup est incomplet, IDEM pour la création de journeys etc. 
+> Transformation des cars en Service_Response
 > Enlever l'attribut unique de email dans le modèle, et faire une classe de vérification dans la database IDEM pour le téléphone
 > Lors de la modification de l'état d'une journey à 'done', update les statistiques du conducteur / passagers
 > Vérifier les adresses avec l'API google maps?

@@ -12,7 +12,9 @@ router.post('/login', controller.login)
 
 router.post('/signup', controller.signup)
 
-router.post('/verify', auth, controller.verify)
+router.post('/:id/emailValidation', auth, controller.verifyEmailNonce)
+
+router.post('/:id/phoneValidation', auth, controller.verifyPhoneNonce)
 
 router.put('/:id', auth, multer, controller.modify)
 

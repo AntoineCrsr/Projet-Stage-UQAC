@@ -112,11 +112,17 @@ exports.modifyBirth = (user, dateBirthday) => {
  * @returns {User}
  */
 exports.modifyPhone = (user, type, prefix, number, phoneExt, phoneDescription) => {
+    let isChangingNumber = user.phone.number !== number
     user.phone.type = type
     user.phone.prefix = prefix
     user.phone.number = number
     user.phone.phoneExt = phoneExt
     user.phone.phoneDescription = phoneDescription
+
+    if (isChangingNumber) {
+        user.phoneNonce = "000"
+        user.hasVerifiedPhone = false
+    }
     return user
 }
 
@@ -152,7 +158,10 @@ exports.modifyProfilePicture = (user, reqFile, reqProtocol, reqHost) => {
  * @returns {User}
  */
 exports.modifyEmail = (user, email) => {
+    if (user.email === email) return user
     user.email = email
+    user.emailNonce = "000"
+    user.hasVerifiedEmail = false
     return user
 }
 
@@ -247,5 +256,18 @@ exports.modifyAlternateEmail = (user, alternateEmail) => {
  */
 exports.modifyTestimonial = (user, testimonial) => {
     user.testimonial = testimonial
+    return user
+}
+
+
+exports.validateNonceEmail = (user) => {
+    user.hasVerifiedEmail = true
+    user.emailNonce = null
+    return user
+}
+
+exports.validateNoncePhone = (user) => {
+    user.hasVerifiedPhone = true
+    user.phoneNonce = null
     return user
 }

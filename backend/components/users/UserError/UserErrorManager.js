@@ -163,3 +163,41 @@ exports.getModificationError = (newUser, userId, userAuthId, reqFile, reqProtoco
 
     return new ErrorReport(false)
 }
+
+
+/**
+ * 
+ * @param {object} reqUser 
+ * @param {string} userId 
+ * @param {string} userAuthId 
+ * @returns {ErrorReport}
+ */
+exports.getNonceVerifError = (reqUser, userId, userAuthId) => { 
+    if (userAuthId == undefined) 
+        return new ErrorReport(true, errorTable["missingLogin"])
+
+    if (userId == undefined)
+        return new ErrorReport(true, errorTable["thisShouldNotHappen"])
+    
+    if (reqUser == undefined || reqUser.nonce == undefined)
+        return new ErrorReport(true, errorTable["nonceMissing"])
+
+    return new ErrorReport(false)
+}
+
+
+/**
+ * 
+ * @param {string} dbNonce 
+ * @param {string} reqNonce 
+ * @returns {ErrorReport}
+ */
+exports.getNonceEqualsError = (dbNonce, reqNonce) => {
+    if (dbNonce == null)
+        return new ErrorReport(true, errorTable["nonceVerifNotRequired"])
+
+    if (dbNonce !== reqNonce)
+        return new ErrorReport(true, errorTable["nonceNotEquals"])
+
+    return new ErrorReport(false)
+}

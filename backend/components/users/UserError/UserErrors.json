@@ -7,6 +7,14 @@
             }
         }
     },
+    "thisShouldNotHappen": {
+        "errors": {
+            "user": {
+                "code": "internal-error",
+                "name": "Une erreur interne est survenue."
+            }
+        }
+    },
     "missingId": {
         "errors": {
             "user": {
@@ -76,6 +84,30 @@
             "user": {
                 "code": "Wrong login or password",
                 "name": "La paire login / mot de passe est incorrecte."
+            }
+        }
+    },
+    "nonceMissing": {
+        "errors": {
+            "user": {
+                "code": "missing-fields",
+                "name": "La nonce requis pour la vérification est requise."
+            }
+        }
+    },
+    "nonceNotEquals": {
+        "errors": {
+            "user": {
+                "code": "verification failed",
+                "name": "La nonce de la requête est invalide."
+            }
+        }
+    },
+    "nonceVerifNotRequired": {
+        "errors": {
+            "user": {
+                "code": "verification failed",
+                "name": "Cette requête n'est pas nécessaire."
             }
         }
     }

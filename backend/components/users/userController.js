@@ -54,13 +54,21 @@ exports.modify = (req, res, next) => {
 
 
 /**
- * Prend une req qui contient le nonce de l'utilisateur connecté (token dans authentification)
- * puis valide le num de téléphone, et si déjà vérifié, valide l'email. 
  * @param {object} req 
  * @param {object} res 
  * @param {Function} next 
  */
-exports.verify = (req, res, next) => {
-    userService.verifyNonce(req.body.user, req.auth.userId)
+exports.verifyEmailNonce = (req, res, next) => {
+    userService.verifyNonce(req.body.user, req.params.id, req.auth.userId, "email")
+        .then(service_response => service_response.buildSimpleResponse(res))
+}
+
+/**
+ * @param {object} req 
+ * @param {object} res 
+ * @param {Function} next 
+ */
+exports.verifyPhoneNonce = (req, res, next) => {
+    userService.verifyNonce(req.body.user, req.params.id, req.auth.userId, "phone")
         .then(service_response => service_response.buildSimpleResponse(res))
 }
