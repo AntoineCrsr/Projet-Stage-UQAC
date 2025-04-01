@@ -50,21 +50,20 @@ exports.createUser = async (reqUser) => {
 
 /**
  * 
- * @param {string} userEmail 
- * @param {string} userPassword 
+ * @param {User} reqUser
  * @returns {Service_Response}
  */
-exports.verifyUserLogin = async (userEmail, userPassword) => {
-    const inputError = UserErrorManager.userLoginInput(userEmail, userPassword)
+exports.verifyUserLogin = async (reqUser) => {
+    const inputError = UserErrorManager.userLoginInput(reqUser.email, reqUser.password)
     if (inputError.hasError) return new Service_Response(undefined, 400, true, inputError.error)
 
-    return await UserSeeker.getOneUserByEmail(userEmail)
+    return await UserSeeker.getOneUserByEmail(reqUser.email)
         .then(user => {
             // Vérification que l'utilisateur existe
             const isUserNullReport = UserErrorManager.getErrorForNullUserLogin(user)
             if (isUserNullReport.hasError) return new Service_Response(undefined, 403, true, isUserNullReport.error)
             
-            return UserConnexionManager.getToken(user, userPassword)
+            return UserConnexionManager.getToken(user, reqUser.password)
                 .then(token => {
                     // Vérification couple login / mdp
                     const tokenError = UserErrorManager.getErrorForNullTokenLogin(token)

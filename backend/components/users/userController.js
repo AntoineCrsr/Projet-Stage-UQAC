@@ -36,7 +36,7 @@ exports.signup = (req, res, next) => {
  * @param {Function} next 
  */
 exports.login = (req, res, next) => {
-    userService.verifyUserLogin(req.body.user.email, req.body.user.password)
+    userService.verifyUserLogin(req.body.user)
         .then(service_response => service_response.buildSimpleResponse(res))
 }
 
