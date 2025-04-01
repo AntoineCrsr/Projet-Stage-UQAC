@@ -20,14 +20,20 @@ Pour l'instant, on peut:
 > Créer, modifier, supprimer des voitures
 
 En cours:
-> Modification user (update des statistiques par exemple) à TESTER
-> Ajout d'image sur les users (profile picture)
+> Nonce email + phone
+> Modifier controleur pour passer req au service et non user.email qui peut planter
+> Sécurisation (avis donnables qu'une fois par journey, à déterminer le reste)
 
 TODO:
-> Ajout d'un état pour les journeys (en_attente, en_cours, done)
+> Login error si le signup est incomplet, IDEM pour la création de journeys etc. 
+> Transformation des cars en Service_Response
+> Enlever l'attribut unique de email dans le modèle, et faire une classe de vérification dans la database IDEM pour le téléphone
 > Lors de la modification de l'état d'une journey à 'done', update les statistiques du conducteur / passagers
 > Vérifier les adresses avec l'API google maps?
+> Test de Journey incluant les erreurs
 
+Questionnement:
+> Pour enregistrer les infos, on doit pas laisser le user utiliser son compte s'il n'a pas de profil complet. Du coup comment gérer ça au niveau du login, est-ce que je dois laisser le login se faire (et peut-être mettre un "isUserValid" ?) 
 
 
 

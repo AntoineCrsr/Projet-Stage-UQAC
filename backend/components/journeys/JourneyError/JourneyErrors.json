@@ -1,0 +1,66 @@
+{
+    "unauthorizedError": {
+        "errors": {
+            "journey": {
+                "code": "unauthorized",
+                "name": "L'utilisateur cherchant éditer le trajet n'en est pas le propriétaire."
+            }
+        }
+    },
+    "missingArg": {
+        "errors": {
+            "journey": {
+                "code": "missing-fields",
+                "name": "La requete ne dispose pas des attributs nécessaires (starting, arrival, date, seats, price)"
+            }
+        }
+    },
+    "missingId": {
+        "errors": {
+            "journey": {
+                "code": "missing-fields",
+                "name": "Il est nécessaire de renseigner une id pour obtenir la requete visée."
+            }
+        }
+    },
+    "badValues": {
+        "errors": {
+            "journey": {
+                "code": "bad-values",
+                "name": "Les valeurs 'seats' ou 'price' doivent être >= 0."
+            }
+        }
+    },
+    "typeError": {
+        "errors": {
+            "journey": {
+                "code": "type-error",
+                "name": "Les types des variables ne correspondent pas aux attendus."
+            }
+        }
+    },
+    "nullError": {
+        "errors": {
+            "journey": {
+                "code": "type-error",
+                "name": "Les variables ne peuvent pas être nulles."
+            }
+        }
+    },
+    "leftUpperThanTotal": {
+        "errors": {
+            "journey": {
+                "code": "consistency-error",
+                "name": "Le nombre de sièges libres doit être inférieur ou égal au nombre de sièges au total."
+            }
+        }
+    },
+    "incorrectState": {
+        "errors": {
+            "journey": {
+                "code": "consistency-error",
+                "name": "Le status d'une journey ne peut être que 'd' (done) ou 'w' (wainting)"
+            }
+        }
+    }
+}

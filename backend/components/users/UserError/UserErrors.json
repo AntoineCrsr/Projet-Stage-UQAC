@@ -1,0 +1,114 @@
+{
+    "unauthorizedError": {
+        "errors": {
+            "user": {
+                "code": "unauthorized",
+                "name": "Vous n'êtes pas autorisé à modifier un compte dont vous n'êtes pas le propriétaire."
+            }
+        }
+    },
+    "thisShouldNotHappen": {
+        "errors": {
+            "user": {
+                "code": "internal-error",
+                "name": "Une erreur interne est survenue."
+            }
+        }
+    },
+    "missingId": {
+        "errors": {
+            "user": {
+                "code": "missing-fields",
+                "name": "Il est nécessaire de renseigner une id pour obtenir la requete visée."
+            }
+        }
+    },
+    "typeError": {
+        "errors": {
+            "user": {
+                "code": "type-error",
+                "name": "Les types des variables ne correspondent pas aux attendus."
+            }
+        }
+    },
+    "missingArg": {
+        "errors": {
+            "user": {
+                "code": "missing-fields",
+                "name": "La requete ne dispose pas des attributs nécessaires (email, password, ?preferredLangage)"
+            }
+        }
+    },
+    "missingLogin": {
+        "errors": {
+            "user": {
+                "code": "missing-action",
+                "name": "Vous devez être connecté pour effectuer cette action."
+            }
+        }
+    },
+    "missingArgModify": {
+        "errors": {
+            "user": {
+                "code": "missing-fields",
+                "name": "Votre requête ne contient aucun attribut."
+            }
+        }
+    },
+    "badEmail": {
+        "errors": {
+            "user": {
+                "code": "bad-values",
+                "name": "L'email n'est pas valide."
+            }
+        }
+    },
+    "badPhone": {
+        "errors": {
+            "user": {
+                "code": "bad-values",
+                "name": "Le téléphone fourni est invalide."
+            }
+        }
+    },
+    "loginBadArgs": {
+        "errors": {
+            "user": {
+                "code": "bad-values",
+                "name": "La requête de login doit contenir un email (string) et un password (string)."
+            }
+        }
+    },
+    "badLoginPassword": {
+        "errors": {
+            "user": {
+                "code": "Wrong login or password",
+                "name": "La paire login / mot de passe est incorrecte."
+            }
+        }
+    },
+    "nonceMissing": {
+        "errors": {
+            "user": {
+                "code": "missing-fields",
+                "name": "La nonce requis pour la vérification est requise."
+            }
+        }
+    },
+    "nonceNotEquals": {
+        "errors": {
+            "user": {
+                "code": "verification failed",
+                "name": "La nonce de la requête est invalide."
+            }
+        }
+    },
+    "nonceVerifNotRequired": {
+        "errors": {
+            "user": {
+                "code": "verification failed",
+                "name": "Cette requête n'est pas nécessaire."
+            }
+        }
+    }
+}
