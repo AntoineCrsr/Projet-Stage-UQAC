@@ -65,7 +65,7 @@ exports.createUser = async (email, password, preferredLangage="FR") => {
 
                 hasVerifiedEmail: false,
                 hasVerifiedPhone: false,
-                emailNonce: null,
+                emailNonce: "000",
                 phoneNonce: null
             })
         })

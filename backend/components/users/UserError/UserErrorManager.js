@@ -2,6 +2,7 @@ const ErrorReport = require("../../workspace/ErrorReport")
 const EmailVerifier = require("./emailVerifier")
 const PhoneVerifier = require("./phoneVerifier")
 const errorTable = require("./UserErrors.json")
+const userSeeker = require("../userSeeker")
 
 /**
  * 
@@ -23,7 +24,7 @@ exports.getOneUserError = (userId) => {
 }
 
 
-exports.userCreationError = (req) => {
+exports.userCreationError = async (req) => {
     // Présence de tous les champs nécessaires
     if (req == undefined
         || typeof(req) !== "object"
@@ -45,7 +46,12 @@ exports.userCreationError = (req) => {
     if (!EmailVerifier.verifyEmail(req.email))
         return new ErrorReport(true, errorTable["badEmail"])
 
-    return new ErrorReport(false)
+    // Présence des attributs dans la db
+    return await userSeeker.emailExists(req.email)
+        .then(alreadyExist => alreadyExist ? 
+            new ErrorReport(true, errorTable["emailAlreadyExists"])
+            : new ErrorReport(false)
+        )
 }
 
 
@@ -199,5 +205,50 @@ exports.getNonceEqualsError = (dbNonce, reqNonce) => {
     if (dbNonce !== reqNonce)
         return new ErrorReport(true, errorTable["nonceNotEquals"])
 
+    return new ErrorReport(false)
+}
+
+
+/**
+ * 
+ * @param {User} user 
+ * @param {object} reqPhone 
+ * @returns {Promise}
+ */
+exports.getPhoneModificationError = async (userPhone, reqPhone) => {
+    return await userSeeker.phoneExists(reqPhone)
+        .then(phoneExists => {
+            if (userPhone.prefix == reqPhone.prefix && userPhone.number == reqPhone.number) return new ErrorReport(false)
+            return phoneExists ? new ErrorReport(true, errorTable["phoneAlreadyExists"]) 
+                        : new ErrorReport(false)
+        })
+}
+
+exports.getEmailModificationError = async (userEmail, reqEmail) => {
+    return await userSeeker.emailExists(reqEmail)
+        .then(alreadyExist => {
+            if (userEmail === reqEmail) return new ErrorReport(false)
+            return alreadyExist ? new ErrorReport(true, errorTable["emailAlreadyExists"])
+            : new ErrorReport(false)
+        }
+)
+}
+
+exports.getUserNotFoundError = (user) => {
+    if (user == null) return new ErrorReport(true, errorTable["userNotFound"]) 
+    return new ErrorReport(false)
+}
+
+exports.getModificationErrorKnowingUser = async (user, newUser) => {
+    if (newUser.phone != undefined) {
+        const phoneError = await this.getPhoneModificationError(user.phone, newUser.phone)
+        if (phoneError.hasError) return phoneError
+    }
+
+    if (newUser.email != undefined) {
+        const emailError = await this.getEmailModificationError(user.email, newUser.email)
+        if (emailError.hasError) return emailError
+    }
+    
     return new ErrorReport(false)
 }

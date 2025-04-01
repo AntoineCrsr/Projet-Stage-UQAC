@@ -4,6 +4,7 @@ const Service_Response = require("../workspace/service_response.js")
 
 const UserErrorManager = require("./UserError/UserErrorManager.js")
 const UserConnexionManager = require("./UserConnexionManager.js")
+const { error } = require("console")
 
 
 /**
@@ -27,21 +28,20 @@ exports.getUser = async (userId) => {
  * @returns {Service_Response}
  */
 exports.createUser = async (reqUser) => {
-    const reqError = UserErrorManager.userCreationError(reqUser)
-    if (reqError.hasError) return new Service_Response(undefined, 400, true, reqError.error)
+    const report = await UserErrorManager.userCreationError(reqUser)
+    if (report.hasError) return new Service_Response(undefined, 400, true, report.error)
 
-    return await UserFactory.createUser(reqUser.email, reqUser.password, reqUser.preferredLangage)
+    return UserFactory.createUser(reqUser.email, reqUser.password, reqUser.preferredLangage)
         .then(user => {
             return user.save()
                 .then(userData => {
-                        return this.verifyUserLogin(reqUser.email, reqUser.password)
-                            .then(loginResponse => {
-                                if (loginResponse.has_error) return new Service_Response(undefined, 500, true, loginResponse.error_object)
-                                return loginResponse.setLocation("/auth/" + userData._id)
-                            })
-                            .catch(error => new Service_Response(undefined, 500, true, error))
-                    }
-                )
+                    return this.verifyUserLogin(reqUser)
+                        .then(loginResponse => {
+                            if (loginResponse.has_error) return new Service_Response(undefined, 400, true, loginResponse.error_object)
+                            return loginResponse.setLocation("/auth/" + userData._id)
+                        })
+                        .catch(error => new Service_Response(undefined, 500, true, error))
+                })
                 .catch(error => new Service_Response(undefined, 400, true, error))
         })
         .catch(error => new Service_Response(undefined, 500, true, error))
@@ -101,9 +101,15 @@ exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, r
 
     return await UserSeeker.getOneUser(userId)
         .then(async user => {
-            // 404
-            if (user == null) return new Service_Response(undefined, 404, true)
-            // Direction du traitement des infos
+            // Vérification du not found
+            const notFoundError = UserErrorManager.getUserNotFoundError(user)
+            if (notFoundError.hasError) return new Service_Response(undefined, 404, true, notFoundError.error)
+            
+            // Vérification des infos sachant user
+            const report = await UserErrorManager.getModificationErrorKnowingUser(user, newUser)
+            if (report.hasError) return new Service_Response(undefined, 400, true, report.error)
+
+                // Direction du traitement des infos
             if (reqFile !== undefined) UserFactory.modifyProfilePicture(user, reqFile, reqProtocol, reqHost)
             else if (newUser.email != undefined) UserFactory.modifyEmail(user, newUser.email)
             else if (newUser.password != undefined) await UserFactory.modifyPassword(user, newUser.password)
