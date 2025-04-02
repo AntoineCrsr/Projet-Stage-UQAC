@@ -1,6 +1,7 @@
 const UserSeeker = require("./userSeeker.js")
 const UserFactory = require("./userFactory.js")
 const Service_Response = require("../workspace/service_response.js")
+const UserFilter = require("./UserFilter.js")
 
 const UserErrorManager = require("./UserError/UserErrorManager.js")
 const UserConnexionManager = require("./UserConnexionManager.js")
@@ -11,13 +12,19 @@ const UserConnexionManager = require("./UserConnexionManager.js")
  * @param {string} userId 
  * @returns {Service_Response}
  */
-exports.getUser = async (userId) => {
+exports.getUser = async (userId, showPrivate, userAuthId) => {
     const reqError = UserErrorManager.getOneUserError(userId)
     if (reqError.hasError) 
         return new Service_Response(undefined, 400, true, reqError.error)
-
+    console.log(userAuthId)
     return await UserSeeker.getOneUser(userId)
-        .then(user => new Service_Response(user, 302))
+        .then(user => {
+            const verifyPermission = UserErrorManager.getPrivateDataShowError(user.id, userAuthId, showPrivate)
+            if (verifyPermission.hasError) return new Service_Response(undefined, 401, true, verifyPermission.error)
+            
+            UserFilter.filterOneUser(user, showPrivate)
+            return new Service_Response(user, 302)
+        })
         .catch(error => new Service_Response(undefined, 404, true))
 }
 

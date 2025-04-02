@@ -3,6 +3,7 @@ const Car = require("./carModel")
 const CarFactory = require("./CarFactory.js")
 const CarErrorManager = require("./CarError/CarErrorManager.js")
 const CarSeeker = require("./CarSeeker.js")
+const CarFilter = require("./CarFilter.js")
 
 
 /**
@@ -28,12 +29,15 @@ exports.createCar = async (carJson, userAuthId, fileReq, protocolReq, reqHost) =
 
 exports.getAllCars = async () => {
     return await CarSeeker.getAll()
-        .then(cars => new Service_Response(cars))
+        .then(cars => { 
+            CarFilter.filterMultipleCars(cars)
+            return new Service_Response(cars)
+        })
         .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
 
-exports.getOneCar = async (carId) => {
+exports.getOneCar = async (carId, userAuthId, showPrivate) => {
     const verifyError = CarErrorManager.getOneCarError(carId)
     if (verifyError.hasError) return new Service_Response(undefined, 400, true, verifyError.error)
 
@@ -41,6 +45,11 @@ exports.getOneCar = async (carId) => {
         .then(car => {
             const notFoundError = CarErrorManager.getNotFound(car)
             if (notFoundError.hasError) return new Service_Response(undefined, 404, true, notFoundError.error)
+
+            const permissionPrivateError = CarErrorManager.verifyPrivatePermission(car.userId, userAuthId, showPrivate)
+            if (permissionPrivateError.hasError) return new Service_Response(undefined, 401, true, permissionPrivateError.error)
+            
+            CarFilter.filterOneCar(car, showPrivate)
             return new Service_Response(car, 302)
         })
         .catch(error => new Service_Response(undefined, 400, true, error))

@@ -260,3 +260,8 @@ exports.getModificationErrorKnowingUser = async (user, newUser) => {
     
     return new ErrorReport(false)
 }
+
+exports.getPrivateDataShowError = (userId, userAuthId, showData) => {
+    if (userId !== userAuthId && showData === "true") return new ErrorReport(true, errorTable["showDataNotAuth"])
+    return new ErrorReport(false)
+}

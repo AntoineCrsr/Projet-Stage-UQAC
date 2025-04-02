@@ -17,7 +17,7 @@ exports.createCar = (req, res, next) => {
         car = req.body.car
     }
     
-    carService.createCar(car, req.auth.userId, req.file, req.protocol, req.get('host'))
+    carService.createCar(car, req.auth ? req.auth.userId : null, req.file, req.protocol, req.get('host'))
         .then(service_response => service_response.buildLocationResponse(res))
 }
 
@@ -42,7 +42,7 @@ exports.getAllCars = (req, res, next) => {
  * @param {*} next 
  */
 exports.getOneCar = (req, res, next) => {
-    carService.getOneCar(req.params.id)
+    carService.getOneCar(req.params.id, req.auth ? req.auth.userId : null, req.query.private)
         .then(service_response => service_response.buildSimpleResponse(res))
 }
 
@@ -54,7 +54,7 @@ exports.getOneCar = (req, res, next) => {
  */
 exports.modifyOneCar = (req, res, next) => {
     let newCarReq = typeof(req.body.car) === "string" ? JSON.parse(req.body.car) : {...req.body.car}
-    carService.modifyOneCar(req.params.id, req.auth.userId, req.file, newCarReq, req.protocol, req.get('host'))
+    carService.modifyOneCar(req.params.id, req.auth ? req.auth.userId : null, req.file, newCarReq, req.protocol, req.get('host'))
         .then(service_response => service_response.buildLocationResponse(res))
 }
 
@@ -66,6 +66,6 @@ exports.modifyOneCar = (req, res, next) => {
  * @param {*} next 
  */
 exports.deleteOneCar = (req, res, next) => {
-    carService.deleteOneCar(req.params.id, req.auth.userId)
+    carService.deleteOneCar(req.params.id, req.auth ? req.auth.userId : null)
         .then(service_response => service_response.buildSimpleResponse(res))
 }

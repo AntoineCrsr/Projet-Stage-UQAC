@@ -3,6 +3,7 @@ const Service_Response = require("../workspace/service_response.js")
 const JourneyErrorManager = require("./JourneyError/JourneyErrorManager.js")
 const JourneyFactory = require("./JourneyFactory.js")
 const JourneySeeker = require("./JourneySeeker.js")
+const JourneyFilter = require("./JourneyFilter.js")
 
 /**
  * Le role de ce service est de :
@@ -38,7 +39,10 @@ exports.getLastJourneys = async (query, limit=50) => {
     if (verifConstraints.hasError) return new Service_Response(undefined, 400, true, verifConstraints.error)
 
     return await JourneySeeker.getLastJourneys(limit, query)
-        .then(elts => new Service_Response(elts))
+        .then(elts => {
+            JourneyFilter.filterMultipleJourneys(elts)
+            return new Service_Response(elts)
+        })
         .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
@@ -55,6 +59,7 @@ exports.getOneJourney = async (journeyId) => {
     return await JourneySeeker.getOneJourney(journeyId)
         .then(journey => {
             if (journey == null) return new Service_Response(undefined, 404, true)
+                JourneyFilter.filterOneJourney(journey)
             return new Service_Response(journey)
         })
         .catch(error => new Service_Response(undefined, 500, true, error))

@@ -46,5 +46,13 @@
                 "name": "Vous n'êtes pas autorisé à modifier une voiture qui ne vous appartient pas."
             }
         }
+    },
+    "unauthorizedPrivate": {
+        "errors": {
+            "car": {
+                "code": "unauthorized",
+                "name": "Vous n'êtes pas autorisé à accéder aux informations privées de cette voiture."
+            }
+        }
     }
 }

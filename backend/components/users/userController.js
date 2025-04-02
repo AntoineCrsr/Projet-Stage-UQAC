@@ -8,7 +8,7 @@ const userService = require("./userService")
  * @param {Function} next 
  */
 exports.getUser = (req, res, next) => {
-    userService.getUser(req.params.id)
+    userService.getUser(req.params.id, req.query.private, req.auth ? req.auth.userId : null)
         .then(service_response => service_response.buildSimpleResponse(res))
 }
 
@@ -48,7 +48,8 @@ exports.login = (req, res, next) => {
  * @param {Function} next 
  */
 exports.modify = (req, res, next) => {
-    userService.modifyUser(req.body.user, req.params.id, req.auth.userId, req.file, req.protocol, req.get('host'))
+    console.log(req.auth)
+    userService.modifyUser(req.body.user, req.params.id, req.auth ? req.auth.userId : null, req.file, req.protocol, req.get('host'))
         .then(service_response => service_response.buildSimpleResponse(res))
 }
 
@@ -59,7 +60,7 @@ exports.modify = (req, res, next) => {
  * @param {Function} next 
  */
 exports.verifyEmailNonce = (req, res, next) => {
-    userService.verifyNonce(req.body.user, req.params.id, req.auth.userId, "email")
+    userService.verifyNonce(req.body.user, req.params.id, req.auth ? req.auth.userId : null, "email")
         .then(service_response => service_response.buildSimpleResponse(res))
 }
 
@@ -69,6 +70,6 @@ exports.verifyEmailNonce = (req, res, next) => {
  * @param {Function} next 
  */
 exports.verifyPhoneNonce = (req, res, next) => {
-    userService.verifyNonce(req.body.user, req.params.id, req.auth.userId, "phone")
+    userService.verifyNonce(req.body.user, req.params.id, req.auth ? req.auth.userId : null, "phone")
         .then(service_response => service_response.buildSimpleResponse(res))
 }
