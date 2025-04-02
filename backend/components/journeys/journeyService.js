@@ -29,15 +29,18 @@ exports.createJourney = async (reqJourney, userId) => {
 
 /**
  * Renvoie les dernières journeys dans la limite du paramètre limite (50 si non renseigné)
+ * @param {object} query 
  * @param {number} limit 
  * @returns {Service_Response}
  */
-exports.getLastJourneys = async (limit=50) => {
-    return await JourneySeeker.getLastJourneys(limit)
+exports.getLastJourneys = async (query, limit=50) => {
+    const verifConstraints = JourneyErrorManager.getConstraintsJourneys(query)
+    if (verifConstraints.hasError) return new Service_Response(undefined, 400, true, verifConstraints.error)
+
+    return await JourneySeeker.getLastJourneys(limit, query)
         .then(elts => new Service_Response(elts))
         .catch(error => new Service_Response(undefined, 500, true, error))
 }
-
 
 /**
  * Renvoie la journey dont l'id est en paramètre, dans un Service_Response

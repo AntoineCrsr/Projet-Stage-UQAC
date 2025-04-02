@@ -9,6 +9,8 @@ const Journey = require("./journeyModel")
  * @returns {Journey}
  */
 exports.createJourney = (userId, starting, arrival, date, seats, price) => {
+    starting.city = starting.city.toLowerCase()
+    arrival.city = arrival.city.toLowerCase()
     return new Journey({
         ownerId: userId,
         starting: starting,
