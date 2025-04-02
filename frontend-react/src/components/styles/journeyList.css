@@ -23,3 +23,17 @@
 .journey-table tbody tr:hover {
     background-color: #ceeff9;
 }
+
+.btn-details-liste {
+    display: inline-block;
+    padding: 10% 25%;
+    background-color: #047d9b;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.btn-details-liste:hover {
+    background-image: var(--component-gradient);
+}

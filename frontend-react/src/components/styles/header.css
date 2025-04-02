@@ -1,3 +1,5 @@
+/* TODO : le title dans le header n'est pas responsive, à fixer */
+
 .header {
     position: relative;
     display: flex;

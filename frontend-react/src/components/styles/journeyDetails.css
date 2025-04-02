@@ -1,0 +1,45 @@
+.journey-container {
+    padding: 40px;
+    position: relative;
+}
+
+.btn-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1.2rem;
+    background-color: rgb(193, 191, 191);
+    border: none;
+    color: black;
+}
+
+.journey-content {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 60px;
+}
+
+.journey-infos {
+    flex: 1;
+    font-size: 1.1rem;
+}
+
+.btn-reserver {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    padding: 12px 20px;
+    background-color: #047d9b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-reserver:hover {
+    background-color: #035a6d;
+}
