@@ -7,7 +7,6 @@ import JourneyList from "../components/journeyList";
 const Home = () => {
   return (
     <div>
-      <Header />
       <main>
         <JourneyForm />
         <JourneyList />

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./styles/journeyList.css";
+import { Link } from "react-router-dom";
 
 const JourneyList = () => {
   const [journeys, setJourneys] = useState([]);
@@ -31,7 +32,7 @@ const JourneyList = () => {
               <th>Date</th>
               <th>Places</th>
               <th>Prix</th>
-              <th>Ouaip</th>
+              <th>details/reservation</th>
             </tr>
           </thead>
           <tbody>
@@ -42,8 +43,7 @@ const JourneyList = () => {
                 <td>{journey.date}</td>
                 <td>{journey.seats.left}/{journey.seats.total}</td>
                 <td>{journey.price} $ CAD</td>
-                <td> <a href="">détails/reserver</a></td>
-
+                <td> <Link to={`/journey/${journey._id}`} className="btn-details-liste">details/reserver</Link></td>
               </tr>
             ))}
           </tbody>
