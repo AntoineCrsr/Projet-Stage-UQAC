@@ -134,5 +134,13 @@
                 "name": "L'utilisateur n'a pas été trouvé."
             }
         }
+    },
+    "showDataNotAuth": {
+        "errors": {
+            "user": {
+                "code": "unauthorized",
+                "name": "Vous n'avez pas le droit d'afficher les informations privées d'un utilisateur autre que vous-même."
+            }
+        }
     }
 }

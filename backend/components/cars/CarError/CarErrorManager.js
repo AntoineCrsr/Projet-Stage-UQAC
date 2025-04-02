@@ -74,3 +74,9 @@ exports.getAuthError = (authId, ownerId) => {
     if (authId !== ownerId) return new ErrorReport(true, errorTable["unauthorized"])
     return new ErrorReport(false)
 }
+
+
+exports.verifyPrivatePermission = (ownerId, userAuthId, showPrivate) => {
+    if (ownerId !== userAuthId && showPrivate === "true") return new ErrorReport(true, errorTable["unauthorizedPrivate"])
+    return new ErrorReport(false)
+}
