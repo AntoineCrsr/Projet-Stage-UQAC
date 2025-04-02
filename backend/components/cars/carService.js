@@ -1,6 +1,5 @@
 const Service_Response = require("../workspace/service_response.js")
 const Car = require("./carModel")
-const fs = require('fs');
 const CarFactory = require("./CarFactory.js")
 const CarErrorManager = require("./CarError/CarErrorManager.js")
 const CarSeeker = require("./CarSeeker.js")
@@ -76,18 +75,20 @@ exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol, reqH
 
 
  exports.deleteOneCar = async (id, userAuthId) => {
-    return await Car.findOne({_id: id})
+    const verifId = CarErrorManager.getOneCarError(id)
+    if (verifId.hasError) return new Service_Response(undefined, 400, true, verifId.error)
+
+    return await CarSeeker.getOne(id)
         .then(car => {
-            if (userAuthId !== car.userId) {
-                return new Service_Response(undefined, 401, true)
-            } else {
-                if (car.imageUrl) {
-                    const filename = car.imageUrl.split('/images/')[1];
-                    fs.unlink(`images/${filename}`);
-                }
-                return Car.deleteOne({_id: id})
+            const notFound = CarErrorManager.getNotFound(car)
+            if (notFound.hasError) return new Service_Response(undefined, 404, true, authError.error)
+
+            const authError = CarErrorManager.getAuthError(userAuthId, car.userId)
+            if (authError.hasError) return new Service_Response(undefined, 401, true, authError.error)
+            else {
+                return CarFactory.deleteCar(id, car.imageUrl)
                     .then(() => new Service_Response(undefined))
-                    .catch(error => new Service_Response(undefined, 400, true, error))
+                    .catch(error => {console.log(error); return new Service_Response(undefined, 400, true, error)})
             }
         })
         .catch(error => new Service_Response(undefined, 404, true, error))
