@@ -21,6 +21,7 @@ TODO:
 > Filtrer les données dans les fonctions get
 > Lors de la modification de l'état d'une journey à 'done', update les statistiques du conducteur / passagers
 > Vérifier les adresses avec l'API google maps?
+> Vérifier la cohérence des attributs de car (couleur, model etc.) // model --> API ?
 > Test de Journey incluant les erreurs
 
 

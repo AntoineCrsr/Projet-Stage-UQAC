@@ -146,17 +146,20 @@ exports.getModificationError = (newUser, userId, userAuthId, reqFile, reqProtoco
     ) return new ErrorReport(true, errorTable["typeError"])
     
     // Vérification de l'email
-    if (newUser.email != undefined
+    if (newUser != undefined 
+        && newUser.email != undefined
         && !EmailVerifier.verifyEmail(newUser.email)
     ) return new ErrorReport(true, errorTable["badEmail"])
 
     // Vérification du téléphone
-    if (newUser.phone != undefined
+    if (newUser != undefined
+        && newUser.phone != undefined
         && !PhoneVerifier.verifyPhone(newUser.phone)
     ) return new ErrorReport(true, errorTable["badPhone"])
 
     // Vérification des paramètres
-    if (newUser.parameters != undefined
+    if (newUser != undefined
+        && newUser.parameters != undefined
         && (newUser.parameters.show != undefined)
             && ((newUser.parameters.show.showAgePublically != null && typeof(newUser.parameters.show.showAgePublically) !== "boolean")
              && (newUser.parameters.show.showEmailPublically != null && typeof(newUser.parameters.show.showEmailPublically) !== "boolean")
@@ -240,11 +243,16 @@ exports.getUserNotFoundError = (user) => {
 }
 
 exports.getModificationErrorKnowingUser = async (user, newUser) => {
+    // Modification d'une image
+    if (newUser == undefined) return new ErrorReport(false)
+
+    // Modification d'un phone
     if (newUser.phone != undefined) {
         const phoneError = await this.getPhoneModificationError(user.phone, newUser.phone)
         if (phoneError.hasError) return phoneError
     }
 
+    // Modification d'un email
     if (newUser.email != undefined) {
         const emailError = await this.getEmailModificationError(user.email, newUser.email)
         if (emailError.hasError) return emailError
