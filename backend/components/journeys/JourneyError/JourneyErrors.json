@@ -62,5 +62,21 @@
                 "name": "Le status d'une journey ne peut être que 'd' (done) ou 'w' (wainting)"
             }
         }
+    },
+    "badResearch": {
+        "errors": {
+            "journey": {
+                "code": "bad values",
+                "name": "La recherche demandée est incorrecte, doit contenir au moins un des 3 attributs: starting (string), arrival (string), date (string)"
+            }
+        }
+    },
+    "researchTypeError": {
+        "errors": {
+            "journey": {
+                "code": "bad values",
+                "name": "Les attributs de la recherche sont invalides: starting (string), arrival (string), date (string)"
+            }
+        }
     }
 }

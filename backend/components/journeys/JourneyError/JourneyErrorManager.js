@@ -174,3 +174,24 @@ exports.getModifyError = (req, userAuthId, ownerId, seats) => {
 
     return new ErrorReport(false)
 }
+
+
+exports.getConstraintsJourneys = (constraints) => {
+    if (constraints != undefined) {
+        if (
+            ((constraints.starting != null && typeof(constraints.starting) !== "string")
+            || (constraints.arrival != null && typeof(constraints.arrival) !== "string")
+            || (constraints.date != null && typeof(constraints.date) !== "string"))
+        )
+        return new ErrorReport(true, errorTable["researchTypeError"])
+    
+        // Format de la date
+        try {
+            const date = new Date(constraints.date)
+        } 
+        catch (e) {
+            return new ErrorReport(true, errorTable["researchTypeError"])
+        }
+    }
+    return new ErrorReport(false)
+}

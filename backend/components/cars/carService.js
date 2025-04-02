@@ -88,8 +88,8 @@ exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol, reqH
             else {
                 return CarFactory.deleteCar(id, car.imageUrl)
                     .then(() => new Service_Response(undefined))
-                    .catch(error => {console.log(error); return new Service_Response(undefined, 400, true, error)})
+                    .catch(error => new Service_Response(undefined, 400, true, error))
             }
         })
-        .catch(error => new Service_Response(undefined, 404, true, error))
+        .catch(error => new Service_Response(undefined, 400, true, error))
 }

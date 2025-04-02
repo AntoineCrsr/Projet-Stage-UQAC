@@ -19,7 +19,7 @@ exports.createJourney = (req, res, next) => {
  * @param {Function} next 
  */
 exports.getLastJourneys = (req, res, next) => {
-    journeyService.getLastJourneys(20)
+    journeyService.getLastJourneys(req.query, 20)
         .then(service_response => service_response.buildSimpleResponse(res))
 }
 
@@ -55,4 +55,3 @@ exports.deleteOneJourney = (req, res, next) => {
     journeyService.deleteOneJourney(req.params.id, req.auth.userId)
         .then(service_response => service_response.buildSimpleResponse(res))
 }
-
