@@ -1,3 +1,25 @@
-div.journeyList{
+.journey-list-wrapper {
+    max-width: 800px;
+    margin: 40px auto;
     text-align: center;
+}
+
+.journey-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.journey-table th,
+.journey-table td {
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+}
+
+.journey-table thead {
+    color: white;
+}
+
+.journey-table tbody tr:hover {
+    background-color: #ceeff9;
 }

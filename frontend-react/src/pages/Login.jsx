@@ -27,10 +27,6 @@ const Login = () => {
         ) : (
           // Formulaire d'Inscription
           <form>
-            <div className="input-group">
-              <label>Nom</label>
-              <input type="text" placeholder="Entrez votre nom" />
-            </div>
 
             <div className="input-group">
               <label>Email</label>

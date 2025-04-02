@@ -2,13 +2,14 @@
     --bg-color: #ffffff;
     --text-color: #000000;
     --component-gradient: linear-gradient(to right, #034123, #047d9b);
+    --hover-color: #c3f3f7;
 }
 
 [data-theme="dark"] {
     --bg-color: #121212;
     --text-color: #f0f0f0;
     --component-gradient: linear-gradient(to right, #002412, #002129);
-
+    --hover-color: #232424;
 }
 
 body {
@@ -19,4 +20,13 @@ body {
 header, .footer-container, .search-container {
     background-image: var(--component-gradient);
     color: var(--text-color);
+}
+
+.journey-table thead{
+    background-image: var(--component-gradient);
+    color: var(--text-color);
+}
+
+.journey-table tbody tr:hover{
+    background-color: var(--hover-color);
 }

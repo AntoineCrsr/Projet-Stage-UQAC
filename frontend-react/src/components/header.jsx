@@ -25,7 +25,7 @@ const Header = () => {
     <header className="header">
       <h1 className="title">Travel Express</h1>
       <button className="theme" onClick={toggleTheme}>
-        {theme === "light" ? "🌙 Mode Sombre" : "☀️ Mode Clair"}
+        {theme === "light" ? "🌙" : "☀️"}
       </button>
       <button className="login-header" onClick={handleLoginClick}> Se connecter</button>
     </header>
