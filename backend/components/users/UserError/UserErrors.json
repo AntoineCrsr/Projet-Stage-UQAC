@@ -110,5 +110,29 @@
                 "name": "Cette requête n'est pas nécessaire."
             }
         }
+    },
+    "emailAlreadyExists": {
+        "errors": {
+            "user": {
+                "code": "verification failed",
+                "name": "Un utilisateur utilise déjà cette email."
+            }
+        }
+    },
+    "phoneAlreadyExists": {
+        "errors": {
+            "user": {
+                "code": "verification failed",
+                "name": "Un utilisateur utilise déjà ce numéro de téléphone."
+            }
+        }
+    },
+    "userNotFound": {
+        "errors": {
+            "user": {
+                "code": "not found",
+                "name": "L'utilisateur n'a pas été trouvé."
+            }
+        }
     }
 }

@@ -1,31 +1,10 @@
 const Service_Response = require("../workspace/service_response.js")
 const Car = require("./carModel")
 const fs = require('fs');
+const CarFactory = require("./CarFactory.js")
+const CarErrorManager = require("./CarError/CarErrorManager.js")
+const CarSeeker = require("./CarSeeker.js")
 
-
-function verifyCarInformation(carJson) {
-    console.log(carJson)
-    if (
-        carJson.carType == undefined
-        || carJson.manufacturer == undefined
-        || carJson.year == undefined
-        || carJson.model == undefined
-        || carJson.color
-        || carJson.licensePlate == undefined
-        || carJson.airConditioner == undefined
-        || carJson.name == undefined
-    ) {
-        return new Service_Response(undefined, 400, true, {
-            "errors": {
-                "car": {
-                    "code": "missing-fields",
-                    "name": "La requete ne dispose pas des attributs nécessaires (carType, manufacturer, year, model, color, licensePlate, airConditioner, name)"
-                }
-            }
-        })
-    }
-    return new Service_Response(undefined)
-}
 
 /**
  * 
@@ -34,30 +13,13 @@ function verifyCarInformation(carJson) {
  * @param {*} fileReq 
  * @param {*} protocolReq 
  * @param {*} reqHost 
- * @returns
+ * @returns {Service_Response}
  */
-exports.createCar = async (carJson, userAuthId, fileReq, protocolReq, reqHost) => {
-    let imgUrl = fileReq ? `${protocolReq}://${reqHost}/images/${fileReq.filename}` : null;
-    
-    delete carJson._id;
-    delete carJson._userId;
+exports.createCar = async (carJson, userAuthId, fileReq, protocolReq, reqHost) => {    
+    const verifError = CarErrorManager.verifyCarCreation(carJson)
+    if (verifError.hasError) return new Service_Response(undefined, 400, true, verifError.error)
 
-    carVerification = verifyCarInformation(carJson)
-    if (carVerification.hasError) return carVerification
-
-    const car = new Car({
-        userId: userAuthId,
-        carType: carJson.carType,
-        manufacturer: carJson.manufacturer,
-        year: carJson.year,
-        model: carJson.model,
-        color: carJson.color,
-        licensePlate: carJson.licensePlate,
-        airConditioner: carJson.airConditioner,
-        name: carJson.name,
-        
-        imageUrl: imgUrl
-    });
+    const car = CarFactory.createCar(userAuthId, carJson.carType, carJson.manufacturer, carJson.year, carJson.model, carJson.color, carJson.licensePlate, carJson.airConditioner, carJson.name, protocolReq, reqHost, fileReq)
 
     return await car.save()
         .then(() => (new Service_Response(undefined, 201)).setLocation('/car/' + car.id))
@@ -66,18 +28,21 @@ exports.createCar = async (carJson, userAuthId, fileReq, protocolReq, reqHost) =
 
 
 exports.getAllCars = async () => {
-    return await Car.find()
+    return await CarSeeker.getAll()
         .then(cars => new Service_Response(cars))
         .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
 
 exports.getOneCar = async (carId) => {
-    return await Car.findOne({ _id: carId })
+    const verifyError = CarErrorManager.getOneCarError(carId)
+    if (verifyError.hasError) return new Service_Response(undefined, 400, true, verifyError.error)
+
+    return await CarSeeker.getOne(carId)
         .then(car => {
-            if (car !== null)
-                return new Service_Response(car, 302)
-            return new Service_Response(undefined, 404, true)
+            const notFoundError = CarErrorManager.getNotFound(car)
+            if (notFoundError.hasError) return new Service_Response(undefined, 404, true, notFoundError.error)
+            return new Service_Response(car, 302)
         })
         .catch(error => new Service_Response(undefined, 400, true, error))
 }
@@ -88,15 +53,23 @@ exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol, reqH
     if (reqFile !== undefined) newCarReq.imageUrl = `${reqProtocol}://${reqHost}/images/${reqFile.filename}` 
 
     delete newCarReq._userId;
-    return await Car.findOne({_id: id})
+    const verifId = CarErrorManager.getOneCarError(id)
+    if (verifId.hasError) return new Service_Response(undefined, 400, true, verifId.error)
+
+    const modifError = CarErrorManager.getModifyError(carReq)
+    if (modifError.hasError) return new Service_Response(undefined, 400, true, modifError.error)
+
+    return await CarSeeker.getOne(id)
         .then((car) => {
-            if (car.userId != userAuthId) {
-                return new Service_Response(undefined, 401, true)
-            } else {
-                return Car.updateOne({ _id: id}, { ...newCarReq, _id: id})
-                    .then(() => (new Service_Response(undefined)).setLocation('/car/' + car.id))
-                    .catch(error => new Service_Response(undefined, 400, true, error))
-            }
+            const notFoundError = CarErrorManager.getNotFound(car)
+            if (notFoundError.hasError) return new Service_Response(undefined, 404, true, notFoundError.error)
+            
+            const authError = CarErrorManager.getAuthError(car.userId, userAuthId)
+            if (authError.hasError) return new Service_Response(undefined, 401, true, authError.error)
+
+            return CarFactory.modifyCar(car.id, carReq)
+                .then(() => (new Service_Response(undefined)).setLocation('/car/' + car.id))
+                .catch(error => new Service_Response(undefined, 400, true, error))
         })
         .catch((error) => new Service_Response(undefined, 400, true, error));
  };

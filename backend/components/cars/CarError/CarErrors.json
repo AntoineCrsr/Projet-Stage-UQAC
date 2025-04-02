@@ -1,0 +1,50 @@
+{
+    "badArgs": {
+        "errors": {
+            "car": {
+                "code": "missing-fields",
+                "name": "La requete ne dispose pas des attributs nécessaires (carType, manufacturer, year, model, color, licensePlate, airConditioner, name)"
+            }
+        }
+    },
+    "typeError": {
+        "errors": {
+            "car": {
+                "code": "type-error",
+                "name": "Le type des variables ne correspondent pas aux attendus."
+            }
+        }
+    },
+    "formatError": {
+        "errors": {
+            "car": {
+                "code": "type-error",
+                "name": "Veillez à ce que l'année et le modèle soit existant."
+            }
+        }
+    },
+    "notFound": {
+        "errors": {
+            "car": {
+                "code": "not found",
+                "name": "La voiture n'a pas été trouvée."
+            }
+        }
+    },
+    "idError": {
+        "errors": {
+            "car": {
+                "code": "bad values",
+                "name": "L'identifiant de la voiture n'est pas correct (doit faire exactement 24 char)."
+            }
+        }
+    },
+    "unauthorized": {
+        "errors": {
+            "car": {
+                "code": "unauthorized",
+                "name": "Vous n'êtes pas autorisé à modifier une voiture qui ne vous appartient pas."
+            }
+        }
+    }
+}

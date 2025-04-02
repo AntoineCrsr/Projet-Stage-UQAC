@@ -27,21 +27,20 @@ exports.getUser = async (userId) => {
  * @returns {Service_Response}
  */
 exports.createUser = async (reqUser) => {
-    const reqError = UserErrorManager.userCreationError(reqUser)
-    if (reqError.hasError) return new Service_Response(undefined, 400, true, reqError.error)
+    const report = await UserErrorManager.userCreationError(reqUser)
+    if (report.hasError) return new Service_Response(undefined, 400, true, report.error)
 
-    return await UserFactory.createUser(reqUser.email, reqUser.password, reqUser.preferredLangage)
+    return UserFactory.createUser(reqUser.email, reqUser.password, reqUser.preferredLangage)
         .then(user => {
             return user.save()
                 .then(userData => {
-                        return this.verifyUserLogin(reqUser.email, reqUser.password)
-                            .then(loginResponse => {
-                                if (loginResponse.has_error) return new Service_Response(undefined, 500, true, loginResponse.error_object)
-                                return loginResponse.setLocation("/auth/" + userData._id)
-                            })
-                            .catch(error => new Service_Response(undefined, 500, true, error))
-                    }
-                )
+                    return this.verifyUserLogin(reqUser)
+                        .then(loginResponse => {
+                            if (loginResponse.has_error) return new Service_Response(undefined, 400, true, loginResponse.error_object)
+                            return loginResponse.setLocation("/auth/" + userData._id)
+                        })
+                        .catch(error => new Service_Response(undefined, 500, true, error))
+                })
                 .catch(error => new Service_Response(undefined, 400, true, error))
         })
         .catch(error => new Service_Response(undefined, 500, true, error))
@@ -50,21 +49,20 @@ exports.createUser = async (reqUser) => {
 
 /**
  * 
- * @param {string} userEmail 
- * @param {string} userPassword 
+ * @param {User} reqUser
  * @returns {Service_Response}
  */
-exports.verifyUserLogin = async (userEmail, userPassword) => {
-    const inputError = UserErrorManager.userLoginInput(userEmail, userPassword)
+exports.verifyUserLogin = async (reqUser) => {
+    const inputError = UserErrorManager.userLoginInput(reqUser.email, reqUser.password)
     if (inputError.hasError) return new Service_Response(undefined, 400, true, inputError.error)
 
-    return await UserSeeker.getOneUserByEmail(userEmail)
+    return await UserSeeker.getOneUserByEmail(reqUser.email)
         .then(user => {
             // Vérification que l'utilisateur existe
             const isUserNullReport = UserErrorManager.getErrorForNullUserLogin(user)
             if (isUserNullReport.hasError) return new Service_Response(undefined, 403, true, isUserNullReport.error)
             
-            return UserConnexionManager.getToken(user, userPassword)
+            return UserConnexionManager.getToken(user, reqUser.password)
                 .then(token => {
                     // Vérification couple login / mdp
                     const tokenError = UserErrorManager.getErrorForNullTokenLogin(token)
@@ -102,20 +100,26 @@ exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, r
 
     return await UserSeeker.getOneUser(userId)
         .then(async user => {
-            // 404
-            if (user == null) return new Service_Response(undefined, 404, true)
+            // Vérification du not found
+            const notFoundError = UserErrorManager.getUserNotFoundError(user)
+            if (notFoundError.hasError) return new Service_Response(undefined, 404, true, notFoundError.error)
+            
+            // Vérification des infos sachant user
+            const report = await UserErrorManager.getModificationErrorKnowingUser(user, newUser)
+            if (report.hasError) return new Service_Response(undefined, 400, true, report.error)
+
             // Direction du traitement des infos
             if (reqFile !== undefined) UserFactory.modifyProfilePicture(user, reqFile, reqProtocol, reqHost)
-            else if (newUser.email != undefined) UserFactory.modifyEmail(user, newUser.email)
-            else if (newUser.password != undefined) await UserFactory.modifyPassword(user, newUser.password)
-            else if (newUser.name != undefined) UserFactory.modifyName(user, newUser.name.firstName, newUser.name.lastName, newUser.name.publicName)
-            else if (newUser.phone != undefined) UserFactory.modifyPhone(user, newUser.phone.type, newUser.phone.prefix, newUser.phone.number, newUser.phone.phoneExt, newUser.phone.phoneDescription)
-            else if (newUser.dateBirthday != undefined) UserFactory.modifyBirth(user, newUser.dateBirthday)
-            else if (newUser.aboutMe != undefined) UserFactory.modifyAboutMe(user, newUser.aboutMe)
-            else if (newUser.alternateEmail != undefined) UserFactory.modifyAlternateEmail(user, newUser.alternateEmail)
-            else if (newUser.testimonial != undefined) UserFactory.modifyTestimonial(user, newUser.testimonial)
-            else if (newUser.isStudent != undefined) UserFactory.modifyIsStudent(user, newUser.isStudent)
-            else if (newUser.parameters != undefined) {
+            if (newUser.email != undefined) UserFactory.modifyEmail(user, newUser.email)
+            if (newUser.password != undefined) await UserFactory.modifyPassword(user, newUser.password)
+            if (newUser.name != undefined) UserFactory.modifyName(user, newUser.name.firstName, newUser.name.lastName, newUser.name.publicName)
+            if (newUser.phone != undefined) UserFactory.modifyPhone(user, newUser.phone.type, newUser.phone.prefix, newUser.phone.number, newUser.phone.phoneExt, newUser.phone.phoneDescription)
+            if (newUser.dateBirthday != undefined) UserFactory.modifyBirth(user, newUser.dateBirthday)
+            if (newUser.aboutMe != undefined) UserFactory.modifyAboutMe(user, newUser.aboutMe)
+            if (newUser.alternateEmail != undefined) UserFactory.modifyAlternateEmail(user, newUser.alternateEmail)
+            if (newUser.testimonial != undefined) UserFactory.modifyTestimonial(user, newUser.testimonial)
+            if (newUser.isStudent != undefined) UserFactory.modifyIsStudent(user, newUser.isStudent)
+            if (newUser.parameters != undefined) {
                 if (newUser.parameters.show != undefined) UserFactory.modifyShowParameter(user, newUser.parameters.show.showAgePublically, newUser.parameters.show.showEmailPublically, newUser.parameters.show.showPhonePublically)
                 if (newUser.parameters.notification != undefined) UserFactory.modifyNotificationParameter(user, newUser.parameters.notification.sendNewsletter, newUser.parameters.notification.remindEvaluations, newUser.parameters.notification.remindDeparture)
                 if (newUser.parameters.preferredLangage != undefined) UserFactory.modifyPreferredLangage(user, newUser.parameters.preferredLangage)

@@ -2,6 +2,7 @@ const ErrorReport = require("../../workspace/ErrorReport")
 const EmailVerifier = require("./emailVerifier")
 const PhoneVerifier = require("./phoneVerifier")
 const errorTable = require("./UserErrors.json")
+const userSeeker = require("../userSeeker")
 
 /**
  * 
@@ -23,7 +24,7 @@ exports.getOneUserError = (userId) => {
 }
 
 
-exports.userCreationError = (req) => {
+exports.userCreationError = async (req) => {
     // Présence de tous les champs nécessaires
     if (req == undefined
         || typeof(req) !== "object"
@@ -45,7 +46,12 @@ exports.userCreationError = (req) => {
     if (!EmailVerifier.verifyEmail(req.email))
         return new ErrorReport(true, errorTable["badEmail"])
 
-    return new ErrorReport(false)
+    // Présence des attributs dans la db
+    return await userSeeker.emailExists(req.email)
+        .then(alreadyExist => alreadyExist ? 
+            new ErrorReport(true, errorTable["emailAlreadyExists"])
+            : new ErrorReport(false)
+        )
 }
 
 
@@ -140,17 +146,20 @@ exports.getModificationError = (newUser, userId, userAuthId, reqFile, reqProtoco
     ) return new ErrorReport(true, errorTable["typeError"])
     
     // Vérification de l'email
-    if (newUser.email != undefined
+    if (newUser != undefined 
+        && newUser.email != undefined
         && !EmailVerifier.verifyEmail(newUser.email)
     ) return new ErrorReport(true, errorTable["badEmail"])
 
     // Vérification du téléphone
-    if (newUser.phone != undefined
+    if (newUser != undefined
+        && newUser.phone != undefined
         && !PhoneVerifier.verifyPhone(newUser.phone)
     ) return new ErrorReport(true, errorTable["badPhone"])
 
     // Vérification des paramètres
-    if (newUser.parameters != undefined
+    if (newUser != undefined
+        && newUser.parameters != undefined
         && (newUser.parameters.show != undefined)
             && ((newUser.parameters.show.showAgePublically != null && typeof(newUser.parameters.show.showAgePublically) !== "boolean")
              && (newUser.parameters.show.showEmailPublically != null && typeof(newUser.parameters.show.showEmailPublically) !== "boolean")
@@ -199,5 +208,55 @@ exports.getNonceEqualsError = (dbNonce, reqNonce) => {
     if (dbNonce !== reqNonce)
         return new ErrorReport(true, errorTable["nonceNotEquals"])
 
+    return new ErrorReport(false)
+}
+
+
+/**
+ * 
+ * @param {User} user 
+ * @param {object} reqPhone 
+ * @returns {Promise}
+ */
+exports.getPhoneModificationError = async (userPhone, reqPhone) => {
+    return await userSeeker.phoneExists(reqPhone)
+        .then(phoneExists => {
+            if (userPhone.prefix == reqPhone.prefix && userPhone.number == reqPhone.number) return new ErrorReport(false)
+            return phoneExists ? new ErrorReport(true, errorTable["phoneAlreadyExists"]) 
+                        : new ErrorReport(false)
+        })
+}
+
+exports.getEmailModificationError = async (userEmail, reqEmail) => {
+    return await userSeeker.emailExists(reqEmail)
+        .then(alreadyExist => {
+            if (userEmail === reqEmail) return new ErrorReport(false)
+            return alreadyExist ? new ErrorReport(true, errorTable["emailAlreadyExists"])
+            : new ErrorReport(false)
+        }
+)
+}
+
+exports.getUserNotFoundError = (user) => {
+    if (user == null) return new ErrorReport(true, errorTable["userNotFound"]) 
+    return new ErrorReport(false)
+}
+
+exports.getModificationErrorKnowingUser = async (user, newUser) => {
+    // Modification d'une image
+    if (newUser == undefined) return new ErrorReport(false)
+
+    // Modification d'un phone
+    if (newUser.phone != undefined) {
+        const phoneError = await this.getPhoneModificationError(user.phone, newUser.phone)
+        if (phoneError.hasError) return phoneError
+    }
+
+    // Modification d'un email
+    if (newUser.email != undefined) {
+        const emailError = await this.getEmailModificationError(user.email, newUser.email)
+        if (emailError.hasError) return emailError
+    }
+    
     return new ErrorReport(false)
 }
