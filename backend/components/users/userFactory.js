@@ -1,3 +1,4 @@
+const ErrorReport = require("../workspace/ErrorReport")
 const User = require("./userModel")
 const bcrypt = require("bcrypt")
 

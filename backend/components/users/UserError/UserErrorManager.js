@@ -23,6 +23,12 @@ exports.getOneUserError = (userId) => {
     return new ErrorReport(false)
 }
 
+exports.getIdInputError = (userId) => {
+    if (userId == null || typeof(userId) !== "string" || userId.length !== 24) 
+        return new ErrorReport(true, errorTable["idNotValid"])
+    return new ErrorReport(false)
+}
+
 
 exports.userCreationError = async (req) => {
     // Présence de tous les champs nécessaires
@@ -263,5 +269,19 @@ exports.getModificationErrorKnowingUser = async (user, newUser) => {
 
 exports.getPrivateDataShowError = (userId, userAuthId, showData) => {
     if (userId !== userAuthId && showData === "true") return new ErrorReport(true, errorTable["showDataNotAuth"])
+    return new ErrorReport(false)
+}
+
+exports.getRegistrationCompletedError = (user) => {
+    // Attributs obligatoires:
+    if (user.dateBirthday == undefined
+        || user.name == undefined
+        || user.phone == undefined
+    ) return new ErrorReport(true, errorTable["registrationIncomplete"])
+
+    // Validation email / phone
+    if (!user.hasVerifiedEmail) return new ErrorReport(true, errorTable["emailNotVerified"])
+    if (!user.hasVerifiedPhone) return new ErrorReport(true, errorTable["emailOrPhoneNotVerified"])
+
     return new ErrorReport(false)
 }

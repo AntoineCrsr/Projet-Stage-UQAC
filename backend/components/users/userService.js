@@ -170,3 +170,21 @@ exports.verifyNonce = async (reqUser, userId, userAuthId, forAttribute) => {
                 .catch(error => new Service_Response(undefined, 500, true, error))
         })
 }
+
+
+exports.getRegistrationCompleted = (userId) => {
+    const userIdVerif = UserErrorManager.getIdInputError(userId)
+    if (userIdVerif.hasError) return new Service_Response(undefined, 400, true, userIdVerif.error)
+    
+    return UserSeeker.getOneUser(userId)
+        .then(user => {
+            const notFound = UserErrorManager.getUserNotFoundError(user)
+            if (notFound.hasError) return new Service_Response(undefined, 404, true, notFound.error)
+            
+            const verifiedAccount = UserErrorManager.getRegistrationCompletedError(user)
+            if (verifiedAccount.hasError) return new Service_Response(undefined, 401, true, verifiedAccount.error)
+            
+            return new Service_Response(undefined, 200)
+        })
+        .catch(error => new Service_Response(undefined, 500, true, error))
+}

@@ -1,0 +1,10 @@
+{
+    "notLogin": {
+        "errors": {
+            "reservations": {
+                "code": "unauthorized",
+                "name": "L'utilisateur doit être connecté pour créer une Réservation."
+            }
+        }
+    }
+}
