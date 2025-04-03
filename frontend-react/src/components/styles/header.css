@@ -52,3 +52,8 @@ button.theme:hover {
     background-color: var(--text-color);
     color: var(--bg-color);
 }
+.logo-header {
+    height: 6rem;
+    margin-right: 20px;
+    cursor: pointer;
+}

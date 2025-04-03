@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./styles/header.css";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
+import logo from "../assets/logo_2.png"; 
 
 const Header = () => {
 
@@ -23,6 +23,9 @@ const Header = () => {
 
   return (
     <header className="header">
+      <Link to="/"> {/*Logo temporaire le temps de l'adapter au header, compte comme bouton retour-accueil*/}
+        <img src={logo} alt="Logo Travel Express" className="logo-header" />
+      </Link>
       <h1 className="title">Travel Express</h1>
       <button className="theme" onClick={toggleTheme}>
         {theme === "light" ? "🌙" : "☀️"}
