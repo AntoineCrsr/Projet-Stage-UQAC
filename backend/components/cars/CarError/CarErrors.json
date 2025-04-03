@@ -39,6 +39,14 @@
             }
         }
     },
+    "userIdError": {
+        "errors": {
+            "car": {
+                "code": "bad values",
+                "name": "L'identifiant de l'utilisateur n'est pas correct (doit faire exactement 24 char)."
+            }
+        }
+    },
     "unauthorized": {
         "errors": {
             "car": {
@@ -52,6 +60,22 @@
             "car": {
                 "code": "unauthorized",
                 "name": "Vous n'êtes pas autorisé à accéder aux informations privées de cette voiture."
+            }
+        }
+    },
+    "internalError": {
+        "errors": {
+            "car": {
+                "code": "internal-error",
+                "name": "Ceci n'est pas censé arriver."
+            }
+        }
+    },
+    "badQueryString": {
+        "errors": {
+            "car": {
+                "code": "bad values",
+                "name": "L'utilisation des contraintes sur une voiture n'est valable que pour un userId."
             }
         }
     }

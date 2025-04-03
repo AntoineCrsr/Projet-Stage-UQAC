@@ -142,5 +142,14 @@
                 "name": "Vous n'avez pas le droit d'afficher les informations privées d'un utilisateur autre que vous-même."
             }
         }
+    },
+    "internalError": {
+        "errors": {
+            "user": {
+                "code": "internal-error",
+                "name": "Ceci n'est pas censé arriver."
+            }
+        }
+    
     }
 }

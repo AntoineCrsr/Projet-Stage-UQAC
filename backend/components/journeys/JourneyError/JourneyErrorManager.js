@@ -1,5 +1,6 @@
 const errorTable = require("./JourneyErrors.json")
 const ErrorReport = require("../../workspace/ErrorReport")
+const CarService = require("../../cars/carService.js")
 
 /**
  * Teste les erreurs possibles de req pour réussir la création future de l'objet
@@ -20,6 +21,7 @@ exports.getCreationError = (req) => {
         || req.seats.total == undefined
         || req.seats.left == undefined
         || req.price == undefined
+        || req.carId == undefined
     ) {
         return new ErrorReport(true, errorTable["missingArg"])
     }
@@ -37,6 +39,7 @@ exports.getCreationError = (req) => {
         || typeof(req.seats.total) !== "number"
         || typeof(req.seats.left) !== "number"
         || typeof(req.price) !== "number"
+        || typeof(req.carId) !== "string"
     ) {
         return new ErrorReport(true, errorTable["typeError"])
     }
@@ -56,6 +59,9 @@ exports.getCreationError = (req) => {
     ) {
         return new ErrorReport(true, errorTable["leftUpperThanTotal"])
     }
+    
+    // Format de carId
+    if (req.carId.length !== 24) return new ErrorReport(true, errorTable["carIdError"])
 
     return new ErrorReport(false)
 }
@@ -194,4 +200,23 @@ exports.getConstraintsJourneys = (constraints) => {
         }
     }
     return new ErrorReport(false)
+}
+
+
+/**
+ * Suppose userId et carId déjà vérifiés (non null et de 24 char)
+ * @param {string} userId 
+ * @param {string} carId 
+ * @returns {ErrorReport}
+ */
+exports.verifyIfUserHasCar = async (userId, carId) => {
+    // Bonne utilisation de la fonction:
+    if (userId == null || carId == null || userId.length !== 24 || carId.length !== 24)
+        return new ErrorReport(true, errorTable["internalError"])
+    
+    // Vérification de l'inclusion de la voiture
+    return await CarService.verifyIfUserHasCar(userId, carId)
+        .then(hasTheCar => {
+            return hasTheCar ? new ErrorReport(false) : new ErrorReport(true, errorTable["carNotInUserData"])
+        })
 }

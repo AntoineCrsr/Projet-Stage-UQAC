@@ -30,7 +30,7 @@ exports.createCar = (req, res, next) => {
  * @param {*} next 
  */
 exports.getAllCars = (req, res, next) => {
-    carService.getAllCars()
+    carService.getAllCars(req.query)
         .then(service_response => service_response.buildSimpleResponse(res))
 }
 

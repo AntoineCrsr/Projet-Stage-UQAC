@@ -13,6 +13,7 @@ Without docker, just do "nodemon" or "node server.js"
 
 
 En cours:
+> Car associé à une journey
 > Réservation de trajet
 > Sécurisation (avis donnables qu'une fois par journey, à déterminer le reste)
 

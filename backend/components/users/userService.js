@@ -169,5 +169,4 @@ exports.verifyNonce = async (reqUser, userId, userAuthId, forAttribute) => {
                 .then(() => (new Service_Response(undefined, 200).setLocation("/auth/" + user._id)))
                 .catch(error => new Service_Response(undefined, 500, true, error))
         })
-    
 }

@@ -5,6 +5,7 @@ const JourneyFactory = require("./JourneyFactory.js")
 const JourneySeeker = require("./JourneySeeker.js")
 const JourneyFilter = require("./JourneyFilter.js")
 
+
 /**
  * Le role de ce service est de :
  * 1. Lancer la vérifaction des données avec JourneyErrorManager
@@ -20,8 +21,11 @@ const JourneyFilter = require("./JourneyFilter.js")
 exports.createJourney = async (reqJourney, userId) => {
     const creationError = JourneyErrorManager.getCreationError(reqJourney)
     if (creationError.hasError) return new Service_Response(undefined, 400, true, creationError.error)
+    
+    const verifyIfUserHasCar = await JourneyErrorManager.verifyIfUserHasCar(userId, reqJourney.carId)
+    if (verifyIfUserHasCar.hasError) return new Service_Response(undefined, 401, true, verifyIfUserHasCar.error)
 
-    const journey = JourneyFactory.createJourney(userId, reqJourney.starting, reqJourney.arrival, reqJourney.date, reqJourney.seats, reqJourney.price)
+    const journey = JourneyFactory.createJourney(userId, reqJourney.starting, reqJourney.arrival, reqJourney.date, reqJourney.seats, reqJourney.price, reqJourney.carId)
     return await journey.save()
         .then(() => (new Service_Response(undefined, 201)).setLocation('/journey/' + journey.id))
         .catch(error => new Service_Response(undefined, 400, true, error))

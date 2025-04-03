@@ -3,6 +3,7 @@ const validator = require('mongoose-unique-validator')
 
 const journey = mongoose.Schema({
     ownerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    carId: { type: mongoose.Schema.Types.ObjectId, ref: "Car", required: true},
     starting: {
         city: { type: String, required: true },
         adress: { type: String, required: true }
@@ -17,9 +18,6 @@ const journey = mongoose.Schema({
         left: { type: Number, required: true },
     },
     price: { type: Number, required: true },
-    passengers: [
-        { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },
-    ],
     state: { type: String, required: true }
     // Maybe add payment type one day
     // Also considering the preferences such as smoking, animals etc.

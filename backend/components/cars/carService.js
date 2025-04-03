@@ -27,8 +27,11 @@ exports.createCar = async (carJson, userAuthId, fileReq, protocolReq, reqHost) =
 };
 
 
-exports.getAllCars = async () => {
-    return await CarSeeker.getAll()
+exports.getAllCars = async (constraints) => {
+    const verifyConstraints = CarErrorManager.verifyConstraints(constraints)
+    if (verifyConstraints.hasError) return new Service_Response(undefined, 400, true, verifyConstraints.error)
+    
+    return await CarSeeker.getAll(constraints)
         .then(cars => { 
             CarFilter.filterMultipleCars(cars)
             return new Service_Response(cars)
@@ -101,4 +104,25 @@ exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol, reqH
             }
         })
         .catch(error => new Service_Response(undefined, 400, true, error))
+}
+
+
+/**
+ * Cette fonction n'est supposée s'utiliser dans un contrôleur
+ * @param {string} userId 
+ * @param {string} carId 
+ * @returns {Promise}
+ */
+exports.verifyIfUserHasCar = async (userId, carId) => {
+    const internalVerif = CarErrorManager.getCarVerifError(userId, carId)
+    if (internalVerif.hasError) return false
+    
+    return await this.getAllCars({"userId": userId})
+        .then(cars => {
+            cars.result.forEach(car => {
+                if (car._id == carId) return true
+            })
+            return false
+        })
+        .catch(error => false)
 }

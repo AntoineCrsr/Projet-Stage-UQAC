@@ -80,3 +80,37 @@ exports.verifyPrivatePermission = (ownerId, userAuthId, showPrivate) => {
     if (ownerId !== userAuthId && showPrivate === "true") return new ErrorReport(true, errorTable["unauthorizedPrivate"])
     return new ErrorReport(false)
 }
+
+exports.verifyConstraints = (constraints) => {
+    // Vérification de la bonne utilisation:
+    if (constraints == null) return new ErrorReport(true, errorTable["internalError"])
+
+    // Normalement toujours vrai si cela vient du query string
+    if (constraints.userId != undefined 
+        && typeof(constraints.userId) !== "string"  
+    ) return new ErrorReport(true, errorTable["internalError"])
+
+    // Vérification du format de l'id utilisateur
+    if (constraints.userId != undefined
+        && constraints.userId.length !== 24
+    ) return new ErrorReport(true, errorTable["userIdError"])
+
+    // Vérification que la contrainte est sur userId
+    if (typeof(constraints) == "object" 
+    && (Object.keys(constraints).length > 1 // Plus d'une contrainte non autorisé
+        || (Object.keys(constraints).length === 1 && constraints.userId == undefined))) // S'il y en a une et qu'elle n'est pas userId
+        return new ErrorReport(true, errorTable["badQueryString"])
+    
+    return new ErrorReport(false)
+}
+
+exports.getCarVerifError = (userId, carId) => {
+    // Suppose que les vérifications de format de userId et carId ont déjà été faites
+    if (
+        userId == undefined 
+        || carId == undefined
+        || userId.length !== 24
+        || carId.length !== 24
+    ) return new ErrorReport(true, errorTable["internalError"])
+    return new ErrorReport(false)
+}

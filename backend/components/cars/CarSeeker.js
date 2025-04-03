@@ -1,7 +1,7 @@
 const Car = require("./carModel")
 
-exports.getAll = async () => {
-    return await Car.find()
+exports.getAll = async (constraints) => {
+    return await Car.find(constraints)
 }
 
 exports.getOne = async (id) => {

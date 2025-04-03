@@ -11,7 +11,7 @@
         "errors": {
             "journey": {
                 "code": "missing-fields",
-                "name": "La requete ne dispose pas des attributs nécessaires (starting, arrival, date, seats, price)"
+                "name": "La requete ne dispose pas des attributs nécessaires (starting, arrival, date, seats, price, carId)"
             }
         }
     },
@@ -76,6 +76,30 @@
             "journey": {
                 "code": "bad values",
                 "name": "Les attributs de la recherche sont invalides: starting (string), arrival (string), date (string)"
+            }
+        }
+    },
+    "carIdError": {
+        "errors": {
+            "journey": {
+                "code": "bad values",
+                "name": "L'identifiant de Car doit être exactement de 24 char."
+            }
+        }
+    },
+    "internalError": {
+        "errors": {
+            "journey": {
+                "code": "bad values",
+                "name": "L'identifiant de Car doit être exactement de 24 char."
+            }
+        }
+    },
+    "carNotInUserData": {
+        "errors": {
+            "journey": {
+                "code": "unauthorized",
+                "name": "La voiture renseignée n'est pas possédée par l'utilisateur."
             }
         }
     }
