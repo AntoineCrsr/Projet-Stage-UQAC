@@ -227,3 +227,13 @@ exports.verifyIfUserHasCar = async (userId, carId) => {
         })
         .catch(error => new ErrorReport(true, error))
 }
+
+exports.getIdError = (id) => {
+    if (id == null || id.length !== 24) return new ErrorReport(true, errorTable["idTypeError"])
+    return new ErrorReport(false)
+}
+
+exports.getNotFoundError = (journey) => {
+    if (journey == null) return new ErrorReport(true, errorTable["journeyNotFound"])
+    return new ErrorReport(false)
+}

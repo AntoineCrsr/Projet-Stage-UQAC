@@ -23,6 +23,14 @@
             }
         }
     },
+    "idTypeError": {
+        "errors": {
+            "journey": {
+                "code": "type error",
+                "name": "L'identifiant de la journey n'est pas au format exigé (24 char)."
+            }
+        }
+    },
     "badValues": {
         "errors": {
             "journey": {
@@ -100,6 +108,14 @@
             "journey": {
                 "code": "unauthorized",
                 "name": "La voiture renseignée n'est pas possédée par l'utilisateur."
+            }
+        }
+    },
+    "journeyNotFound": {
+        "errors": {
+            "journey": {
+                "code": "not found",
+                "name": "La journey n'a pas été trouvée."
             }
         }
     }

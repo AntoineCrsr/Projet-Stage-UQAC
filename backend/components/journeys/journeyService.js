@@ -112,3 +112,17 @@ exports.deleteOneJourney = async (journeyId, userAuthId) => {
         })
         .catch(error => new Service_Response(undefined, 500, true, error))
 }
+
+
+exports.canAddAReservation = async (journeyId) => {
+    const journeyIdError = JourneyErrorManager.getIdError(journeyId)
+    if (journeyIdError.hasError) return new Service_Response(undefined, 400, true, journeyIdError.error)
+
+    return await Journey.findOne({_id: journeyId})
+        .then(journey => {
+            const notFound = JourneyErrorManager.getNotFoundError(journey)
+            if (notFound.hasError) return new Service_Response(undefined, 404, true, notFound.error)
+
+            return new Service_Response(journey.seats.left < journey.seats.total)
+        })
+}

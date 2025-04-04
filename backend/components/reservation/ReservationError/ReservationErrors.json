@@ -22,5 +22,21 @@
                 "name": "Les variables sont au mauvais format: journeyId: string, 24 char ; userId: string, 24 char."
             }
         }
+    },
+    "notEnoughPlace": {
+        "errors": {
+            "reservations": {
+                "code": "bad request",
+                "name": "La journey est déjà complète."
+            }
+        }
+    },
+    "alreadyRes": {
+        "errors": {
+            "reservations": {
+                "code": "bad request",
+                "name": "Vous avez déjà réservé la journey."
+            }
+        }
     }
 }
