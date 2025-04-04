@@ -79,12 +79,12 @@ exports.getOneJourney = async (journeyId) => {
 exports.modifyOneJourney = async (newJourneyId, newJourney, userAuthId) => {
     // Utilise le service pour éviter la répétition de code
     return await this.getOneJourney(newJourneyId)
-        .then(currentJourneyResp => {
+        .then(async currentJourneyResp => {
             if (currentJourneyResp.has_error) 
                 return currentJourneyResp
 
             // Vérification de la validité des données
-            const modifyError = JourneyErrorManager.getModifyError(newJourney, userAuthId, currentJourneyResp.result.ownerId, currentJourneyResp.result.seats)
+            const modifyError = await JourneyErrorManager.getModifyError(newJourney, userAuthId, currentJourneyResp.result.ownerId, currentJourneyResp.result.seats)
             if (modifyError.hasError) return new Service_Response(undefined, 400, true, modifyError.error)
             
             return JourneyFactory.updateJourney(newJourneyId, newJourney)

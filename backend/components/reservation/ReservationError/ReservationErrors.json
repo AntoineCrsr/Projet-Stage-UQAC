@@ -6,5 +6,21 @@
                 "name": "L'utilisateur doit être connecté pour créer une Réservation."
             }
         }
+    },
+    "nullValues": {
+        "errors": {
+            "reservations": {
+                "code": "bad values",
+                "name": "Une réservation ne peut pas contenir de valeur nulle."
+            }
+        }
+    },
+    "typeError": {
+        "errors": {
+            "reservations": {
+                "code": "bad values",
+                "name": "Les variables sont au mauvais format: journeyId: string, 24 char ; userId: string, 24 char."
+            }
+        }
     }
 }

@@ -109,7 +109,7 @@ exports.verifyAuthentication = (ownerId, userAuthId) => {
  * @param {object} seats 
  * @returns {ErrorReport}
  */
-exports.getModifyError = (req, userAuthId, ownerId, seats) => {
+exports.getModifyError = async (req, userAuthId, ownerId, seats) => {
     // Attention, il est probable que la requete ne contienne que l'attribut qui doit être modifié
     // Authentification
     const authError = this.verifyAuthentication(ownerId, userAuthId)
@@ -129,6 +129,7 @@ exports.getModifyError = (req, userAuthId, ownerId, seats) => {
         || (req.seats.left != null && typeof(req.seats.left) !== "number")
         || (req.price != null && typeof(req.price) !== "number")
         || (req.state != null && typeof(req.state) !== "string")
+        || (req.carId != null && typeof(req.carId !== "string") && req.carId.length !== 24)
     ) {
         return new ErrorReport(true, errorTable["typeError"])
     }
@@ -147,6 +148,7 @@ exports.getModifyError = (req, userAuthId, ownerId, seats) => {
         || req.seats.total === null
         || req.price === null
         || req.state === null
+        || req.carId === null
     ) {
         return new ErrorReport(true, errorTable["nullError"])
     }
@@ -178,6 +180,10 @@ exports.getModifyError = (req, userAuthId, ownerId, seats) => {
         if (!(req.state === "w" || req.state === "d")) return new ErrorReport(true, errorTable["incorrectState"])
     }
 
+    const hasCar = await this.verifyIfUserHasCar(ownerId, req.carId)
+
+    if (hasCar.hasError) return hasCar
+
     return new ErrorReport(false)
 }
 
@@ -207,16 +213,17 @@ exports.getConstraintsJourneys = (constraints) => {
  * Suppose userId et carId déjà vérifiés (non null et de 24 char)
  * @param {string} userId 
  * @param {string} carId 
- * @returns {ErrorReport}
+ * @returns {Promise}
  */
 exports.verifyIfUserHasCar = async (userId, carId) => {
     // Bonne utilisation de la fonction:
-    if (userId == null || carId == null || userId.length !== 24 || carId.length !== 24)
+    if (userId == null || carId == null || userId.toString().length !== 24 || carId.length !== 24)
         return new ErrorReport(true, errorTable["internalError"])
-    
+
     // Vérification de l'inclusion de la voiture
     return await CarService.verifyIfUserHasCar(userId, carId)
         .then(hasTheCar => {
             return hasTheCar ? new ErrorReport(false) : new ErrorReport(true, errorTable["carNotInUserData"])
         })
+        .catch(error => new ErrorReport(true, error))
 }
