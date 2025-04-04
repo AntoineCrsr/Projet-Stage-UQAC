@@ -119,8 +119,6 @@ exports.verifyIfUserHasCar = async (userId, carId) => {
     
     return await this.getAllCars({"userId": userId})
         .then(cars => {
-            console.log(`Verifying for carId: ${carId}`)
-            console.log(cars)
             let hasTheCar = false
             cars.result.forEach(car => {
                 if (car._id.toString() === carId) {

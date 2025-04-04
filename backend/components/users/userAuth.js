@@ -18,6 +18,7 @@ module.exports = (req, res, next) => {
         }
         next()
     } catch (error) {
+        req.auth = {}
         next()
     }
 }

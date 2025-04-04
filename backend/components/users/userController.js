@@ -9,7 +9,7 @@ const userService = require("./userService")
  */
 exports.getUser = (req, res, next) => {
     userService.getUser(req.params.id, req.query.private, req.auth ? req.auth.userId : null)
-        .then(service_response => service_response.buildSimpleResponse(res))
+        .then(service_response => service_response.buildResponse(res))
 }
 
 
@@ -26,7 +26,7 @@ exports.signup = (req, res, next) => {
         user = req.body.user
     }
     userService.createUser(user)
-        .then(service_response => service_response.buildLocationResponse(res))
+        .then(service_response => service_response.buildResponse(res))
 }
 
 /**
@@ -37,7 +37,7 @@ exports.signup = (req, res, next) => {
  */
 exports.login = (req, res, next) => {
     userService.verifyUserLogin(req.body.user)
-        .then(service_response => service_response.buildSimpleResponse(res))
+        .then(service_response => service_response.buildResponse(res))
 }
 
 
@@ -50,7 +50,7 @@ exports.login = (req, res, next) => {
 exports.modify = (req, res, next) => {
     console.log(req.auth)
     userService.modifyUser(req.body.user, req.params.id, req.auth ? req.auth.userId : null, req.file, req.protocol, req.get('host'))
-        .then(service_response => service_response.buildSimpleResponse(res))
+        .then(service_response => service_response.buildResponse(res))
 }
 
 
@@ -61,7 +61,7 @@ exports.modify = (req, res, next) => {
  */
 exports.verifyEmailNonce = (req, res, next) => {
     userService.verifyNonce(req.body.user, req.params.id, req.auth ? req.auth.userId : null, "email")
-        .then(service_response => service_response.buildSimpleResponse(res))
+        .then(service_response => service_response.buildResponse(res))
 }
 
 /**
@@ -71,5 +71,5 @@ exports.verifyEmailNonce = (req, res, next) => {
  */
 exports.verifyPhoneNonce = (req, res, next) => {
     userService.verifyNonce(req.body.user, req.params.id, req.auth ? req.auth.userId : null, "phone")
-        .then(service_response => service_response.buildSimpleResponse(res))
+        .then(service_response => service_response.buildResponse(res))
 }
