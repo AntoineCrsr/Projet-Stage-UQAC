@@ -5,12 +5,15 @@ const ReservationSeeker = require("../ReservationSeeker")
 
 async function hasAlreadyReserved(journeyId, userId) {
     let hasAlreadyRes = false
-    (await ReservationSeeker.getReservations({"journeyId": reqRes.journeyId})).forEach(res => {
-        if (res.userId === reqRes.userId) {
-            hasAlreadyRes = true
-            return
-        }
-    });
+    await ReservationSeeker.getReservations({"journeyId": journeyId})
+        .then(reservations => {
+            reservations.forEach(res => {
+                if (res.userId.toString() === userId) {
+                    hasAlreadyRes = true
+                    return
+                }
+            })
+        });
     return hasAlreadyRes
 }
 
@@ -19,30 +22,40 @@ exports.verifyAuth = (userAuthId) => {
     return new ErrorReport(false)
 }
 
-exports.verifyCreation = async (reqRes) => {
+exports.verifyCreation = async (reqRes, userAuthId) => {
     // Valeurs nulles
     if (reqRes == null
         || reqRes.journeyId == null
-        || reqRes.userId == null
     ) return new ErrorReport(true, errorTable["nullValues"])
 
     // Format des id (type et longueur)
     if (
         typeof(reqRes.journeyId) !== "string" 
-        || typeof(reqRes.userId) !== "string"
-        || reqRes.length !== 24
-        || reqRes.length !== 24
+        || typeof(userAuthId) !== "string" 
+        || reqRes.journeyId.length !== 24
+        || userAuthId.length !== 24
     ) 
         return new ErrorReport(true, errorTable["typeError"])
 
     // Possibilité d'ajouter une réservation sur la journey
-    const canAddRes = await JourneyService.canAddAReservation(reqRes.journeyId)
+    const canAddRes = await JourneyService.canAddAReservation(reqRes.journeyId, userAuthId)
     if (canAddRes.has_error) return new ErrorReport(true, canAddRes.error_object)
     if (!canAddRes.result) return new ErrorReport(true, errorTable["notEnoughPlace"])
     
     // Vérifier si l'utilisateur n'a pas déjà réservé la journey
-    if (await this.hasAlreadyReserved(reqRes.journeyId, reqRes.userId))
+    if (await hasAlreadyReserved(reqRes.journeyId, userAuthId))
         return new ErrorReport(true, errorTable["alreadyRes"])
-    
+
+    // Vérifier si l'utilisateur n'est pas le créateur de la journey
+    return new ErrorReport(false)
+}
+
+
+exports.getReservationGetError = (constraints) => {
+    if (constraints != undefined
+        && (constraints.userId != undefined && constraints.userId.length !== 24)
+        || (constraints.journeyId != undefined && constraints.journeyId.length !== 24)
+        || (constraints._id != undefined && constraints._id.length !== 24)
+    ) return new ErrorReport(true, errorTable["queryError"])
     return new ErrorReport(false)
 }

@@ -13,7 +13,7 @@ exports.getLastJourneys = async (limit, constraints={}) => {
 }
 
 /**
- * @param {number} journeyId
+ * @param {string} journeyId
  * @returns {Promise}
  */
 exports.getOneJourney = async (journeyId) => {

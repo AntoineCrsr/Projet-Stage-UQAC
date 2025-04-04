@@ -7,7 +7,8 @@ exports.createReservation = (req, res, next) => {
 }
 
 exports.getReservations = (req, res, next) => {
-
+    ReservationService.getReservations(req.query)
+        .then(service_response => service_response.buildResponse(res))
 }
 
 exports.modifyReservation = (req, res, next) => {

@@ -38,5 +38,13 @@
                 "name": "Vous avez déjà réservé la journey."
             }
         }
+    },
+    "queryError": {
+        "errors": {
+            "reservations": {
+                "code": "bad values",
+                "name": "Le ou les identifiants renseignés sont au mauvais format (24 chars)."
+            }
+        }
     }
 }

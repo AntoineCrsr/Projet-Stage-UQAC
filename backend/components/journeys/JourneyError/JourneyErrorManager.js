@@ -237,3 +237,14 @@ exports.getNotFoundError = (journey) => {
     if (journey == null) return new ErrorReport(true, errorTable["journeyNotFound"])
     return new ErrorReport(false)
 }
+
+exports.verifyRightsOfReservationOfUserOnJourney = (journey, userId) => {
+    if (userId == undefined) return new ErrorReport(true, errorTable["internalError"])
+    if (journey.ownerId.toString() === userId) return new ErrorReport(true, errorTable["reserverIsOwner"])
+    return new ErrorReport(false)
+}
+
+exports.verifyAddReservation = (journey) => {
+    if (journey.seats.left <= 0) return new ErrorReport(true, errorTable["addReservationError"])
+    return new ErrorReport(false)
+}

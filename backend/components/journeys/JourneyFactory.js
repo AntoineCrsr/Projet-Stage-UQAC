@@ -46,3 +46,7 @@ exports.deleteJourney = (journeyId) => {
     // Peut-être prévenir les passagers que la journey a été supp / annulée
     // Sinon considérer que tu ne peux pas la supp, seulement la passer dans l'état annuler ?
 } 
+
+exports.addReservation = (journey) => {
+    journey.seats.left--
+}

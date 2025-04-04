@@ -118,5 +118,21 @@
                 "name": "La journey n'a pas été trouvée."
             }
         }
+    },
+    "reserverIsOwner": {
+        "errors": {
+            "journey": {
+                "code": "unauthorized",
+                "name": "Le créateur du trajet ne peut pas le réserver."
+            }
+        }
+    },
+    "addReservationError": {
+        "errors": {
+            "journey": {
+                "code": "consistency-error",
+                "name": "Le trajet est déjà à son niveau maximal de réservations."
+            }
+        }
     }
 }

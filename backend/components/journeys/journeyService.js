@@ -1,4 +1,3 @@
-const Journey = require("./journeyModel.js")
 const Service_Response = require("../workspace/service_response.js")
 const JourneyErrorManager = require("./JourneyError/JourneyErrorManager.js")
 const JourneyFactory = require("./JourneyFactory.js")
@@ -114,15 +113,45 @@ exports.deleteOneJourney = async (journeyId, userAuthId) => {
 }
 
 
-exports.canAddAReservation = async (journeyId) => {
+
+/**
+ * 
+ * @param {string} journeyId 
+ * @param {string} userId 
+ * @returns {Promise}
+ */
+exports.canAddAReservation = async (journeyId, userId) => {
     const journeyIdError = JourneyErrorManager.getIdError(journeyId)
     if (journeyIdError.hasError) return new Service_Response(undefined, 400, true, journeyIdError.error)
 
-    return await Journey.findOne({_id: journeyId})
+    return await JourneySeeker.getOneJourney(journeyId)
         .then(journey => {
             const notFound = JourneyErrorManager.getNotFoundError(journey)
             if (notFound.hasError) return new Service_Response(undefined, 404, true, notFound.error)
-
+            
+            const permissionError = JourneyErrorManager.verifyRightsOfReservationOfUserOnJourney(journey, userId)
+            if (permissionError.hasError) return new Service_Response(undefined, 401, true, permissionError.error)
+            
             return new Service_Response(journey.seats.left < journey.seats.total)
+        })
+}
+
+
+exports.addReservation = async (journeyId) => {
+    const journeyIdError = JourneyErrorManager.getIdError(journeyId)
+    if (journeyIdError.hasError) return new Service_Response(undefined, 400, true, journeyIdError.error)
+    
+    return await JourneySeeker.getOneJourney(journeyId)
+        .then(journey => {
+            const notFound = JourneyErrorManager.getNotFoundError(journey)
+            if (notFound.hasError) return new Service_Response(undefined, 404, true, notFound.error)
+            
+            const verifyAddingLogic = JourneyErrorManager.verifyAddReservation(journey)
+            if (verifyAddingLogic.hasError) return new Service_Response(undefined, 400, true, verifyAddingLogic.error)
+            
+            JourneyFactory.addReservation(journey)
+            return journey.save()
+                .then(() => new Service_Response(undefined))
+                .catch(error => new Service_Response(undefined, 500, true, error))
         })
 }
