@@ -17,6 +17,13 @@ async function hasAlreadyReserved(journeyId, userId) {
     return hasAlreadyRes
 }
 
+async function getHasAReservationError(reservationId, userId) {
+    const reservations = await ReservationSeeker.getReservations({"_id": reservationId})
+    if (reservations.length === 0) return new ErrorReport(true, errorTable["internalError"])
+    if (reservations[0].userId.toString() === userId) return new ErrorReport(false)
+    return new ErrorReport(true, errorTable["cantDelete"])
+}
+
 exports.verifyAuth = (userAuthId) => {
     if (userAuthId == null) return new ErrorReport(true, errorTable["notLogin"])
     return new ErrorReport(false)
@@ -37,7 +44,7 @@ exports.verifyCreation = async (reqRes, userAuthId) => {
     ) 
         return new ErrorReport(true, errorTable["typeError"])
 
-    // Possibilité d'ajouter une réservation sur la journey
+    // Possibilité d'ajouter une réservation sur la journey (ceci vérifie aussi que l'utilisateur n'est pas le créateur du trajet)
     const canAddRes = await JourneyService.canAddAReservation(reqRes.journeyId, userAuthId)
     if (canAddRes.has_error) return new ErrorReport(true, canAddRes.error_object)
     if (!canAddRes.result) return new ErrorReport(true, errorTable["notEnoughPlace"])
@@ -58,4 +65,23 @@ exports.getReservationGetError = (constraints) => {
         || (constraints._id != undefined && constraints._id.length !== 24)
     ) return new ErrorReport(true, errorTable["queryError"])
     return new ErrorReport(false)
+}
+
+
+exports.getReservationExistError = async (reservationId) => {
+    const reservations = await ReservationSeeker.getReservations({"_id": reservationId})
+    if (reservations.length === 0) return new ErrorReport(true, errorTable["resNotFound"])
+    return new ErrorReport(false)
+}
+
+
+exports.getIdError = (id) => {
+    if (id == null || typeof(id) !== "string" || id.length !== 24) return new ErrorReport(true, errorTable["idError"])
+    return new ErrorReport(false)
+}
+
+
+exports.getDeleteError = async (reservationId, userAuthId) => {
+    if (userAuthId == null) return new ErrorReport(true, errorTable["notLogin"])
+    return await getHasAReservationError(reservationId, userAuthId)
 }

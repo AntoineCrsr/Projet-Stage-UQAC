@@ -9,6 +9,6 @@ router.get('/', reservationController.getReservations);
   
 // router.get('/:id', journeyController.getOneJourney);
   
-// router.delete('/:id', auth, reservationController.deleteReservation);
+router.delete('/:id', auth, reservationController.deleteReservation);
 
 module.exports = router

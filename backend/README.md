@@ -14,16 +14,15 @@ Without docker, just do "nodemon" or "node server.js"
 
 En cours:
 > Réservation de trajet
-> Sécurisation (avis donnables qu'une fois par journey, à déterminer le reste)
 
 TODO:
+> Faire en sorte que quand une journey est supprimée, cela supprime aussi les réservations associées
 > Login error si le signup est incomplet, IDEM pour la création de journeys etc. 
-> Filtrer les données dans les fonctions get
-> Lors de la modification de l'état d'une journey à 'done', update les statistiques du conducteur / passagers
-> Ajouter une voiture à un trajet
+> Réalisation des avis
 > Vérifier les adresses avec l'API google maps?
 > Vérifier la cohérence des attributs de car (couleur, model etc.) // model --> API ?
-> Test de Journey incluant les erreurs
+> Test de l'app incluant les erreurs
+> Documentation
 
 
 

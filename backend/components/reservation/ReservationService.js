@@ -47,3 +47,20 @@ exports.getReservations = async (constraints) => {
         })
         .catch(error => new Service_Response(undefined, 500, true, error))
 }
+
+
+exports.deleteReservation = async (reservationId, userAuthId) => {
+    // Format de l'id
+    const idError = ReservationErrorManager.getIdError(reservationId)
+    if (idError.hasError) return idError.error
+    // Existance de la réservation
+    const reservationExists = await ReservationErrorManager.getReservationExistError(reservationId)
+    if (reservationExists.hasError) return new Service_Response(undefined, 404, true, reservationExists.error)
+    // Permission du user
+    const permissionError = await ReservationErrorManager.getDeleteError(reservationId, userAuthId)
+    if (permissionError.hasError) return new Service_Response(undefined, 401, true, permissionError.error)
+    // Action
+    return await ReservationFactory.deleteReservation(reservationId)
+        .then(() => new Service_Response(undefined))
+        .catch(error => new Service_Response(undefined, 500, true, error))
+}

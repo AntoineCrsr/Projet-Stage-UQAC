@@ -11,10 +11,7 @@ exports.getReservations = (req, res, next) => {
         .then(service_response => service_response.buildResponse(res))
 }
 
-exports.modifyReservation = (req, res, next) => {
-
-}
-
 exports.deleteReservation = (req, res, next) => {
-    
+    ReservationService.deleteReservation(req.params.id, req.auth.userId)
+        .then(service_response => service_response.buildResponse(res))
 }

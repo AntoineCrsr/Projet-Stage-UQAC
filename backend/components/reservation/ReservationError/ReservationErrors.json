@@ -3,7 +3,7 @@
         "errors": {
             "reservations": {
                 "code": "unauthorized",
-                "name": "L'utilisateur doit être connecté pour créer une Réservation."
+                "name": "L'utilisateur doit être connecté pour effectuer cette action."
             }
         }
     },
@@ -44,6 +44,38 @@
             "reservations": {
                 "code": "bad values",
                 "name": "Le ou les identifiants renseignés sont au mauvais format (24 chars)."
+            }
+        }
+    },
+    "idError": {
+        "errors": {
+            "reservations": {
+                "code": "bad values",
+                "name": "L'identifiant est au mauvais format (24 chars)."
+            }
+        }
+    },
+    "cantDelete": {
+        "errors": {
+            "reservations": {
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas supprimer une réservation qui n'est pas la votre."
+            }
+        }
+    },
+    "resNotFound": {
+        "errors": {
+            "reservations": {
+                "code": "not-found",
+                "name": "La réservation n'a pas été trouvée."
+            }
+        }
+    },
+    "internalError": {
+        "errors": {
+            "reservations": {
+                "code": "internal-error",
+                "name": "Ceci n'est pas censé arriver."
             }
         }
     }
