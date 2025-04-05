@@ -3,6 +3,7 @@ const JourneyErrorManager = require("./JourneyError/JourneyErrorManager.js")
 const JourneyFactory = require("./JourneyFactory.js")
 const JourneySeeker = require("./JourneySeeker.js")
 const JourneyFilter = require("./JourneyFilter.js")
+const ReservationService = require("../reservation/ReservationService.js")
 
 
 /**
@@ -101,15 +102,22 @@ exports.modifyOneJourney = async (newJourneyId, newJourney, userAuthId) => {
  * @returns  {Service_Response}
  */
 exports.deleteOneJourney = async (journeyId, userAuthId) => {
-    return await Journey.findOne({_id: journeyId})
+    const idError = JourneyErrorManager.getIdError(journeyId)
+    if (idError.hasError) return new Service_Response(undefined, 400, true, idError.error)
+
+    return await JourneySeeker.getOneJourney(journeyId)
         .then(journey => {
             const authError = JourneyErrorManager.verifyAuthentication(journey.ownerId, userAuthId)
             if (authError.hasError) return new Service_Response(undefined, 401, true, authError.error)
+            
+            const reservationResponse = ReservationService.deleteJourneyReservation(journeyId)
+            if (reservationResponse.has_error) return reservationResponse
+
             return JourneyFactory.deleteJourney(journeyId)
                 .then(() => new Service_Response(undefined))
                 .catch(error => new Service_Response(undefined, 500, true, error))
         })
-        .catch(error => new Service_Response(undefined, 500, true, error))
+        .catch(error => {console.log(error); return new Service_Response(undefined, 500, true, error)})
 }
 
 

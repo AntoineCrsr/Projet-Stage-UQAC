@@ -17,3 +17,7 @@ exports.createReservation = (userId, journeyId) => {
 exports.deleteReservation = (reservationId) => {
     return Reservation.deleteOne({_id: reservationId})
 }
+
+exports.deleteJourneyReservations = (journeyId) => {
+    return Reservation.deleteMany({journeyId: journeyId})
+}

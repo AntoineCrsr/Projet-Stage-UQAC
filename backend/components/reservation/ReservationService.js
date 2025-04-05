@@ -64,3 +64,18 @@ exports.deleteReservation = async (reservationId, userAuthId) => {
         .then(() => new Service_Response(undefined))
         .catch(error => new Service_Response(undefined, 500, true, error))
 }
+
+
+/**
+ * A n'utiliser que dans un contexte interne et sécurisé
+ * @param {string} journeyId 
+ * @returns {Promise}
+ */
+exports.deleteJourneyReservation = async (journeyId) => {
+    const internalError = ReservationErrorManager.getIdError(journeyId)
+    if (internalError.hasError) return new Service_Response(undefined, 400, true, internalError.error)
+
+    return await ReservationFactory.deleteJourneyReservations(journeyId)
+        .then(() => new Service_Response(undefined))
+        .catch(error => new Service_Response(undefined, 500, true, error))
+} 
