@@ -1,6 +1,5 @@
 const errorTable = require("./CarErrors.json")
 const ErrorReport = require("../../workspace/ErrorReport")
-const { isNullOrUndefined } = require("node:util")
 
 exports.verifyCarCreation = (reqCar) => {
     // Attributs définis

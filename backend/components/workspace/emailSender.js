@@ -25,7 +25,6 @@ exports.sendEmail = (to, subject, text) => {
         if (error) {
           return new Service_Response(undefined, 500, true, error)
         } else {
-          //console.log('Email sent: ' + info.response);
           return new Service_Response(undefined)
         }
       }); 

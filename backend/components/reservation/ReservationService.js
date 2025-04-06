@@ -1,5 +1,6 @@
 const Service_Response = require("../workspace/service_response")
 const ReservationErrorManager = require("./ReservationError/ReservationErrorManager")
+const GeneralErrorManager = require("../workspace/GeneralError/GeneralErrorManager.js")
 const ReservationFactory = require("./ReservationFactory")
 const ReservationSeeker = require("./ReservationSeeker")
 const ReservationFilter = require("./ReservationFilter")
@@ -16,10 +17,14 @@ exports.createReservation = async (reqRes, userAuthId) => {
     const authError = ReservationErrorManager.verifyAuth(userAuthId)
     if (authError.hasError) return new Service_Response(undefined, 401, true, authError.error)
 
+    // Utilisateur avec inscription complète
+    const userRegistrationCompleteError = await GeneralErrorManager.isUserVerified(userAuthId)
+    if (userRegistrationCompleteError.hasError) return new Service_Response(undefined, 401, true, userRegistrationCompleteError.error)
+
     // Validité des données
     const creationError = await ReservationErrorManager.verifyCreation(reqRes, userAuthId) 
     if (creationError.hasError) return new Service_Response(undefined, 400, true, creationError.error)
-
+    
     // Création
     const reservation = ReservationFactory.createReservation(userAuthId, reqRes.journeyId)
     const journeyAddResponse = await JourneyService.addReservation(reqRes.journeyId)

@@ -1,7 +1,7 @@
 const Service_Response = require("../workspace/service_response.js")
-const Car = require("./carModel")
 const CarFactory = require("./CarFactory.js")
 const CarErrorManager = require("./CarError/CarErrorManager.js")
+const GeneralErrorManager = require("../workspace/GeneralError/GeneralErrorManager.js")
 const CarSeeker = require("./CarSeeker.js")
 const CarFilter = require("./CarFilter.js")
 
@@ -18,6 +18,9 @@ const CarFilter = require("./CarFilter.js")
 exports.createCar = async (carJson, userAuthId, fileReq, protocolReq, reqHost) => {    
     const verifError = CarErrorManager.verifyCarCreation(carJson)
     if (verifError.hasError) return new Service_Response(undefined, 400, true, verifError.error)
+
+    const userRegistrationCompleteError = await GeneralErrorManager.isUserVerified(userAuthId)
+    if (userRegistrationCompleteError.hasError) return new Service_Response(undefined, 401, true, userRegistrationCompleteError.error)
 
     const car = CarFactory.createCar(userAuthId, carJson.carType, carJson.manufacturer, carJson.year, carJson.model, carJson.color, carJson.licensePlate, carJson.airConditioner, carJson.name, protocolReq, reqHost, fileReq)
 

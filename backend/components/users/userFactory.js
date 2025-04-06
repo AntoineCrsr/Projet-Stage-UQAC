@@ -12,7 +12,7 @@ exports.createUser = async (email, password, preferredLangage="FR") => {
     return await bcrypt.hash(password, 10)
         .then(hash => {
             return new User({
-                email: email,
+                email: email.toLowerCase(),
                 password: hash,
                 isStudent: false,
                 dateBirthday: null, 
@@ -160,7 +160,7 @@ exports.modifyProfilePicture = (user, reqFile, reqProtocol, reqHost) => {
  */
 exports.modifyEmail = (user, email) => {
     if (user.email === email) return user
-    user.email = email
+    user.email = email.toLowerCase()
     user.emailNonce = "000"
     user.hasVerifiedEmail = false
     return user
@@ -190,7 +190,7 @@ exports.modifyPassword = async (user, password) => {
  * @returns {User}
  */
 exports.modifyPreferredLangage = (user, preferredLangage) => {
-    user.parameters.preferredLangage = preferredLangage
+    user.parameters.preferredLangage = preferredLangage.toLowerCase()
     return user
 }
 

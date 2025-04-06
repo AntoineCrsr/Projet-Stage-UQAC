@@ -23,6 +23,8 @@ exports.filterOneUser = (user, showPrivate) => {
         user.parameters = undefined
         user.isStudent = undefined
         user.testimonial = undefined
+        user.hasVerifiedEmail = undefined
+        user.hasVerifiedPhone = undefined
     }
     return user
 }

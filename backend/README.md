@@ -13,14 +13,14 @@ Without docker, just do "nodemon" or "node server.js"
 
 
 En cours:
-> Réservation de trajet
 
 TODO:
-> Faire en sorte que quand une journey est supprimée, cela supprime aussi les réservations associées
+> Email tolowercase
 > Login error si le signup est incomplet, IDEM pour la création de journeys etc. 
 > Réalisation des avis
 > Vérifier les adresses avec l'API google maps?
-> Vérifier la cohérence des attributs de car (couleur, model etc.) // model --> API ?
+> Vérifier la cohérence des attributs de car (couleur, model etc.) // model --> API voiture ?
+> Si demandé, faire de l'abstraction sur les erreurs
 > Test de l'app incluant les erreurs
 > Documentation
 

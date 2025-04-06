@@ -16,7 +16,7 @@ exports.getUser = async (userId, showPrivate, userAuthId) => {
     const reqError = UserErrorManager.getOneUserError(userId)
     if (reqError.hasError) 
         return new Service_Response(undefined, 400, true, reqError.error)
-    console.log(userAuthId)
+    
     return await UserSeeker.getOneUser(userId)
         .then(user => {
             const verifyPermission = UserErrorManager.getPrivateDataShowError(user.id, userAuthId, showPrivate)
@@ -172,6 +172,11 @@ exports.verifyNonce = async (reqUser, userId, userAuthId, forAttribute) => {
 }
 
 
+/**
+ * 
+ * @param {string} userId 
+ * @returns {Promise}
+ */
 exports.getRegistrationCompleted = (userId) => {
     const userIdVerif = UserErrorManager.getIdInputError(userId)
     if (userIdVerif.hasError) return new Service_Response(undefined, 400, true, userIdVerif.error)

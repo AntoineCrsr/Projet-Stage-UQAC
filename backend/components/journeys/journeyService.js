@@ -1,5 +1,6 @@
 const Service_Response = require("../workspace/service_response.js")
 const JourneyErrorManager = require("./JourneyError/JourneyErrorManager.js")
+const GeneralErrorManager = require("../workspace/GeneralError/GeneralErrorManager.js")
 const JourneyFactory = require("./JourneyFactory.js")
 const JourneySeeker = require("./JourneySeeker.js")
 const JourneyFilter = require("./JourneyFilter.js")
@@ -22,9 +23,12 @@ exports.createJourney = async (reqJourney, userId) => {
     const creationError = JourneyErrorManager.getCreationError(reqJourney)
     if (creationError.hasError) return new Service_Response(undefined, 400, true, creationError.error)
     
+    const userRegistrationCompleteError = await GeneralErrorManager.isUserVerified(userId)
+    if (userRegistrationCompleteError.hasError) return new Service_Response(undefined, 401, true, userRegistrationCompleteError.error)
+    
     const verifyIfUserHasCar = await JourneyErrorManager.verifyIfUserHasCar(userId, reqJourney.carId)
     if (verifyIfUserHasCar.hasError) return new Service_Response(undefined, 401, true, verifyIfUserHasCar.error)
-
+    
     const journey = JourneyFactory.createJourney(userId, reqJourney.starting, reqJourney.arrival, reqJourney.date, reqJourney.seats, reqJourney.price, reqJourney.carId)
     return await journey.save()
         .then(() => (new Service_Response(undefined, 201)).setLocation('/journey/' + journey.id))

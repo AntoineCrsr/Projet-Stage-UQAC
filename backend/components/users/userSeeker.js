@@ -17,7 +17,7 @@ exports.getOneUser = async (userId) => {
  * @returns {Promise}
  */
 exports.getOneUserByEmail = async (userEmail) => {
-    return await User.findOne({email: userEmail})
+    return await User.findOne({email: userEmail.toLowerCase()})
 }
 
 /**
@@ -25,7 +25,7 @@ exports.getOneUserByEmail = async (userEmail) => {
  * @param {string} email 
  */
 exports.emailExists = async (email) => {
-    return await User.find({"email": email})
+    return await User.find({"email": email.toLowerCase()})
         .then(users => users.length > 0)
 }
 
