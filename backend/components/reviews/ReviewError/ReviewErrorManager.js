@@ -68,18 +68,39 @@ exports.getCreationError = async (reqRev, userAuthId) => {
         return new ErrorReport(true, errorTable["reviewAlreadyGiven"])
 
     // Vérifie que l'utilisateur a bien réalisé un trajet
+    console.log(await hasCompletedAJourneyWith(userAuthId, reqRev.reviewedId))
     if (await hasCompletedAJourneyWith(userAuthId, reqRev.reviewedId))
         return new ErrorReport(true, errorTable["haveNotDoneJourney"])
+
+    return new ErrorReport(false)
 } 
 
 
 exports.getConstraintsError = (constraints) => {
     if (constraints == undefined)
         return new ErrorReport(false)
-    
     if ((constraints.reviewerId != undefined && constraints.reviewerId.length !== 24)
-        || (constraints.reviewedId != undefined && constraints.reviewedId.length !== 24))
+        || (constraints.reviewedId != undefined && constraints.reviewedId.length !== 24)
+        || (constraints._id != undefined && constraints._id.length !== 24))
         return new ErrorReport(true, errorTable["idErrors"])
     
+    return new ErrorReport(false)
+}
+
+
+exports.getIdError = (reviewId) => {
+    if (reviewId == undefined || typeof(reviewId) !== "string" || reviewId.length !== 24)
+        return new ErrorReport(true, errorTable["idErrors"])
+    return new ErrorReport(false)
+}
+
+exports.getNotFound = (review) => {
+    if (review == undefined) return new ErrorReport(true, errorTable["notFound"])
+    return new ErrorReport(false)
+}
+
+exports.getDeletePermissionError = (review, userAuthId) => {
+    if (review.reviewerId.toString() !== userAuthId)
+        return new ErrorReport(true, errorTable["modifyOthersReview"])
     return new ErrorReport(false)
 }

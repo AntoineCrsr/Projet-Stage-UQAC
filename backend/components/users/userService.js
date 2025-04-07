@@ -193,3 +193,20 @@ exports.getRegistrationCompleted = (userId) => {
         })
         .catch(error => new Service_Response(undefined, 500, true, error))
 }
+
+
+/**
+ * 
+ * @param {string} userId 
+ * @param {Number} punctualityRating 
+ * @param {Number} securityRating 
+ * @param {Number} comfortRating 
+ * @param {Number} courtesyRating 
+ */
+exports.updateRating = (userId, punctualityRating, securityRating, comfortRating, courtesyRating) => {
+    UserSeeker.getOneUser(userId)
+        .then(user => {
+            UserFactory.updateRating(user, punctualityRating, securityRating, comfortRating, courtesyRating)
+            user.save()
+        })
+}

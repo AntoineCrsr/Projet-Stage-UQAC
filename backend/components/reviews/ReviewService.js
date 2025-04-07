@@ -3,16 +3,32 @@ const GeneralErrorManager = require("../workspace/GeneralError/GeneralErrorManag
 const ServiceResponse = require("../workspace/service_response")
 const ReviewFactory = require("./ReviewFactory")
 const ReviewSeeker = require("./ReviewSeeker")
+const ReviewFilter = require("./ReviewFilter")
+const UserService = require("../users/userService")
 
+/**
+ * 
+ * @param {Array} constraints - normalement l'objet req.query
+ * @returns {Promise}
+ */
 exports.getReviews = async (constraints) => {
     const constraintError = ReviewErrorManager.getConstraintsError(constraints)
     if (constraintError.hasError) return new ServiceResponse(undefined, 400, true, constraintError.error)
     
     return await ReviewSeeker.getReviews(constraints)
-        .then(reviews => new ServiceResponse(reviews))
+        .then(reviews => { 
+            ReviewFilter.filterMultipleReviews(reviews)
+            return new ServiceResponse(reviews)
+        })
         .catch(error => new ServiceResponse(undefined, 500, true, error))
 }
 
+/**
+ * 
+ * @param {object} reqRev 
+ * @param {string} userAuthId 
+ * @returns {Promise}
+ */
 exports.createReview = async (reqRev, userAuthId) => {
     const authError = GeneralErrorManager.getAuthError(userAuthId)
     if (authError.hasError) return new ServiceResponse(undefined, 401, true, authError.error)
@@ -22,7 +38,31 @@ exports.createReview = async (reqRev, userAuthId) => {
 
     const review = ReviewFactory.createReview(userAuthId, reqRev.reviewedId, reqRev.punctualityRating, reqRev.securityRating, reqRev.comfortRating, reqRev.courtesyRating, reqRev.message)
 
+    UserService.updateRating(userAuthId, reqRev.punctualityRating, reqRev.securityRating, reqRev.comfortRating, reqRev.courtesyRating)
+
     return await review.save()
         .then(() => (new ServiceResponse(undefined, 201)).setLocation("/review/" + review.id))
         .catch(error => new ServiceResponse(undefined, 500, true, error))
+}
+
+
+exports.deleteReview = async (reviewId, userAuthId) => {
+    const authError = GeneralErrorManager.getAuthError(userAuthId)
+    if (authError.hasError) return new ServiceResponse(undefined, 401, true, authError.error)
+    
+    const idError = ReviewErrorManager.getIdError(reviewId)
+    if (idError.hasError) return new ServiceResponse(undefined, 400, true, idError.error)
+
+    return await ReviewSeeker.getOneReview(reviewId)
+        .then(async review => {
+            const notFound = ReviewErrorManager.getNotFound(review)
+            if (notFound.hasError) return new ServiceResponse(undefined, 404, true, notFound.error)
+
+            const permissionError = ReviewErrorManager.getDeletePermissionError(review, userAuthId)
+            if (permissionError.hasError) return new ServiceResponse(undefined, 401, true, permissionError.error)
+            
+            return await ReviewFactory.deleteReview(reviewId)
+                .then(() => new ServiceResponse(undefined))
+                .catch(error => new ServiceResponse(undefined, 500, true, error))
+        }) 
 }

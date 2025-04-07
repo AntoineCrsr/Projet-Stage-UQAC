@@ -15,8 +15,10 @@ Without docker, just do "nodemon" or "node server.js"
 En cours:
 
 TODO:
-> Réalisation des avis
+> Réalisation des avis (modification) + calculer les statistiques en fonction des avis de la db
+> Fin automatique des journeys
 > Mise à jour des statistiques utilisateur quand le trajet a été fini
+> Vérification de l'âge de l'utilisateur
 > Vérifier les adresses avec l'API google maps?
 > Vérifier la cohérence des attributs de car (couleur, model etc.) // model --> API voiture ?
 > Si demandé, faire de l'abstraction sur les erreurs

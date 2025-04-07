@@ -50,8 +50,24 @@
     "reviewHimselfError": {
         "errors": {
             "review": {
-                "code": "bad values",
-                "name": "Le format du ou des identifiants est incorrect (24 chars)."
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas vous donner d'avis à vous-même."
+            }
+        }
+    },
+    "modifyOthersReview": {
+        "errors": {
+            "review": {
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas modifier l'avis de quelqu'un d'autre."
+            }
+        }
+    },
+    "notFound": {
+        "errors": {
+            "review": {
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas vous donner d'avis à vous-même."
             }
         }
     }
