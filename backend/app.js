@@ -8,6 +8,7 @@ const userRouter = require('./components/users/userRouter')
 const journeyRouter = require('./components/journeys/journeyRouter')
 const carRouter = require('./components/cars/carRouter')
 const reservationRouter = require('./components/reservation/ReservationRouter')
+const reviewRouter = require('./components/reviews/ReviewRouter')
 
 mongoose.connect(process.env.MONGODB_URI,
   { useNewUrlParser: true, useUnifiedTopology: true })
@@ -32,6 +33,7 @@ app.use('/api/auth', userRouter)
 app.use('/api/journey', journeyRouter)
 app.use('/api/car', carRouter)
 app.use('/api/reservation', reservationRouter)
+app.use('/api/review', reviewRouter)
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
 module.exports = app

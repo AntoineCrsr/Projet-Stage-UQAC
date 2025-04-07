@@ -7,3 +7,9 @@ exports.isUserVerified = async (userId) => {
     if (servResp.has_error) return new ErrorReport(true, servResp.error_object)
     return new ErrorReport(false)
 }
+
+exports.getAuthError = (userAuthId) => {
+    if (userAuthId == null || userAuthId.length !== 24) 
+        return new ErrorReport(true, generalErrors["authError"])
+    return new ErrorReport(false)
+}

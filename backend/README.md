@@ -15,9 +15,8 @@ Without docker, just do "nodemon" or "node server.js"
 En cours:
 
 TODO:
-> Email tolowercase
-> Login error si le signup est incomplet, IDEM pour la création de journeys etc. 
 > Réalisation des avis
+> Mise à jour des statistiques utilisateur quand le trajet a été fini
 > Vérifier les adresses avec l'API google maps?
 > Vérifier la cohérence des attributs de car (couleur, model etc.) // model --> API voiture ?
 > Si demandé, faire de l'abstraction sur les erreurs
