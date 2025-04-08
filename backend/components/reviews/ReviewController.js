@@ -14,3 +14,8 @@ exports.deleteReview = (req, res, next) => {
     ReviewService.deleteReview(req.params.id, req.auth.userId)
         .then(service_response => service_response.buildResponse(res))
 }
+
+exports.modifyReview = (req, res, next) => {
+    ReviewService.modifyReview(req.params.id, req.body.review, req.auth.userId)
+        .then(service_response => service_response.buildResponse(res))
+}

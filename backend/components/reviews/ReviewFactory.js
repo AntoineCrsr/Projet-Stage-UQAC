@@ -16,3 +16,10 @@ exports.createReview = (reviewerId, reviewedId, punctualityRating, securityRatin
 exports.deleteReview = (reviewId) => {
     return Review.deleteOne({"_id": reviewId})
 }
+
+
+exports.modifyReview = (reviewId, review) => {
+    delete review._id
+    delete review.reviewedId
+    return Review.updateOne({_id: reviewId}, { ...review, _id: reviewId })
+}

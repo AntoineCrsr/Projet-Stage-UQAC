@@ -99,8 +99,41 @@ exports.getNotFound = (review) => {
     return new ErrorReport(false)
 }
 
-exports.getDeletePermissionError = (review, userAuthId) => {
+exports.getModifyPermissionError = (review, userAuthId) => {
     if (review.reviewerId.toString() !== userAuthId)
         return new ErrorReport(true, errorTable["modifyOthersReview"])
     return new ErrorReport(false)
 }
+
+exports.getModifyError = async (reqRev, review) => {
+    // Présence des attributs:
+    if (reqRev == undefined
+        || (reqRev.punctualityRating == undefined
+        && reqRev.securityRating == undefined
+        && reqRev.comfortRating == undefined
+        && reqRev.courtesyRating == undefined)
+    ) return new ErrorReport(true, errorTable["missingArg"])
+
+    // Format:
+    if (
+        (reqRev.punctualityRating != undefined && typeof(reqRev.punctualityRating) !== "number")
+        || (reqRev.securityRating != undefined && typeof(reqRev.securityRating) !== "number")
+        || (reqRev.comfortRating != undefined && typeof(reqRev.comfortRating) !== "number")
+        || (reqRev.courtesyRating != undefined && typeof(reqRev.courtesyRating) !== "number")
+        || (reqRev.message != undefined && typeof(reqRev.message) !== "string")
+    ) return new ErrorReport(true, errorTable["typeError"])
+
+    // Données invalides
+    if (reqRev.reviewedId != undefined && reqRev.reviewedId != review.reviewedId)
+        return new ErrorReport(true, errorTable["modifyToAnotherGuy"])
+
+    // Logique:
+    if (
+        (reqRev.punctualityRating != undefined && (reqRev.punctualityRating < 0 || reqRev.punctualityRating > 5))
+        || (reqRev.securityRating != undefined && (reqRev.securityRating < 0 || reqRev.securityRating > 5))
+        || (reqRev.comfortRating != undefined && (reqRev.comfortRating < 0  || reqRev.comfortRating > 5))
+        || (reqRev.courtesyRating != undefined && (reqRev.courtesyRating < 0 || reqRev.courtesyRating > 5))
+    ) return new ErrorReport(true, errorTable["avisIncorrects"])
+    
+    return new ErrorReport(false)
+} 

@@ -7,6 +7,14 @@
             }
         }
     },
+    "missingModifArg": {
+        "errors": {
+            "review": {
+                "code": "missing-fields",
+                "name": "La requete ne dispose pas des attributs nécessaires (au moins un parmis: reviewedId, punctualityRating, securityRating, comfortRating, courtesyRating, message)"
+            }
+        }
+    },
     "typeError": {
         "errors": {
             "review": {
@@ -68,6 +76,14 @@
             "review": {
                 "code": "unauthorized",
                 "name": "Vous ne pouvez pas vous donner d'avis à vous-même."
+            }
+        }
+    },
+    "modifyToAnotherGuy": {
+        "errors": {
+            "review": {
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas changer l'avis pour une autre personne. Pour cela, recréez un nouvel avis."
             }
         }
     }

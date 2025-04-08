@@ -7,7 +7,7 @@ router.post('/', auth, ReviewController.createReview);
   
 router.get('/', ReviewController.getReviews);
   
-// router.get('/:id', journeyController.getOneJourney);
+router.put('/:id', auth, ReviewController.modifyReview);
   
 router.delete('/:id', auth, ReviewController.deleteReview);
 

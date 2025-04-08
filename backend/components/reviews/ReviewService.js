@@ -58,11 +58,40 @@ exports.deleteReview = async (reviewId, userAuthId) => {
             const notFound = ReviewErrorManager.getNotFound(review)
             if (notFound.hasError) return new ServiceResponse(undefined, 404, true, notFound.error)
 
-            const permissionError = ReviewErrorManager.getDeletePermissionError(review, userAuthId)
+            const permissionError = ReviewErrorManager.getModifyPermissionError(review, userAuthId)
             if (permissionError.hasError) return new ServiceResponse(undefined, 401, true, permissionError.error)
             
             return await ReviewFactory.deleteReview(reviewId)
                 .then(() => new ServiceResponse(undefined))
                 .catch(error => new ServiceResponse(undefined, 500, true, error))
         }) 
+}
+
+
+exports.modifyReview = async (reviewId, reqRev, userAuthId) => {
+    // Auth
+    const authError = GeneralErrorManager.getAuthError(userAuthId)
+    if (authError.hasError) return new ServiceResponse(undefined, 401, true, authError.error)
+    // Format d'id
+    const idError = ReviewErrorManager.getIdError(reviewId)
+    if (idError.hasError) return new ServiceResponse(undefined, 400, true, idError.error)
+
+    return await ReviewSeeker.getOneReview(reviewId)
+        .then(async review => {
+            // Not found
+            const notFound = ReviewErrorManager.getNotFound(review)
+            if (notFound.hasError) return new ServiceResponse(undefined, 404, true, notFound.error)
+            // Permission
+            const permissionError = ReviewErrorManager.getModifyPermissionError(review, userAuthId)
+            if (permissionError.hasError) return new ServiceResponse(undefined, 401, true, permissionError.error)
+            // Vérification des données
+            const verifData = await ReviewErrorManager.getModifyError(reqRev, review)
+            if (verifData.hasError) return new ServiceResponse(undefined, 400, true, verifData.error)
+            
+            // Action de modification
+            return await ReviewFactory.modifyReview(reviewId, reqRev)
+                .then(() => (new ServiceResponse(undefined)).setLocation("/review/" + review._id))
+                .catch(error => new ServiceResponse(undefined, 500, true, error))
+        }) 
+        .catch(error => new ServiceResponse(undefined, 500, true, error))
 }
