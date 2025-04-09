@@ -175,6 +175,8 @@ exports.getModificationError = (newUser, userId, userAuthId, reqFile, reqProtoco
              && (newUser.parameters.notification.remindEvaluations != null && typeof(newUser.parameters.notification.remindEvaluations) !== "boolean")
              && (newUser.parameters.notification.remindDeparture != null && typeof(newUser.parameters.notification.remindDeparture) !== "boolean"))
     ) return new ErrorReport(true, errorTable["typeError"])
+    
+    // Age de l'utilisateur TODO
 
     return new ErrorReport(false)
 }

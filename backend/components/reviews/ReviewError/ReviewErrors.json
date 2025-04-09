@@ -1,0 +1,90 @@
+{
+    "missingArg": {
+        "errors": {
+            "review": {
+                "code": "missing-fields",
+                "name": "La requete ne dispose pas des attributs nécessaires (reviewedId, punctualityRating, securityRating, comfortRating, courtesyRating, ?message)"
+            }
+        }
+    },
+    "missingModifArg": {
+        "errors": {
+            "review": {
+                "code": "missing-fields",
+                "name": "La requete ne dispose pas des attributs nécessaires (au moins un parmis: reviewedId, punctualityRating, securityRating, comfortRating, courtesyRating, message)"
+            }
+        }
+    },
+    "typeError": {
+        "errors": {
+            "review": {
+                "code": "bad values",
+                "name": "Le format des variables ne correspond pas aux attendus."
+            }
+        }
+    },
+    "avisIncorrects": {
+        "errors": {
+            "review": {
+                "code": "bad values",
+                "name": "Les notes d'un avis ne peuvent être compris qu'entre 0 et 5."
+            }
+        }
+    },
+    "reviewAlreadyGiven": {
+        "errors": {
+            "review": {
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas donner plus d'un avis sur la même personne."
+            }
+        }
+    },
+    "haveNotDoneJourney": {
+        "errors": {
+            "review": {
+                "code": "unauthorized",
+                "name": "Vous ne disposez pas de trajet complété avec le conducteur renseigné."
+            }
+        }
+    },
+    "idErrors": {
+        "errors": {
+            "review": {
+                "code": "bad values",
+                "name": "Le format du ou des identifiants est incorrect (24 chars)."
+            }
+        }
+    },
+    "reviewHimselfError": {
+        "errors": {
+            "review": {
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas vous donner d'avis à vous-même."
+            }
+        }
+    },
+    "modifyOthersReview": {
+        "errors": {
+            "review": {
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas modifier l'avis de quelqu'un d'autre."
+            }
+        }
+    },
+    "notFound": {
+        "errors": {
+            "review": {
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas vous donner d'avis à vous-même."
+            }
+        }
+    },
+    "modifyToAnotherGuy": {
+        "errors": {
+            "review": {
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas changer l'avis pour une autre personne. Pour cela, recréez un nouvel avis."
+            }
+        }
+    }
+}

@@ -272,3 +272,19 @@ exports.validateNoncePhone = (user) => {
     user.phoneNonce = null
     return user
 }
+
+
+
+exports.updateRating = (user, punctualityRating, securityRating, comfortRating, courtesyRating) => {
+    if (user.rating.nbRating === 0) {
+        user.rating.punctualityRating = punctualityRating    
+        user.rating.securityRating = securityRating
+        user.rating.comfortRating = comfortRating
+        user.rating.courtesyRating = courtesyRating
+    } 
+    user.rating.punctualityRating = (punctualityRating + user.rating.punctualityRating * user.rating.nbRating) / (user.rating.nbRating+1) 
+    user.rating.securityRating = (securityRating + user.rating.securityRating * user.rating.nbRating) / (user.rating.nbRating+1)
+    user.rating.comfortRating = (comfortRating + user.rating.comfortRating * user.rating.nbRating) / (user.rating.nbRating+1)
+    user.rating.courtesyRating = (courtesyRating + user.rating.courtesyRating * user.rating.nbRating) / (user.rating.nbRating+1)
+    user.rating.nbRating++
+}

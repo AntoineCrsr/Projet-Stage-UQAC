@@ -121,7 +121,7 @@ exports.deleteOneJourney = async (journeyId, userAuthId) => {
                 .then(() => new Service_Response(undefined))
                 .catch(error => new Service_Response(undefined, 500, true, error))
         })
-        .catch(error => {console.log(error); return new Service_Response(undefined, 500, true, error)})
+        .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
 

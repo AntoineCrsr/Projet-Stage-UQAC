@@ -1,3 +1,10 @@
 {
-    
+    "authError": {
+        "errors": {
+            "user": {
+                "name": "unauthorized",
+                "code": "L'utilisateur doit être connecté pour effectuer cette action."
+            }
+        }
+    }
 }
