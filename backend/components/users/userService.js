@@ -203,10 +203,27 @@ exports.getRegistrationCompleted = (userId) => {
  * @param {Number} comfortRating 
  * @param {Number} courtesyRating 
  */
-exports.updateRating = (userId, punctualityRating, securityRating, comfortRating, courtesyRating) => {
-    UserSeeker.getOneUser(userId)
-        .then(user => {
+exports.updateRating = async (userId, punctualityRating, securityRating, comfortRating, courtesyRating) => {
+    await UserSeeker.getOneUser(userId)
+        .then(async user => {
             UserFactory.updateRating(user, punctualityRating, securityRating, comfortRating, courtesyRating)
-            user.save()
+            await user.save()
+        })
+}
+
+
+/**
+ * 
+ * @param {string} userId 
+ * @param {Number} punctualityRating 
+ * @param {Number} securityRating 
+ * @param {Number} comfortRating 
+ * @param {Number} courtesyRating 
+ */
+exports.undoRating = async (userId, punctualityRating, securityRating, comfortRating, courtesyRating) => {
+    await UserSeeker.getOneUser(userId)
+        .then(async user => {
+            UserFactory.undoRating(user, punctualityRating, securityRating, comfortRating, courtesyRating)
+            await user.save()
         })
 }

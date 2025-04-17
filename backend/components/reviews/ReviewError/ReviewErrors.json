@@ -74,8 +74,8 @@
     "notFound": {
         "errors": {
             "review": {
-                "code": "unauthorized",
-                "name": "Vous ne pouvez pas vous donner d'avis à vous-même."
+                "code": "not found",
+                "name": "L'avis n'a pas été trouvé."
             }
         }
     },

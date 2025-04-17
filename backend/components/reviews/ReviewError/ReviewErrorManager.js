@@ -10,20 +10,20 @@ async function hasAlreadyGivenReview(userId, reviewedId) {
 } 
 
 async function hasCompletedAJourneyWith(userAuth, reviewedId) {
-    let hasCompletedAJourneyWithTheGuy = false
-    // Obtention des réservations de y:
-    await ReservationSeeker.getReservations({"userId": userAuth})
-        .then(async reservations => {
-            await reservations.forEach(async reserv => {
-                // Pour chaque réservation, obtention de la journey:
-                const journey = await JourneySeeker.getOneJourney(reserv.journeyId)
-                // Recherche de la journey dont le conducteur est le reviewed, puis vérifie que la journey soit terminée
-                if (journey.ownerId === reviewedId && journey.state === "d")
-                    hasCompletedAJourneyWithTheGuy = true
-            });
-        })
-    return hasCompletedAJourneyWithTheGuy
+    let hasCompletedAJourneyWithTheGuy = false;
+
+    const reservations = await ReservationSeeker.getReservations({ userId: userAuth });
+
+    for (const reserv of reservations) {
+        const journey = await JourneySeeker.getOneJourney(reserv.journeyId);
+        if (journey.ownerId.toString() === reviewedId && journey.state === "d") {
+            hasCompletedAJourneyWithTheGuy = true;
+            break;
+        }
+    }
+    return hasCompletedAJourneyWithTheGuy;
 }
+
 
 /**
  * Vérifie que l'utilisateur a déjà fait une journey terminée avec la personne évaluée,
@@ -68,8 +68,8 @@ exports.getCreationError = async (reqRev, userAuthId) => {
         return new ErrorReport(true, errorTable["reviewAlreadyGiven"])
 
     // Vérifie que l'utilisateur a bien réalisé un trajet
-    console.log(await hasCompletedAJourneyWith(userAuthId, reqRev.reviewedId))
-    if (await hasCompletedAJourneyWith(userAuthId, reqRev.reviewedId))
+    //console.log(await hasCompletedAJourneyWith(userAuthId, reqRev.reviewedId))
+    if (!(await hasCompletedAJourneyWith(userAuthId, reqRev.reviewedId)))
         return new ErrorReport(true, errorTable["haveNotDoneJourney"])
 
     return new ErrorReport(false)

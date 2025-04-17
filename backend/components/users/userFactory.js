@@ -282,9 +282,28 @@ exports.updateRating = (user, punctualityRating, securityRating, comfortRating, 
         user.rating.comfortRating = comfortRating
         user.rating.courtesyRating = courtesyRating
     } 
+    // newMoy = (ancMoy * card(ancMoy) + newVal) / (card(ancMoy) + 1) puis card(ancMoy)++
     user.rating.punctualityRating = (punctualityRating + user.rating.punctualityRating * user.rating.nbRating) / (user.rating.nbRating+1) 
     user.rating.securityRating = (securityRating + user.rating.securityRating * user.rating.nbRating) / (user.rating.nbRating+1)
     user.rating.comfortRating = (comfortRating + user.rating.comfortRating * user.rating.nbRating) / (user.rating.nbRating+1)
     user.rating.courtesyRating = (courtesyRating + user.rating.courtesyRating * user.rating.nbRating) / (user.rating.nbRating+1)
     user.rating.nbRating++
+}
+
+
+exports.undoRating = (user, punctualityRating, securityRating, comfortRating, courtesyRating) => {
+    if (user.rating.nbRating === 1) {
+        user.rating.punctualityRating = null    
+        user.rating.securityRating = null
+        user.rating.comfortRating = null
+        user.rating.courtesyRating = null
+        user.rating.nbRating = 0
+        return
+    }
+    // newMoy = (ancMoy * card(ancMoy) - newVal) / (card(ancMoy) - 1) puis card(ancMoy)--
+    user.rating.punctualityRating = (user.rating.punctualityRating * user.rating.nbRating - punctualityRating) / (user.rating.nbRating-1) 
+    user.rating.securityRating = (user.rating.securityRating * user.rating.nbRating - securityRating) / (user.rating.nbRating-1)
+    user.rating.comfortRating = (user.rating.comfortRating * user.rating.nbRating - comfortRating) / (user.rating.nbRating-1)
+    user.rating.courtesyRating = (user.rating.courtesyRating * user.rating.nbRating - courtesyRating) / (user.rating.nbRating-1)
+    user.rating.nbRating--
 }

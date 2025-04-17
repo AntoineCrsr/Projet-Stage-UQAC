@@ -180,9 +180,10 @@ exports.getModifyError = async (req, userAuthId, ownerId, seats) => {
         if (!(req.state === "w" || req.state === "d")) return new ErrorReport(true, errorTable["incorrectState"])
     }
 
-    const hasCar = await this.verifyIfUserHasCar(ownerId, req.carId)
-
-    if (hasCar.hasError) return hasCar
+    if (req.carId != null) {
+        const hasCar = await this.verifyIfUserHasCar(ownerId, req.carId)
+        if (hasCar.hasError) return hasCar
+    }
 
     return new ErrorReport(false)
 }

@@ -5,11 +5,11 @@ const Journey = require("./journeyModel")
  * @returns {Promise}
  */
 exports.getLastJourneys = async (limit, constraints={}) => {
-    let refinedConstraints = {}
-    if (constraints.starting) refinedConstraints["starting.city"] = constraints.starting.toLowerCase()
-    if (constraints.arrival) refinedConstraints["arrival.city"] = constraints.arrival.toLowerCase()
-    if (constraints.date) refinedConstraints["date"] = constraints.date
-    return await Journey.find(refinedConstraints).sort({ date: -1 }).limit(limit)
+    if (constraints.starting) constraints["starting.city"] = constraints.starting.toLowerCase()
+    if (constraints.arrival) constraints["arrival.city"] = constraints.arrival.toLowerCase()
+    delete constraints.starting
+    delete constraints.arrival
+    return await Journey.find(constraints).sort({ date: -1 }).limit(limit)
 }
 
 /**

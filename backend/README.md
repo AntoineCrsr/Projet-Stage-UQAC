@@ -15,7 +15,7 @@ Without docker, just do "nodemon" or "node server.js"
 En cours:
 
 TODO:
-> Réalisation des avis (modification) + calculer les statistiques en fonction des avis de la db
+> Empêcher de rejoindre une journey déjà faite
 > Fin automatique des journeys
 > Mise à jour des statistiques utilisateur quand le trajet a été fini
 > Vérification de l'âge de l'utilisateur

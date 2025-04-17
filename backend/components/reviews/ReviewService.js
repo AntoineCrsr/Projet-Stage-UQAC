@@ -38,7 +38,7 @@ exports.createReview = async (reqRev, userAuthId) => {
 
     const review = ReviewFactory.createReview(userAuthId, reqRev.reviewedId, reqRev.punctualityRating, reqRev.securityRating, reqRev.comfortRating, reqRev.courtesyRating, reqRev.message)
 
-    UserService.updateRating(userAuthId, reqRev.punctualityRating, reqRev.securityRating, reqRev.comfortRating, reqRev.courtesyRating)
+    UserService.updateRating(reqRev.reviewedId, reqRev.punctualityRating, reqRev.securityRating, reqRev.comfortRating, reqRev.courtesyRating)
 
     return await review.save()
         .then(() => (new ServiceResponse(undefined, 201)).setLocation("/review/" + review.id))
@@ -61,6 +61,8 @@ exports.deleteReview = async (reviewId, userAuthId) => {
             const permissionError = ReviewErrorManager.getModifyPermissionError(review, userAuthId)
             if (permissionError.hasError) return new ServiceResponse(undefined, 401, true, permissionError.error)
             
+            UserService.undoRating(review.reviewedId, review.punctualityRating, review.securityRating, review.comfortRating, review.courtesyRating)
+
             return await ReviewFactory.deleteReview(reviewId)
                 .then(() => new ServiceResponse(undefined))
                 .catch(error => new ServiceResponse(undefined, 500, true, error))
@@ -88,6 +90,11 @@ exports.modifyReview = async (reviewId, reqRev, userAuthId) => {
             const verifData = await ReviewErrorManager.getModifyError(reqRev, review)
             if (verifData.hasError) return new ServiceResponse(undefined, 400, true, verifData.error)
             
+            // Retirer l'ancien rating
+            await UserService.undoRating(review.reviewedId, review.punctualityRating, review.securityRating, review.comfortRating, review.courtesyRating)
+            // Ajouter le nouveau rating
+            await UserService.updateRating(reqRev.reviewedId, reqRev.punctualityRating, reqRev.securityRating, reqRev.comfortRating, reqRev.courtesyRating)
+
             // Action de modification
             return await ReviewFactory.modifyReview(reviewId, reqRev)
                 .then(() => (new ServiceResponse(undefined)).setLocation("/review/" + review._id))

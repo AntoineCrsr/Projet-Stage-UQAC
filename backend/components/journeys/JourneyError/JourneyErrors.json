@@ -3,7 +3,7 @@
         "errors": {
             "journey": {
                 "code": "unauthorized",
-                "name": "L'utilisateur cherchant éditer le trajet n'en est pas le propriétaire."
+                "name": "L'utilisateur cherchant à éditer le trajet n'en est pas le propriétaire."
             }
         }
     },
