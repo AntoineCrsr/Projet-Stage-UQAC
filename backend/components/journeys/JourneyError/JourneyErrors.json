@@ -134,5 +134,13 @@
                 "name": "Le trajet est déjà à son niveau maximal de réservations."
             }
         }
+    },
+    "doneError": {
+        "errors": {
+            "journey": {
+                "code": "consistency-error",
+                "name": "Le trajet est déjà terminé."
+            }
+        }
     }
 }

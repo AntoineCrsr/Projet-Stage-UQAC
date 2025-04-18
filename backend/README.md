@@ -15,8 +15,7 @@ Without docker, just do "nodemon" or "node server.js"
 En cours:
 
 TODO:
-> Empêcher de rejoindre une journey déjà faite
-> Fin automatique des journeys
+> Fin automatique des journeys (lors d'un GET = update ?)
 > Mise à jour des statistiques utilisateur quand le trajet a été fini
 > Vérification de l'âge de l'utilisateur
 > Vérifier les adresses avec l'API google maps?

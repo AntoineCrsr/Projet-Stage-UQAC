@@ -249,3 +249,8 @@ exports.verifyAddReservation = (journey) => {
     if (journey.seats.left <= 0) return new ErrorReport(true, errorTable["addReservationError"])
     return new ErrorReport(false)
 }
+
+exports.getDoneError = (journey) => {
+    if (journey.state === "d") return new ErrorReport(true, errorTable["doneError"])
+    return new ErrorReport(false)
+}

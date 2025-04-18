@@ -64,6 +64,11 @@ exports.deleteReservation = async (reservationId, userAuthId) => {
     // Permission du user
     const permissionError = await ReservationErrorManager.getDeleteError(reservationId, userAuthId)
     if (permissionError.hasError) return new Service_Response(undefined, 401, true, permissionError.error)
+    
+    // Anti-suppression si le trajet a été fait
+    const journeyId = (await ReservationSeeker.getReservations({"_id": reservationId}))[0].journeyId.toString()
+    const isDone = await JourneyService.isDoneJourney(journeyId)
+    if (isDone.has_error) return isDone
     // Action
     return await ReservationFactory.deleteReservation(reservationId)
         .then(() => new Service_Response(undefined))

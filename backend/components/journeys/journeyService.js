@@ -144,6 +144,9 @@ exports.canAddAReservation = async (journeyId, userId) => {
             const permissionError = JourneyErrorManager.verifyRightsOfReservationOfUserOnJourney(journey, userId)
             if (permissionError.hasError) return new Service_Response(undefined, 401, true, permissionError.error)
             
+            const journeyDoneError = JourneyErrorManager.getDoneError(journey)
+            if (journeyDoneError.hasError) return new Service_Response(undefined, 400, true, journeyDoneError.error)
+
             return new Service_Response(journey.seats.left < journey.seats.total)
         })
 }
@@ -165,5 +168,19 @@ exports.addReservation = async (journeyId) => {
             return journey.save()
                 .then(() => new Service_Response(undefined))
                 .catch(error => new Service_Response(undefined, 500, true, error))
+        })
+}
+
+
+exports.isDoneJourney = async (journeyId) => {
+    const journeyIdError = JourneyErrorManager.getIdError(journeyId)
+    if (journeyIdError.hasError) return new Service_Response(undefined, 400, true, journeyIdError.error)
+    
+    return await JourneySeeker.getOneJourney(journeyId)
+        .then(journey => {
+            const journeyDoneError = JourneyErrorManager.getDoneError(journey)
+            if (journeyDoneError.hasError) return new Service_Response(undefined, 400, true, journeyDoneError.error)
+
+            return new Service_Response(undefined)
         })
 }
