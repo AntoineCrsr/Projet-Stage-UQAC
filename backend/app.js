@@ -1,5 +1,4 @@
 const express = require("express")
-const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const path = require('path');
 require("dotenv").config();
@@ -10,11 +9,12 @@ const carRouter = require('./components/cars/carRouter')
 const reservationRouter = require('./components/reservation/ReservationRouter')
 const reviewRouter = require('./components/reviews/ReviewRouter')
 
-mongoose.connect(process.env.MONGODB_URI,
-  { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch((error) => console.log('Connexion à MongoDB échouée :' + error));
-
+if (process.env.NODE_ENV !== 'test') {
+  const connectDB = require('./db');
+  connectDB()
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('MongoDB connection error:', err));
+}
 const app = express()
 
 app.use(bodyParser.json())
