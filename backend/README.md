@@ -21,7 +21,7 @@ TODO:
 > Vérifier les adresses avec l'API google maps?
 > Vérifier la cohérence des attributs de car (couleur, model etc.) // model --> API voiture ?
 > Si demandé, faire de l'abstraction sur les erreurs
-> Test de l'app incluant les erreurs
+> Test de l'app incluant les erreurs (tests unitaires)
 > Documentation
 
 
