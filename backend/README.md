@@ -25,7 +25,15 @@ TODO:
 > Documentation
 
 
+Pour chaque "auth required", cela signifie avoir un header Authorization avec comme contenu "Bearer {TOKEN}", avec TOKEN le token obtenu avec le login.  
+
 
 Les routes:
 
-Pour chaque "auth required", cela signifie avoir un header Authorization avec comme contenu "Bearer {TOKEN}", avec TOKEN le token obtenu avec le login.  
+> User:
+
+POST /auth/login
+POST /auth/signup 
+
+GET /auth/<id>
+GET /auth/<id>?private=true
