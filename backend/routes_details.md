@@ -31,3 +31,12 @@ Si l'utilisateur existe, doit renvoyer un status 302 avec les informations de l'
 Si l'utilisateur n'existe pas ou s'il n'a pas complété son inscription, renvoie un status 404, avec un objet d'erreur dans le corps de la requête. Le nom de l'erreur doit être "not-found", et le message "L'utilisateur n'a pas été trouvé.".
 
 Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "Impossible de rechercher un utilisateur avec un identifiant invalide."
+
+
+#### POST /auth/
+
+La requête contient dans son corps un email et un mot de passe. Si l'email n'est pas dans un format cohérent (@, .fr, .com etc.) retourne un status 400 avec une erreur de nom "bad-request" et de message "L'email ne respecte pas le format attendu.". Ne doit pas contenir de header location. 
+
+S'il existe déjà un compte utilisateur enregistré dans la base avec l'email valide renseigné, alors retourne un status 409 avec une erreur de nom "conflict" et un message "Un utilisateur utilise déjà cette email.". Ne doit pas contenir de header location. 
+
+Si tout est valide, crée un utilisateur dans la base de données, et renvoie une réponse contenant un header avec une location appropriée (de forme /api/auth/<id>)
