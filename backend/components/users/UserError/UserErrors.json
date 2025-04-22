@@ -34,7 +34,7 @@
     "missingArg": {
         "errors": {
             "user": {
-                "code": "missing-fields",
+                "code": "bad-request",
                 "name": "La requete ne dispose pas des attributs nécessaires (email, password, ?preferredLangage)"
             }
         }
@@ -50,7 +50,7 @@
     "missingArgModify": {
         "errors": {
             "user": {
-                "code": "missing-fields",
+                "code": "bad-request",
                 "name": "Votre requête ne contient aucun attribut."
             }
         }
@@ -90,7 +90,7 @@
     "nonceMissing": {
         "errors": {
             "user": {
-                "code": "missing-fields",
+                "code": "bad-request",
                 "name": "La nonce requis pour la vérification est requise."
             }
         }

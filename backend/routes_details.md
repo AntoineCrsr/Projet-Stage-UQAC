@@ -61,3 +61,29 @@ S'il ne contient pas au moins un des deux, renvoie un 400 avec une erreur de cod
 Si l'email existe dans la base de données, mais que le mot de passe ne correspond pas avec celui enregistré, ou que l'email n'existe pas, renvoie un 403 avec code "forbidden" et name "La paire login / mot de passe est incorrecte.".
 
 Si l'email existe et que le mot de passe correspond à celui enregistré, renvoie un 200 avec un _id correspondant à celui du user, et un token JWT. 
+
+
+#### PUT /auth/<id>
+
+La requête contient au moins un des éléments suivants: email, password, name, phone, dateBirthday, aboutMe, alternateEmail, testimonial, isStudent, parameters
+
+S'il ne contient aucun de ces éléments, retourne un status 400 avec une erreur de code "bad-request", name "Votre requête ne contient aucun attribut.".
+
+Si la requete contient un élément qui n'est pas du bon type, renvoie un 400 avec erreur "bad-request", name "Les types des variables ne correspondent pas aux attendus."
+
+Si la requete contient un email invalide, renvoie 400 avec "L'email n'est pas valide."
+
+Si la requete contient un phone invalide, renvoie 400 avec "Le téléphone fourni est invalide."
+
+Si le user renseigné n'est pas trouvé, renvoie un 404 avec "L'utilisateur n'a pas été trouvé."
+
+Si le user n'est pas authentifié ou s'il n'est pas le propriétaire du compte, renvoie 401 avec code = "unauthorized" et name = "Vous n'êtes pas autorisé à modifier un compte dont vous n'êtes pas le propriétaire."
+
+Si l'utilisateur tente de modifier un téléphone vers un qui existe déjà, renvoie un 409 avec "Un utilisateur utilise déjà ce numéro de téléphone."
+
+Si l'utilisateur tente de modifier un email vers un qui existe déjà, renvoie un 409 avec "Un utilisateur utilise déjà cette email."
+
+Quand la modification a réussi, renvoie un 200 avec un header location pointant vers l'utilisateur modifié. 
+
+
+// TODO: test phone et email existant signup
