@@ -13,3 +13,19 @@ exports.getAuthError = (userAuthId) => {
         return new ErrorReport(true, generalErrors["authError"])
     return new ErrorReport(false)
 }
+
+exports.isValidId = (id) => {
+    const maj = [65, 90]
+    const min = [97, 122]
+    if (id == undefined || typeof(id) !== "string" || id.length !== 24) {
+        return false
+    }
+
+    for (let i = 0; i<id.length; i++) {
+        let asciiCode = id.charCodeAt(i)
+        if (asciiCode >= min[1] || asciiCode <= maj[0] || (asciiCode > maj[1] && asciiCode < min[0]))
+            return false
+    }
+
+    return true
+}

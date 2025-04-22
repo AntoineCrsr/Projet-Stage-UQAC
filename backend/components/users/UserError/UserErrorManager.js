@@ -3,6 +3,7 @@ const EmailVerifier = require("./emailVerifier")
 const PhoneVerifier = require("./phoneVerifier")
 const errorTable = require("./UserErrors.json")
 const userSeeker = require("../userSeeker")
+const generalErrorManager = require("../../workspace/GeneralError/GeneralErrorManager")
 
 /**
  * 
@@ -10,16 +11,8 @@ const userSeeker = require("../userSeeker")
  * @returns {ErrorReport}
  */
 exports.getOneUserError = (userId) => {
-    // Missing fields
-    if (userId == undefined) {
-        return new ErrorReport(true, errorTable["missingId"])
-    }
-
-    // Type error (ceci ne devrait jamais arriver vu que normalement le req.params est systématiquement un string)
-    if (typeof(userId) !== "string") {
-        return new ErrorReport(true, errorTable["typeError"])
-    }
-    
+    if (!generalErrorManager.isValidId(userId))
+        return new ErrorReport(true, errorTable["badId"])
     return new ErrorReport(false)
 }
 

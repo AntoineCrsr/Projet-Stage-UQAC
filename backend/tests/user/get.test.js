@@ -13,7 +13,6 @@ describe('GET /api/auth/<id>', () => {
         await UserFactory.validateNoncePhone(user)
         await user.save()
 
-        console.log('/api/auth/' + user._id.toString())
         const response = await request(app).get('/api/auth/' + user._id.toString());
 
         expect(response.status).toBe(302);

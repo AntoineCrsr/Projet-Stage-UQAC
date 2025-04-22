@@ -33,10 +33,23 @@ Si l'utilisateur n'existe pas ou s'il n'a pas complété son inscription, renvoi
 Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "Impossible de rechercher un utilisateur avec un identifiant invalide."
 
 
-#### POST /auth/
+#### POST /auth/signup
 
-La requête contient dans son corps un email et un mot de passe. Si l'email n'est pas dans un format cohérent (@, .fr, .com etc.) retourne un status 400 avec une erreur de nom "bad-request" et de message "L'email ne respecte pas le format attendu.". Ne doit pas contenir de header location. 
+La requête contient dans son corps un email et un mot de passe. 
+
+Si l'email n'est pas dans un format cohérent (@, .fr, .com etc.) retourne un status 400 avec une erreur de nom "bad-request" et de message "L'email ne respecte pas le format attendu.". Ne doit pas contenir de header location. 
 
 S'il existe déjà un compte utilisateur enregistré dans la base avec l'email valide renseigné, alors retourne un status 409 avec une erreur de nom "conflict" et un message "Un utilisateur utilise déjà cette email.". Ne doit pas contenir de header location. 
 
 Si tout est valide, crée un utilisateur dans la base de données, et renvoie une réponse contenant un header avec une location appropriée (de forme /api/auth/<id>)
+
+
+#### POST /auth/login
+
+La requête contient dans son corps un email et un mot de passe.
+
+S'il ne contient pas au moins un des deux, renvoie un 400 avec une erreur de code "bad-request" et de message "La requête de login doit contenir un email (string) et un password (string).". 
+
+Si l'email existe dans la base de données, mais que le mot de passe ne correspond pas avec celui enregistré, ou que l'email n'existe pas, renvoie un 403 avec code "forbidden" et name "La paire login / mot de passe est incorrecte.".
+
+Si l'email existe et que le mot de passe correspond à celui enregistré, renvoie un 200 avec un _id correspondant à celui du user, et un token JWT. 

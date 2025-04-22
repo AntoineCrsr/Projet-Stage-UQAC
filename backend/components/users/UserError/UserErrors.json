@@ -15,11 +15,11 @@
             }
         }
     },
-    "missingId": {
+    "badId": {
         "errors": {
             "user": {
-                "code": "missing-fields",
-                "name": "Il est nécessaire de renseigner une id pour obtenir la requete visée."
+                "code": "bad-request",
+                "name": "Impossible de rechercher un utilisateur avec un identifiant invalide."
             }
         }
     },
@@ -58,7 +58,7 @@
     "badEmail": {
         "errors": {
             "user": {
-                "code": "bad-values",
+                "code": "bad-request",
                 "name": "L'email n'est pas valide."
             }
         }
@@ -66,7 +66,7 @@
     "badPhone": {
         "errors": {
             "user": {
-                "code": "bad-values",
+                "code": "bad-request",
                 "name": "Le téléphone fourni est invalide."
             }
         }
@@ -74,7 +74,7 @@
     "loginBadArgs": {
         "errors": {
             "user": {
-                "code": "bad-values",
+                "code": "bad-request",
                 "name": "La requête de login doit contenir un email (string) et un password (string)."
             }
         }
@@ -82,7 +82,7 @@
     "badLoginPassword": {
         "errors": {
             "user": {
-                "code": "Wrong login or password",
+                "code": "forbidden",
                 "name": "La paire login / mot de passe est incorrecte."
             }
         }
@@ -178,7 +178,7 @@
     "idNotValid": {
         "errors": {
             "user": {
-                "code": "bad values",
+                "code": "bad-request",
                 "name": "L'identifiant de l'utilisateur n'est pas dans un format valide (doit faire 24 char)."
             }
         }

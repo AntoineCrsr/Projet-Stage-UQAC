@@ -1,10 +1,10 @@
 const request = require('supertest');
 const app = require('../../app');
 
-describe('POST /api/auth/', () => {
+describe('POST /api/auth/signup', () => {
 
   it('should return 201 with header Location', async () => {
-    request(app)
+    await request(app)
       .post('/api/auth/signup')
       .send({"user": {"email": "john.doe@gmail.com","password": "StrongPassword1234"}})
       .set('Accept', 'application/json')
@@ -24,7 +24,7 @@ describe('POST /api/auth/', () => {
 
 
   it('should return 400', async () => {
-    request(app)
+    await request(app)
       .post('/api/auth/signup')
       .send({"user": {"email": "notAnEmail","password": "StrongPassword1234"}})
       .set('Accept', 'application/json')
@@ -42,7 +42,7 @@ describe('POST /api/auth/', () => {
       .post('/api/auth/signup')
       .send({"user": {"email": "john.doe@gmail.com","password": "StrongPassword1234"}})
 
-    request(app)
+    await request(app)
       .post('/api/auth')
       .send({"user": {"email": "john.doe@gmail.com","password": "StrongPassword1234"}})
       .set('Accept', 'application/json')
