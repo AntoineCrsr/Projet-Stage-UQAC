@@ -13,6 +13,5 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "22"
-      - run: cd ./backend/
-      - run: npm install
-      - run: npm run test
+      - run: npm install ./backend/
+      - run: npm run test_api
