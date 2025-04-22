@@ -14,5 +14,5 @@ jobs:
         with:
           node-version: "22"
       - run: cd backend && npm install
-      - run: cd backend && npm test_api
+      - run: cd backend && npm test
       - run: cp ./backend/tests/.env.test ./backend/.env
