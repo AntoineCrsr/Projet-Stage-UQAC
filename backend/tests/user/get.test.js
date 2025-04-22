@@ -42,6 +42,52 @@ describe('GET /api/auth/<id>', () => {
     });
     
 
+    it('should return 302 with private data', async () => {
+      // Creating a valid user:
+      const user = await UserFactory.createUser("john.doe@gmail.com", "StrongPassword1234")
+      await UserFactory.modifyBirth(user, "2003-02-12T20:52:39.890Z")
+      await UserFactory.modifyName(user, "John", "Doe")
+      await UserFactory.modifyPhone(user, "mobile", "+1", "641369490")
+      await UserFactory.validateNonceEmail(user)
+      await UserFactory.validateNoncePhone(user)
+      await user.save()
+
+      // login
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send({"user": {"email": "john.doe@gmail.com", "password": "StrongPassword1234"}}) // Not containing password
+        .set('Accept', 'application/json')
+
+      const response = await request(app)
+        .get('/api/auth/' + user._id.toString() + '?private=true')
+        .set('Authorization', `Bearer ${res.body.token}`)
+
+      expect(response.status).toBe(302);
+
+      const keys = Object.keys(response.body)
+      
+      // Should contain
+      expect(keys).toContain("name")
+      expect(keys).toContain("rating")
+      expect(keys).toContain("aboutMe")
+      expect(keys).toContain("imageUrl")
+      expect(keys).toContain("statistics")
+      expect(keys).toContain("parameters")
+      expect(keys).toContain("email") 
+      expect(keys).toContain("phone")
+      expect(keys).toContain("isStudent")
+      expect(keys).toContain("dateBirthday")
+      expect(keys).toContain("alternateEmail")
+      expect(keys).toContain("testimonial")
+      expect(keys).toContain("hasVerifiedEmail")
+      expect(keys).toContain("hasVerifiedPhone")
+
+      // Should not contain
+      expect(keys).not.toContain("emailNonce")
+      expect(keys).not.toContain("phoneNonce")
+      expect(keys).not.toContain("password")
+  });
+
 
   it('should return 404', async () => {
     const response = await request(app).get('/api/auth/000000000000000000000000');
