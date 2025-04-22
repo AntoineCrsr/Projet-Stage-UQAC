@@ -23,7 +23,7 @@ exports.getIdInputError = (userId) => {
 }
 
 
-exports.userCreationError = async (req) => {
+exports.userCreationError = (req) => {
     // Présence de tous les champs nécessaires
     if (req == undefined
         || typeof(req) !== "object"
@@ -45,8 +45,12 @@ exports.userCreationError = async (req) => {
     if (!EmailVerifier.verifyEmail(req.email))
         return new ErrorReport(true, errorTable["badEmail"])
 
-    // Présence des attributs dans la db
-    return await userSeeker.emailExists(req.email)
+    return new ErrorReport(false)
+}
+
+exports.userAlreadyExistsVerif = async (email) => {
+        // Présence des attributs dans la db
+    return await userSeeker.emailExists(email)
         .then(alreadyExist => alreadyExist ? 
             new ErrorReport(true, errorTable["emailAlreadyExists"])
             : new ErrorReport(false)

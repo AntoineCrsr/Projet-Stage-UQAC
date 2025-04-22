@@ -12,13 +12,13 @@ describe('POST /api/auth/signup', () => {
       .then(response => {
         // Testing if the header location is giving an id
         expect(typeof(response.get("Location"))).toBe("string")
-        const locationElts = response.get("Location").split("/")
-        expect(locationElts[0]).toBe("api")
-        expect(locationElts[1]).toBe("auth")
-        expect(typeof(locationElts[2])).toBe("string")
-        expect(locationElts[2].length).toBe(24) 
+        const locationElts = response.get("Location").split("/") // should be [ '', 'api', 'auth', '<id>' ]
+        expect(locationElts[1]).toBe("api")
+        expect(locationElts[2]).toBe("auth")
+        expect(typeof(locationElts[3])).toBe("string")
+        expect(locationElts[3].length).toBe(24) 
 
-        expect(response.body).toBeUndefined()
+        expect(response.body).toBe("") // "" is equivalent to no-body
       })
   });
 
@@ -30,7 +30,7 @@ describe('POST /api/auth/signup', () => {
       .set('Accept', 'application/json')
       .expect(400)
       .then(response => {
-        expect(response.body.errors).toEqual({"user": {"code": "bad-request", "name": "L'email ne respecte pas le format attendu."}});
+        expect(response.body.errors).toEqual({"user": {"code": "bad-request", "name": "L'email n'est pas valide."}});
         expect(response.get("Location")).toBeUndefined()
       })
   });
@@ -43,7 +43,7 @@ describe('POST /api/auth/signup', () => {
       .send({"user": {"email": "john.doe@gmail.com","password": "StrongPassword1234"}})
 
     await request(app)
-      .post('/api/auth')
+      .post('/api/auth/signup')
       .send({"user": {"email": "john.doe@gmail.com","password": "StrongPassword1234"}})
       .set('Accept', 'application/json')
       .expect(409)

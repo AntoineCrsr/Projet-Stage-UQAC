@@ -25,7 +25,10 @@ exports.getUser = async (userId, showPrivate, userAuthId) => {
             UserFilter.filterOneUser(user, showPrivate)
             return new Service_Response(user, 302)
         })
-        .catch(error => new Service_Response(undefined, 404, true))
+        .catch(error => {
+            const userNotFoundError = UserErrorManager.getUserNotFoundError(null)
+            return new Service_Response(undefined, 404, true, userNotFoundError.error)
+        })
 }
 
 
@@ -34,19 +37,17 @@ exports.getUser = async (userId, showPrivate, userAuthId) => {
  * @returns {Service_Response}
  */
 exports.createUser = async (reqUser) => {
-    const report = await UserErrorManager.userCreationError(reqUser)
+    const report = UserErrorManager.userCreationError(reqUser)
     if (report.hasError) return new Service_Response(undefined, 400, true, report.error)
+
+    const alreadyExistError = await UserErrorManager.userAlreadyExistsVerif(reqUser.email)
+    if (alreadyExistError.hasError) return new Service_Response(undefined, 409, true, alreadyExistError.error)
 
     return UserFactory.createUser(reqUser.email, reqUser.password, reqUser.preferredLangage)
         .then(user => {
             return user.save()
                 .then(userData => {
-                    return this.verifyUserLogin(reqUser)
-                        .then(loginResponse => {
-                            if (loginResponse.has_error) return new Service_Response(undefined, 400, true, loginResponse.error_object)
-                            return loginResponse.setLocation("/auth/" + userData._id)
-                        })
-                        .catch(error => new Service_Response(undefined, 500, true, error))
+                    return (new Service_Response(undefined, 201)).setLocation("/auth/" + userData._id)
                 })
                 .catch(error => new Service_Response(undefined, 400, true, error))
         })

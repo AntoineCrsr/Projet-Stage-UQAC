@@ -54,7 +54,7 @@ describe('GET /api/auth/<id>', () => {
   it('should return 404', async () => {
     const user = await UserFactory.createUser("john.doe@gmail.com", "StrongPassword1234")
 
-    const response = await request(app).get('/api/auth/' + user._id);
+    const response = await request(app).get('/api/auth/' + user._id.toString());
 
     expect(response.status).toBe(404);
     expect(response.body.errors).toEqual({"user": {"code": "not-found", "name": "L'utilisateur n'a pas été trouvé."}});

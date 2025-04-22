@@ -98,7 +98,7 @@
     "nonceNotEquals": {
         "errors": {
             "user": {
-                "code": "verification failed",
+                "code": "conflict",
                 "name": "La nonce de la requête est invalide."
             }
         }
@@ -106,7 +106,7 @@
     "nonceVerifNotRequired": {
         "errors": {
             "user": {
-                "code": "verification failed",
+                "code": "conflict",
                 "name": "Cette requête n'est pas nécessaire."
             }
         }
@@ -114,7 +114,7 @@
     "emailAlreadyExists": {
         "errors": {
             "user": {
-                "code": "verification failed",
+                "code": "conflict",
                 "name": "Un utilisateur utilise déjà cette email."
             }
         }
@@ -122,7 +122,7 @@
     "phoneAlreadyExists": {
         "errors": {
             "user": {
-                "code": "verification failed",
+                "code": "conflict",
                 "name": "Un utilisateur utilise déjà ce numéro de téléphone."
             }
         }
@@ -130,7 +130,7 @@
     "userNotFound": {
         "errors": {
             "user": {
-                "code": "not found",
+                "code": "not-found",
                 "name": "L'utilisateur n'a pas été trouvé."
             }
         }

@@ -37,7 +37,7 @@ Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z
 
 La requête contient dans son corps un email et un mot de passe. 
 
-Si l'email n'est pas dans un format cohérent (@, .fr, .com etc.) retourne un status 400 avec une erreur de nom "bad-request" et de message "L'email ne respecte pas le format attendu.". Ne doit pas contenir de header location. 
+Si l'email n'est pas dans un format cohérent (@, .fr, .com etc.) retourne un status 400 avec une erreur de nom "bad-request" et de message "L'email n'est pas valide.". Ne doit pas contenir de header location. 
 
 S'il existe déjà un compte utilisateur enregistré dans la base avec l'email valide renseigné, alors retourne un status 409 avec une erreur de nom "conflict" et un message "Un utilisateur utilise déjà cette email.". Ne doit pas contenir de header location. 
 

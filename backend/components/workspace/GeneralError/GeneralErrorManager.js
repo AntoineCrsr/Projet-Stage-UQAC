@@ -17,13 +17,18 @@ exports.getAuthError = (userAuthId) => {
 exports.isValidId = (id) => {
     const maj = [65, 90]
     const min = [97, 122]
+    const num = [48, 57]
     if (id == undefined || typeof(id) !== "string" || id.length !== 24) {
         return false
     }
 
     for (let i = 0; i<id.length; i++) {
         let asciiCode = id.charCodeAt(i)
-        if (asciiCode >= min[1] || asciiCode <= maj[0] || (asciiCode > maj[1] && asciiCode < min[0]))
+        if (
+            !((asciiCode >= maj[0] && asciiCode <= maj[1]) // is Maj
+            || (asciiCode >= min[0] && asciiCode <= min[1]) // is Min
+            || (asciiCode >= num[0] && asciiCode <= num[1])) // is Num
+        )
             return false
     }
 

@@ -19,7 +19,6 @@ exports.filterOneUser = (user, showPrivate) => {
     // Data privées
     if (showPrivate !== "true") {
         user.alternateEmail = undefined
-        user.statistics = undefined
         user.parameters = undefined
         user.isStudent = undefined
         user.testimonial = undefined
