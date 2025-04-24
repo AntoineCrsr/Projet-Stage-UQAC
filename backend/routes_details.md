@@ -79,7 +79,7 @@ Si le user renseigné n'est pas trouvé, renvoie un 404 avec "L'utilisateur n'a 
 
 Si le user n'est pas authentifié ou s'il n'est pas le propriétaire du compte, renvoie 401 avec code = "unauthorized" et name = "Vous n'êtes pas autorisé à modifier un compte dont vous n'êtes pas le propriétaire."
 
-Si l'utilisateur tente de modifier un téléphone vers un qui existe déjà, renvoie un 409 avec "Un utilisateur utilise déjà ce numéro de téléphone."
+Si l'utilisateur tente de modifier un téléphone vers un qui existe déjà, renvoie un 409 avec "Un utilisateur utilise déjà ce numéro de téléphone." et code = "conflict"
 
 Si l'utilisateur tente de modifier un email vers un qui existe déjà, renvoie un 409 avec "Un utilisateur utilise déjà cette email."
 

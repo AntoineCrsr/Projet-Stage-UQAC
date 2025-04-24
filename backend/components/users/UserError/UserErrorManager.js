@@ -178,7 +178,6 @@ exports.getModificationError = (newUser, userId, userAuthId, reqFile, reqProtoco
     return new ErrorReport(false)
 }
 
-
 /**
  * 
  * @param {object} reqUser 
@@ -247,7 +246,7 @@ exports.getUserNotFoundError = (user) => {
     return new ErrorReport(false)
 }
 
-exports.getModificationErrorKnowingUser = async (user, newUser) => {
+exports.getConflictError = async (user, newUser) => {
     // Modification d'une image
     if (newUser == undefined) return new ErrorReport(false)
 

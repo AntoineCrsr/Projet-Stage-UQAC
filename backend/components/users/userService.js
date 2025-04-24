@@ -98,13 +98,13 @@ exports.verifyUserLogin = async (reqUser) => {
  * @returns {Service_Response}
  */
 exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, reqHost) => {
-    // Vérification des arguments
-    const inputError = UserErrorManager.getModificationError(newUser, userId, userAuthId, reqFile, reqProtocol, reqHost)
-    if (inputError.hasError) return new Service_Response(undefined, 400, true, inputError.error)
-
     // Vérification des droits
     let unauthorizedError = UserErrorManager.verifyAuthentication(userId, userAuthId)
     if (unauthorizedError.hasError) return new Service_Response(undefined, 401, true, unauthorizedError.error)
+
+    // Vérification des arguments
+    const inputError = UserErrorManager.getModificationError(newUser, userId, userAuthId, reqFile, reqProtocol, reqHost)
+    if (inputError.hasError) return new Service_Response(undefined, 400, true, inputError.error)
 
     return await UserSeeker.getOneUser(userId)
         .then(async user => {
@@ -113,8 +113,8 @@ exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, r
             if (notFoundError.hasError) return new Service_Response(undefined, 404, true, notFoundError.error)
             
             // Vérification des infos sachant user
-            const report = await UserErrorManager.getModificationErrorKnowingUser(user, newUser)
-            if (report.hasError) return new Service_Response(undefined, 400, true, report.error)
+            const report = await UserErrorManager.getConflictError(user, newUser)
+            if (report.hasError) return new Service_Response(undefined, 409, true, report.error)
 
             // Direction du traitement des infos
             if (reqFile !== undefined) UserFactory.modifyProfilePicture(user, reqFile, reqProtocol, reqHost)
