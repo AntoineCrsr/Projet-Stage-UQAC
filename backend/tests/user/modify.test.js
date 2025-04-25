@@ -1,4 +1,5 @@
 const UserFactory = require("../../components/users/userFactory")
+const UserSeeker = require("../../components/users/userSeeker")
 const request = require('supertest');
 const app = require('../../app');
 
@@ -125,7 +126,7 @@ describe('PUT /api/auth/id', () => {
           .set('Accept', 'application/json')
           .set('Authorization', `Bearer ${token}`)
           .expect(200)
-          .then(response => {
+          .then(async response => {
             // Header location
             expect(typeof(response.get("Location"))).toBe("string")
             const locationElts = response.get("Location").split("/") // should be [ '', 'api', 'auth', '<id>' ]
@@ -135,6 +136,24 @@ describe('PUT /api/auth/id', () => {
             expect(locationElts[3].length).toBe(24) 
     
             expect(response.body).toBe("") // "" is equivalent to no-body
+
+            let test = new Date(Date.now())
+            test.getMilliseconds
+
+            const user = await UserSeeker.getOneUser(locationElts[3]) // Gather the user
+            expect(user.email).toBe("john.doe2@gmail.com")
+            expect(user.name).toEqual({"publicName": "MatthiasLeChauffeur","firstName": "Matthias","lastName": "Chopin"})
+            expect(user.phone).toEqual({"type": "mobile","prefix": "+1","number": "641369490"})
+            expect(user.dateBirthday.getMilliseconds()).toBe((new Date("2005-02-12T20:52:39.890Z")).getMilliseconds())
+            expect(user.isStudent).toBe(true)
+            expect(user.aboutMe).toBe("Conducteur depuis 10 ans ^^")
+            expect(user.alternateEmail).toBe("bellamygarde@gmail.com")
+            expect(user.testimonial).toBe("Un testimonial")
+            expect(user.parameters.show.showAgePublically).toBe(true)
+            expect(user.parameters.show.showPhonePublically).toBe(true)
+            expect(user.parameters.notification.sendNewsletter).toBe(true)
+            expect(user.parameters.notification.remindEvaluations).toBe(true)
+            expect(user.parameters.preferredLangage).toBe("en")
           })
     })
 })
