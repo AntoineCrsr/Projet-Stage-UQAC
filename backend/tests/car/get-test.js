@@ -1,17 +1,35 @@
 const request = require('supertest');
 const app = require('../../app');
-const UserFactory = require("../../components/users/userFactory")
+const CarFactory = require("../../components/cars/CarFactory")
 
-describe('GET /api/auth/<id>', () => {
-    it('should return 302', async () => {
-        // Creating a valid user:
-        const user = await UserFactory.createUser("john.doe@gmail.com", "StrongPassword1234")
+describe('GET /api/car/id', () => {
+    let token = undefined
+    let id = undefined
+
+    beforeEach(async () => {
+        // Création d'un user et récupération du token de connexion
+        const user = await UserFactory.createUser("john.doe2@gmail.com", "StrongPassword1234")
         await UserFactory.modifyBirth(user, "2003-02-12T20:52:39.890Z")
         await UserFactory.modifyName(user, "John", "Doe")
         await UserFactory.modifyPhone(user, "mobile", "+1", "641369490")
         await UserFactory.validateNonceEmail(user)
         await UserFactory.validateNoncePhone(user)
         await user.save()
+
+        const res = await request(app)
+            .post('/api/auth/login')
+            .send({"user": {"email": "john.doe@gmail.com", "password": "StrongPassword1234"}}) // Not containing password
+            .set('Accept', 'application/json')
+
+        token = res.body.token
+        id = res.body._id
+    });
+
+
+    it('should return 302', async () => {
+        // Creating a valid car:
+        const car = await CarFactory.createCar(id, "VUS 2016", "Peugeot", "2016", "208", "Rouge", "ABC DEF GHI", true, "Mon char !!")
+        await car.save()
 
         const response = await request(app).get('/api/auth/' + user._id.toString());
 
@@ -89,25 +107,6 @@ describe('GET /api/auth/<id>', () => {
   });
 
 
-  it('should return 401', async () => {
-     // Creating a valid user:
-     const user = await UserFactory.createUser("john.doe@gmail.com", "StrongPassword1234")
-     await UserFactory.modifyBirth(user, "2003-02-12T20:52:39.890Z")
-     await UserFactory.modifyName(user, "John", "Doe")
-     await UserFactory.modifyPhone(user, "mobile", "+1", "641369490")
-     await UserFactory.validateNonceEmail(user)
-     await UserFactory.validateNoncePhone(user)
-     await user.save()
-
-    const response = await request(app)
-      .get('/api/auth/' + user.id + '?private=true')
-
-    expect(response.status).toBe(401);
-
-    expect(response.body.errors).toEqual({"user": {"code": "unauthorized", "name": "L'utilisateur doit être connecté pour effectuer cette action."}})
-  });
-
-
   it('should return 404', async () => {
     const response = await request(app).get('/api/auth/000000000000000000000000');
 
@@ -130,6 +129,22 @@ describe('GET /api/auth/<id>', () => {
     const response = await request(app).get('/api/auth/azertyuiknbv'); // Not enoughs chars
 
     expect(response.status).toBe(400);
-    expect(response.body.errors).toEqual({"user": {"code": "bad-request", "name": "L'identifiant renseigné n'est pas dans un format acceptable."}});
+    expect(response.body.errors).toEqual({"user": {"code": "bad-request", "name": "Impossible de rechercher un utilisateur avec un identifiant invalide."}});
+  });
+
+
+  it('should return 400', async () => {
+    const response = await request(app).get('/api/auth/azertyuiknbvazertyuiknbvazertyuiknbvazertyuiknbv'); // Too much chars
+
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toEqual({"user": {"code": "bad-request", "name": "Impossible de rechercher un utilisateur avec un identifiant invalide."}});
+  });
+
+
+  it('should return 400', async () => {
+    const response = await request(app).get('/api/auth/000000_00-000000000000'); // Invalid chars
+
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toEqual({"user": {"code": "bad-request", "name": "Impossible de rechercher un utilisateur avec un identifiant invalide."}});
   });
 });

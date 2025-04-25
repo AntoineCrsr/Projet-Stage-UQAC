@@ -1,0 +1,26 @@
+{
+    "authError": {
+        "errors": {
+            "user": {
+                "code": "unauthorized",
+                "name": "L'utilisateur doit être connecté pour effectuer cette action."
+            }
+        }
+    },
+    "notOwnerError": {
+        "errors": {
+            "user": {
+                "code": "unauthorized",
+                "name": "Vous n'êtes pas autorisé à modifier un objet dont vous n'êtes pas le propriétaire."
+            }
+        }
+    },
+    "invalidIdError": {
+        "errors": {
+            "any": {
+                "code": "bad-request",
+                "name": "L'identifiant renseigné n'est pas dans un format acceptable."
+            }
+        }
+    }
+}

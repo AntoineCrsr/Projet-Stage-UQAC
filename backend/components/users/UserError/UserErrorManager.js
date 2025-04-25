@@ -112,10 +112,7 @@ exports.verifyAuthentication = (userId, userAuthId) => {
 }
 
 
-exports.getModificationError = (newUser, userId, userAuthId, reqFile, reqProtocol, reqHost) => {
-    // Attributs obligatoires
-    if (userId == undefined || userAuthId == undefined) return new ErrorReport(true, errorTable["missingLogin"])
-
+exports.getModificationError = (newUser, reqFile, reqProtocol, reqHost) => {
     // Vérification qu'il y ait au moins une modification possible
     if (newUser == undefined && (reqFile == undefined || reqProtocol == undefined || reqHost == undefined))
         return new ErrorReport(true, errorTable["missingArgModify"])
@@ -266,7 +263,12 @@ exports.getConflictError = async (user, newUser) => {
 }
 
 exports.getPrivateDataShowError = (userId, userAuthId, showData) => {
-    if (userId !== userAuthId && showData === "true") return new ErrorReport(true, errorTable["showDataNotAuth"])
+    if (userId !== userAuthId && showData === "true") {
+        const isConnected = generalErrorManager.getAuthError(userAuthId)
+        if (isConnected.hasError) return isConnected
+        const isOwner = generalErrorManager.isUserOwnerOfObject(userAuthId, userId)
+        if (isOwner.hasError) return isOwner
+    }
     return new ErrorReport(false)
 }
 

@@ -30,7 +30,7 @@ Si l'utilisateur existe, doit renvoyer un status 302 avec les informations de l'
 
 Si l'utilisateur n'existe pas ou s'il n'a pas complété son inscription, renvoie un status 404, avec un objet d'erreur dans le corps de la requête. Le nom de l'erreur doit être "not-found", et le message "L'utilisateur n'a pas été trouvé.".
 
-Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "Impossible de rechercher un utilisateur avec un identifiant invalide."
+Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable."
 
 
 #### GET /auth/<id>?private=true
@@ -39,6 +39,8 @@ Si l'utilisateur existe, doit renvoyer un status 302 avec toutes les information
 Si l'utilisateur n'existe pas ou s'il n'a pas complété son inscription, renvoie un status 404, avec un objet d'erreur dans le corps de la requête. Le nom de l'erreur doit être "not-found", et le message "L'utilisateur n'a pas été trouvé.".
 
 Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "Impossible de rechercher un utilisateur avec un identifiant invalide."
+
+Si l'utilisateur n'est pas connecté, renvoie un 401 avec code = "unauthorized" et name = "L'utilisateur doit être connecté pour effectuer cette action.".
 
 
 #### POST /auth/signup
@@ -69,6 +71,8 @@ La requête contient au moins un des éléments suivants: email, password, name,
 
 S'il ne contient aucun de ces éléments, retourne un status 400 avec une erreur de code "bad-request", name "Votre requête ne contient aucun attribut.".
 
+Si l'id du user à modifier est incorrecte (mauvais format), renvoie un 400 avec code = "bad-request" et name = "L'identifiant renseigné n'est pas dans un format acceptable.".
+
 Si la requete contient un élément qui n'est pas du bon type, renvoie un 400 avec erreur "bad-request", name "Les types des variables ne correspondent pas aux attendus."
 
 Si la requete contient un email invalide, renvoie 400 avec "L'email n'est pas valide."
@@ -77,7 +81,9 @@ Si la requete contient un phone invalide, renvoie 400 avec "Le téléphone fourn
 
 Si le user renseigné n'est pas trouvé, renvoie un 404 avec "L'utilisateur n'a pas été trouvé."
 
-Si le user n'est pas authentifié ou s'il n'est pas le propriétaire du compte, renvoie 401 avec code = "unauthorized" et name = "Vous n'êtes pas autorisé à modifier un compte dont vous n'êtes pas le propriétaire."
+Si l'utilisateur n'est pas connecté, renvoie un 401 avec code = "unauthorized" et name = "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si le user n'est pas le propriétaire du compte, renvoie 401 avec code = "unauthorized" et name = "Vous n'êtes pas autorisé à modifier un objet dont vous n'êtes pas le propriétaire."
 
 Si l'utilisateur tente de modifier un téléphone vers un qui existe déjà, renvoie un 409 avec "Un utilisateur utilise déjà ce numéro de téléphone." et code = "conflict"
 
@@ -86,4 +92,13 @@ Si l'utilisateur tente de modifier un email vers un qui existe déjà, renvoie u
 Quand la modification a réussi, renvoie un 200 avec un header location pointant vers l'utilisateur modifié. 
 
 
-// TODO: test phone et email existant signup
+
+### Car
+
+#### GET /car/id
+
+Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
+
+Si la voiture existe, renvoie un status 302 avec toutes les infos de la voiture enregistrée. 
+
+Si elle n'existe pas, renvoie un 404 avec code = "not-found" et name = "La voiture n'a pas été trouvée.". 

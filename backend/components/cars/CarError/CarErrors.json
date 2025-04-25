@@ -26,7 +26,7 @@
     "notFound": {
         "errors": {
             "car": {
-                "code": "not found",
+                "code": "not-found",
                 "name": "La voiture n'a pas été trouvée."
             }
         }

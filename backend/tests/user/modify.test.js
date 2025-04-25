@@ -14,7 +14,7 @@ describe('PUT /api/auth/id', () => {
 
         const res = await request(app)
             .post('/api/auth/login')
-            .send({"user": {"email": "john.doe@gmail.com", "password": "StrongPassword1234"}}) // Not containing password
+            .send({"user": {"email": "john.doe@gmail.com", "password": "StrongPassword1234"}}) 
             .set('Accept', 'application/json')
 
         token = res.body.token
@@ -42,9 +42,40 @@ describe('PUT /api/auth/id', () => {
           .set('Accept', 'application/json')
           .expect(401)
           .then(response => {
-              expect(response.body.errors).toEqual({"user": {"code": "unauthorized", "name": "Vous n'êtes pas autorisé à modifier un compte dont vous n'êtes pas le propriétaire."}})
+              expect(response.body.errors).toEqual({"user": {"code": "unauthorized", "name": "L'utilisateur doit être connecté pour effectuer cette action."}})
           })
       });
+
+
+    it('should return 401 not owner', async () => {
+        // Creating an other user to test if another valid fellow could possibly modify another user
+        const user = await UserFactory.createUser("john.doe2@gmail.com", "StrongPassword1234")
+        await UserFactory.modifyBirth(user, "2003-02-12T20:52:39.890Z")
+        await UserFactory.modifyName(user, "John", "Doe")
+        await UserFactory.modifyPhone(user, "mobile", "+1", "641369490")
+        await UserFactory.validateNonceEmail(user)
+        await UserFactory.validateNoncePhone(user)
+        await user.save()
+
+        // Login with another account
+        const res = await request(app)
+            .post('/api/auth/login')
+            .send({"user": {"email": "john.doe2@gmail.com", "password": "StrongPassword1234"}})
+            .set('Accept', 'application/json')
+
+        other_token = res.body.token
+        other_id = res.body._id
+
+        await request(app)
+            .put('/api/auth/' + id)
+            .send({"user": {"name": {"firstName": "Matthias","lastName": "Chopin"}}})
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${other_token}`)
+            .expect(401)
+            .then(response => {
+                expect(response.body.errors).toEqual({"user": {"code": "unauthorized", "name": "Vous n'êtes pas autorisé à modifier un objet dont vous n'êtes pas le propriétaire."}})
+            })
+    });
 
     
     it('should return 409 (phone)', async () => {
@@ -86,6 +117,18 @@ describe('PUT /api/auth/id', () => {
           .expect(409)
           .then(response => {
               expect(response.body.errors).toEqual({"user": {"code": "conflict", "name": "Un utilisateur utilise déjà cette email."}})
+          })
+    })
+
+    it('should return 400', async () => {
+        await request(app)
+          .put('/api/auth/' + "invalidID") // bad ID
+          .send({"user": {"email": "john.doe@gmail.com"}})
+          .set('Accept', 'application/json')
+          .set('Authorization', `Bearer ${token}`)
+          .expect(400)
+          .then(response => {
+              expect(response.body.errors).toEqual({"user": {"code": "bad-request", "name": "L'identifiant renseigné n'est pas dans un format acceptable."}})
           })
     })
 

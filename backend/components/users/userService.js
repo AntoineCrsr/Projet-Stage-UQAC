@@ -2,10 +2,9 @@ const UserSeeker = require("./userSeeker.js")
 const UserFactory = require("./userFactory.js")
 const Service_Response = require("../workspace/service_response.js")
 const UserFilter = require("./UserFilter.js")
-
 const UserErrorManager = require("./UserError/UserErrorManager.js")
 const UserConnexionManager = require("./UserConnexionManager.js")
-
+const GeneralErrorManager = require("../workspace/GeneralError/GeneralErrorManager.js")
 
 /**
  * 
@@ -13,7 +12,7 @@ const UserConnexionManager = require("./UserConnexionManager.js")
  * @returns {Service_Response}
  */
 exports.getUser = async (userId, showPrivate, userAuthId) => {
-    const reqError = UserErrorManager.getOneUserError(userId)
+    const reqError = GeneralErrorManager.isValidId(userId, "user")
     if (reqError.hasError) 
         return new Service_Response(undefined, 400, true, reqError.error)
     
@@ -98,12 +97,20 @@ exports.verifyUserLogin = async (reqUser) => {
  * @returns {Service_Response}
  */
 exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, reqHost) => {
-    // Vérification des droits
-    let unauthorizedError = UserErrorManager.verifyAuthentication(userId, userAuthId)
+    // Validité de l'ID
+    let idValid = GeneralErrorManager.isValidId(userId, "user")
+    if (idValid.hasError) return new Service_Response(undefined, 400, true, idValid.error)
+
+    // Vérification de la connexion
+    let notAuthError = GeneralErrorManager.getAuthError(userAuthId)
+    if (notAuthError.hasError) return new Service_Response(undefined, 401, true, notAuthError.error)
+
+    // Vérification owner
+    let unauthorizedError = GeneralErrorManager.isUserOwnerOfObject(userAuthId, userId)
     if (unauthorizedError.hasError) return new Service_Response(undefined, 401, true, unauthorizedError.error)
 
     // Vérification des arguments
-    const inputError = UserErrorManager.getModificationError(newUser, userId, userAuthId, reqFile, reqProtocol, reqHost)
+    const inputError = UserErrorManager.getModificationError(newUser, reqFile, reqProtocol, reqHost)
     if (inputError.hasError) return new Service_Response(undefined, 400, true, inputError.error)
 
     return await UserSeeker.getOneUser(userId)
