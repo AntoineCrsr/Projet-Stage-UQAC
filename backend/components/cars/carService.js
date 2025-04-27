@@ -44,21 +44,28 @@ exports.getAllCars = async (constraints) => {
 
 
 exports.getOneCar = async (carId, userAuthId, showPrivate) => {
-    const verifyError = CarErrorManager.getOneCarError(carId)
+    const verifyError = GeneralErrorManager.isValidId(carId, "car")
     if (verifyError.hasError) return new Service_Response(undefined, 400, true, verifyError.error)
 
+    if (showPrivate) {
+        const isAuthenticated = GeneralErrorManager.getAuthError(userAuthId)
+        if (isAuthenticated.hasError) return new Service_Response(undefined, 401, true, isAuthenticated.error)
+    }
+   
     return await CarSeeker.getOne(carId)
         .then(car => {
             const notFoundError = CarErrorManager.getNotFound(car)
             if (notFoundError.hasError) return new Service_Response(undefined, 404, true, notFoundError.error)
-
-            const permissionPrivateError = CarErrorManager.verifyPrivatePermission(car.userId, userAuthId, showPrivate)
-            if (permissionPrivateError.hasError) return new Service_Response(undefined, 401, true, permissionPrivateError.error)
             
+            if (showPrivate) {
+                const permissionPrivateError = GeneralErrorManager.isUserOwnerOfObject(car.userId, userAuthId)
+                if (permissionPrivateError.hasError) return new Service_Response(undefined, 401, true, permissionPrivateError.error)
+            }
+
             CarFilter.filterOneCar(car, showPrivate)
             return new Service_Response(car, 302)
         })
-        .catch(error => new Service_Response(undefined, 400, true, error))
+        .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
 

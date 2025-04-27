@@ -40,16 +40,6 @@ exports.getNotFound = (car) => {
 }
 
 
-/**
- * 
- * @param {string} id 
- */
-exports.getOneCarError = (id) => {
-    if (id.length !== 24) return new ErrorReport(true, errorTable["idError"])
-    return new ErrorReport(false)
-}
-
-
 exports.getModifyError = (carReq) => {
     // Présence de l'objet
     if (carReq == undefined) return new ErrorReport(true, errorTable["badArgs"])

@@ -99,6 +99,18 @@ Quand la modification a réussi, renvoie un 200 avec un header location pointant
 
 Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
 
-Si la voiture existe, renvoie un status 302 avec toutes les infos de la voiture enregistrée. 
+Si la voiture existe, renvoie un status 302 avec les infos de la voiture enregistrée, exempté de "name" et de "licensePlate". 
 
 Si elle n'existe pas, renvoie un 404 avec code = "not-found" et name = "La voiture n'a pas été trouvée.". 
+
+
+#### GET /car/id?private=true
+Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
+
+Si elle n'existe pas, renvoie un 404 avec code = "not-found" et name = "La voiture n'a pas été trouvée.". 
+
+Si l'utilisateur n'est pas connecté, renvoie un 401 avec code = "unauthorized" et name = "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si l'utilisateur qui envoie la requête n'est pas le propriétaire de cette dernière, renvoie un 401 avec code = "unauthorized" et name = "Vous n'êtes pas autorisé à modifier un objet dont vous n'êtes pas le propriétaire."
+
+Si la voiture existe, renvoie un status 302 avec les infos de la voiture enregistrée (toutes les informations de la voiture). 
