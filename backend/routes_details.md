@@ -5,7 +5,6 @@ Voici le présentation détaillée de chaque route de l'API.
 Le document s'organise comme suit:
 1. Les routes sont triées par thème (user, journey, car etc.)
 2. Pour chaque thème, les routes sont triées par nature (GET, POST, PUT, etc.)
-3. Pour chaque nature, les routes seront triées par ordre alphabétique
 
 Vous trouverez également quelques concepts généraux en introduction de ce document. 
 
@@ -121,3 +120,20 @@ Si l'utilisateur n'est pas connecté, renvoie un 401 avec code = "unauthorized" 
 Si l'utilisateur qui envoie la requête n'est pas le propriétaire de cette dernière, renvoie un 401 avec code = "unauthorized" et name = "Vous n'êtes pas autorisé à modifier un objet dont vous n'êtes pas le propriétaire."
 
 Si la voiture existe, renvoie un status 302 avec les infos de la voiture enregistrée (toutes les informations de la voiture). 
+
+
+#### POST /api/car
+
+La requete utilisateur doit contenir carType, manufacturer, year, model, color, licensePlate, airConditioner, name. 
+
+Si la requete ne contient au moins pas un de ces attributs, renvoie 400 avec code = "bad-request" et name = "La requête ne contient pas tous les attributs nécessaires à la création de l'objet.".
+
+Si la requête contient tous les attributs mais au moins un n'est pas dans un format valide (ex: licensePlate != "AAA AAA AAA") renvoie 400 "bad-request", "Au moins un des attributs ne respecte pas le format attendu.".
+
+Si la licensePlate est déjà renseignée dans la database, renvoie 409 "conflict", "Une voiture possède déjà cette plaque d'immatriculation.".
+
+Si l'utilisateur n'est pas connecté, renvoie 401 avec "unauthorized" et name = "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si l'utilisateur connecté n'a pas complété son inscription, renvoie 401 avec "unauthorized" et name = "L'utilisateur doit compléter son inscription avant de pouvoir créer des objets.".
+
+Sinon renvoie 201, avec un header Location pointant vers l'objet (/api/car/id)
