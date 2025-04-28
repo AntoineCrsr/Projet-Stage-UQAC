@@ -140,4 +140,39 @@ describe('GET /api/car/', () => {
 
       expect(response.body.errors).toEqual({"user": {"code": "unauthorized", "name": "Vous n'êtes pas autorisé à modifier un objet dont vous n'êtes pas le propriétaire."}});
   });
+
+
+  it('should return 200', async () => {
+    // Creating multiple valid cars:
+    for (let i = 0; i<30; i++) {
+      let car = await CarFactory.createCar(id, "VUS 2016", "Peugeot", "2016", "208", "Rouge", "ABC DEF GHI", true, "Mon char " + i)
+      await car.save()
+    }
+
+    const response = await request(app).get('/api/car/');
+
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBeTruthy()
+    expect(response.body.length).toBe(20)
+
+    for (let i = 0; i < response.body.length; i++) {
+      let randomCar = response.body[i]
+
+      const keys = Object.keys(randomCar)
+      
+      // Should not contain
+      expect(keys).not.toContain("name")
+      expect(keys).not.toContain("licensePlate")
+  
+      // Values of the other elements
+      expect(randomCar.userId).toBe(id)
+      expect(randomCar.carType).toBe("VUS 2016")
+      expect(randomCar.manufacturer).toBe("Peugeot")
+      expect(randomCar.year).toBe("2016")
+      expect(randomCar.model).toBe("208")
+      expect(randomCar.color).toBe("Rouge")
+      expect(randomCar.airConditioner).toBe(true)
+      expect(randomCar.imageUrl).toBe(null)
+    }
+});
 });

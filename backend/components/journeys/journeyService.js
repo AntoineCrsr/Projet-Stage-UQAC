@@ -42,7 +42,7 @@ exports.createJourney = async (reqJourney, userId) => {
  * @param {number} limit 
  * @returns {Service_Response}
  */
-exports.getLastJourneys = async (query, limit=50) => {
+exports.getLastJourneys = async (query, limit=20) => {
     const verifConstraints = JourneyErrorManager.getConstraintsJourneys(query)
     if (verifConstraints.hasError) return new Service_Response(undefined, 400, true, verifConstraints.error)
 

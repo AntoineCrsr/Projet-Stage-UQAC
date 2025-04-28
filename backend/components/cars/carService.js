@@ -30,11 +30,11 @@ exports.createCar = async (carJson, userAuthId, fileReq, protocolReq, reqHost) =
 };
 
 
-exports.getAllCars = async (constraints) => {
+exports.getAllCars = async (constraints, limit=20) => {
     const verifyConstraints = CarErrorManager.verifyConstraints(constraints)
     if (verifyConstraints.hasError) return new Service_Response(undefined, 400, true, verifyConstraints.error)
     
-    return await CarSeeker.getAll(constraints)
+    return await CarSeeker.getAll(constraints, limit)
         .then(cars => { 
             CarFilter.filterMultipleCars(cars)
             return new Service_Response(cars)

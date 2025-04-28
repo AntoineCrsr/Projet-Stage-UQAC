@@ -95,6 +95,13 @@ Quand la modification a réussi, renvoie un 200 avec un header location pointant
 
 ### Car
 
+#### GET /car
+
+Renvoie un tableau des voitures avec leurs informations publiques (donc ne doit pas contenir les infos privées), tableau vide si aucune n'est enregistrée. Ne doit pas renvoyer plus de 20 voitures à la fois. Status 200 OK quand on renvoie. 
+
+Pour faciliter la recherche, il doit être possible de rechercher des voitures par leurs attributs, tels que GET /car?manufacturer=peugeot doit marcher. Pour l'instant, les recherches qui contiennent des attributs privées fonctionnent aussi. 
+
+
 #### GET /car/id
 
 Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
