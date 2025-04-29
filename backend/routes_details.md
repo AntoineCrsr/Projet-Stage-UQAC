@@ -128,7 +128,7 @@ La requete utilisateur doit contenir carType, manufacturer, year, model, color, 
 
 Si la requete ne contient au moins pas un de ces attributs, renvoie 400 avec code = "bad-request" et name = "La requête ne contient pas tous les attributs nécessaires à la création de l'objet.".
 
-Si la requête contient tous les attributs mais au moins un n'est pas dans un format valide (ex: licensePlate != "AAA AAA AAA") renvoie 400 "bad-request", "Au moins un des attributs ne respecte pas le format attendu.".
+Si la requête contient tous les attributs mais au moins un n'est pas dans un format valide (ex: licensePlate != "AAAAAAAAA") renvoie 400 "bad-request", "Au moins un des attributs ne respecte pas le format attendu.".
 
 Si la licensePlate est déjà renseignée dans la database, renvoie 409 "conflict", "Une voiture possède déjà cette plaque d'immatriculation.".
 

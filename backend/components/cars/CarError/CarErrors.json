@@ -2,16 +2,16 @@
     "badArgs": {
         "errors": {
             "car": {
-                "code": "missing-fields",
-                "name": "La requete ne dispose pas des attributs nécessaires (carType, manufacturer, year, model, color, licensePlate, airConditioner, name)"
+                "code": "bad-request",
+                "name": "La requête ne contient pas tous les attributs nécessaires à la création de l'objet."
             }
         }
     },
     "typeError": {
         "errors": {
             "car": {
-                "code": "type-error",
-                "name": "Le type des variables ne correspondent pas aux attendus."
+                "code": "bad-request",
+                "name": "Au moins un des attributs ne respecte pas le format attendu."
             }
         }
     },
@@ -76,6 +76,14 @@
             "car": {
                 "code": "bad values",
                 "name": "L'utilisation des contraintes sur une voiture n'est valable que pour un userId."
+            }
+        }
+    },
+    "immatError": {
+        "errors": {
+            "car": {
+                "code": "conflict",
+                "name": "Une voiture possède déjà cette plaque d'immatriculation."
             }
         }
     }

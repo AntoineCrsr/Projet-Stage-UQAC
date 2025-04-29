@@ -15,12 +15,19 @@ const CarFilter = require("./CarFilter.js")
  * @param {*} reqHost 
  * @returns {Service_Response}
  */
-exports.createCar = async (carJson, userAuthId, fileReq, protocolReq, reqHost) => {    
+exports.createCar = async (carJson, userAuthId, fileReq, protocolReq, reqHost) => { 
+    const isConnected = GeneralErrorManager.getAuthError(userAuthId)
+    if (isConnected.hasError) return new Service_Response(undefined, 401, true, isConnected.error)
+    
     const verifError = CarErrorManager.verifyCarCreation(carJson)
     if (verifError.hasError) return new Service_Response(undefined, 400, true, verifError.error)
 
     const userRegistrationCompleteError = await GeneralErrorManager.isUserVerified(userAuthId)
     if (userRegistrationCompleteError.hasError) return new Service_Response(undefined, 401, true, userRegistrationCompleteError.error)
+
+    const carAlreadyExists = await CarErrorManager.getCarAlreadyExistError(carJson.licensePlate)
+    if (carAlreadyExists.hasError) return new Service_Response(undefined, 409, true, carAlreadyExists.error)
+    
 
     const car = CarFactory.createCar(userAuthId, carJson.carType, carJson.manufacturer, carJson.year, carJson.model, carJson.color, carJson.licensePlate, carJson.airConditioner, carJson.name, protocolReq, reqHost, fileReq)
 
@@ -85,7 +92,7 @@ exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol, reqH
             const notFoundError = CarErrorManager.getNotFound(car)
             if (notFoundError.hasError) return new Service_Response(undefined, 404, true, notFoundError.error)
             
-            const authError = CarErrorManager.getAuthError(car.userId, userAuthId)
+            const authError = GeneralErrorManager.isUserOwnerOfObject(car.userId, userAuthId)
             if (authError.hasError) return new Service_Response(undefined, 401, true, authError.error)
 
             return CarFactory.modifyCar(car.id, carReq)

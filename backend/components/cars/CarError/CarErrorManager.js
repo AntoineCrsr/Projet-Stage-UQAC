@@ -1,5 +1,6 @@
 const errorTable = require("./CarErrors.json")
 const ErrorReport = require("../../workspace/ErrorReport")
+const CarSeeker = require("../../cars/CarSeeker")
 
 exports.verifyCarCreation = (reqCar) => {
     // Attributs définis
@@ -29,6 +30,16 @@ exports.verifyCarCreation = (reqCar) => {
 
     // Vérification des attributs par un appel à une API
     // TODO
+    
+    if (
+        !/\d{4}/.test(reqCar.year) // Not a number
+        ||reqCar.year < 1900 
+        || reqCar.year > (new Date(Date.now()).getFullYear())
+    )
+        return new ErrorReport(true, errorTable["typeError"])
+
+    if (!/^[a-z0-9]{9}$/.test(reqCar.licensePlate.toLowerCase()))
+        return new ErrorReport(true, errorTable["typeError"]);
 
     return new ErrorReport(false)
 }
@@ -101,5 +112,12 @@ exports.getCarVerifError = (userId, carId) => {
         || userId.length !== 24
         || carId.length !== 24
     ) return new ErrorReport(true, errorTable["internalError"])
+    return new ErrorReport(false)
+}
+
+
+exports.getCarAlreadyExistError = async (licensePlate) => {
+    if(await CarSeeker.getAll({"licensePlate": licensePlate}).then((cars) => cars.length > 0))
+        return new ErrorReport(true, errorTable["immatError"])
     return new ErrorReport(false)
 }

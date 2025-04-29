@@ -31,7 +31,7 @@ describe('POST /api/car/', () => {
     it ("should return 400 not enough args", async () => {
         const res = await request(app)
             .post('/api/car/')
-            .send({"car": {"carType":"VUS 2016","year":"2016","model":"208","color":"Rouge","licensePlate":"ABC DEF GHI","airConditioner":true,"name":"Mon char !!"}})
+            .send({"car": {"carType":"VUS 2016","year":"2016","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}})
             // Missing manufacturer:
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
@@ -49,7 +49,7 @@ describe('POST /api/car/', () => {
         // Car Type:
         let res = await request(app)
             .post('/api/car/')
-            .send({"car": {"carType":"VUS 2016","manufacturer":"Peugeot","year":"NOT VALID","model":"208","color":"Rouge","licensePlate":"ABC DEF GHI","airConditioner":true,"name":"Mon char !!"}})
+            .send({"car": {"carType":"VUS 2016","manufacturer":"Peugeot","year":"NOT VALID","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
             .expect(400)
@@ -80,13 +80,13 @@ describe('POST /api/car/', () => {
 
     it ("should return 409", async () => {
         // Creating a valid car:
-        const car = await CarFactory.createCar(id, "VUS 2016", "Peugeot", "2016", "208", "Rouge", "ABC DEF GHI", true, "Mon char !!")
+        const car = await CarFactory.createCar(id, "VUS 2016", "Peugeot", "2016", "208", "Rouge", "ABCDEFGHI", true, "Mon char !!")
         await car.save()
 
         // Creating a car with the exact same License Plate
         const res = await request(app)
             .post('/api/car/')
-            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABC DEF GHI","airConditioner":true,"name":"Mon char !!"}})
+            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
             .expect(409)
@@ -104,12 +104,12 @@ describe('POST /api/car/', () => {
         // User not connected
         const res = await request(app)
             .post('/api/car/')
-            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABC DEF GHI","airConditioner":true,"name":"Mon char !!"}})
+            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}})
             .set('Accept', 'application/json')
             .expect(401)
 
         expect(res.body.errors).toEqual({
-            "car": {
+            "user": {
                 "code": "unauthorized",
                 "name": "L'utilisateur doit être connecté pour effectuer cette action."
             }
@@ -135,13 +135,13 @@ describe('POST /api/car/', () => {
         // User with registration incomplete
         const resCar = await request(app)
             .post('/api/car/')
-            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABC DEF GHI","airConditioner":true,"name":"Mon char !!"}})
+            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${other_token}`)
             .expect(401)
 
         expect(resCar.body.errors).toEqual({
-            "car": {
+            "user": {
                 "code": "unauthorized",
                 "name": "L'utilisateur doit compléter son inscription avant de pouvoir créer des objets."
             }
@@ -152,7 +152,7 @@ describe('POST /api/car/', () => {
     it ("should return 201", async () => {
         const resCar = await request(app)
             .post('/api/car/')
-            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABC DEF GHI","airConditioner":true,"name":"Mon char !!"}})
+            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
             .expect(201)

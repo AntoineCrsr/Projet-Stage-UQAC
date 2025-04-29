@@ -280,8 +280,8 @@ exports.getRegistrationCompletedError = (user) => {
     ) return new ErrorReport(true, errorTable["registrationIncomplete"])
 
     // Validation email / phone
-    if (!user.hasVerifiedEmail) return new ErrorReport(true, errorTable["emailNotVerified"])
-    if (!user.hasVerifiedPhone) return new ErrorReport(true, errorTable["emailOrPhoneNotVerified"])
+    if (!user.hasVerifiedEmail) return new ErrorReport(true, errorTable["registrationIncomplete"])
+    if (!user.hasVerifiedPhone) return new ErrorReport(true, errorTable["registrationIncomplete"])
 
     return new ErrorReport(false)
 }

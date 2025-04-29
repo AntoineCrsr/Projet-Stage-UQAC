@@ -154,8 +154,8 @@
     "registrationIncomplete": {
         "errors": {
             "user": {
-                "code": "registration incomplete",
-                "name": "L'utilisateur n'a pas complété son inscription."
+                "code": "unauthorized",
+                "name": "L'utilisateur doit compléter son inscription avant de pouvoir créer des objets."
             }
         }
     },
