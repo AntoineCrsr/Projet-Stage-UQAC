@@ -80,7 +80,7 @@ const Login = () => {
 
       const data = await res.json();
       localStorage.setItem("token", data.token);
-      localStorage.setItem("userId", data.id);
+      localStorage.setItem("userId", data._id);
 
       // infos utilisateur
       const userRes = await fetch(`http://localhost:3000/api/user/${data.id}`, {
@@ -112,7 +112,7 @@ const Login = () => {
 
       const data = await loginRes.json();
       localStorage.setItem("token", data.token);
-      localStorage.setItem("userId", data.id);
+      localStorage.setItem("userId", data._id);
 
       //si pas login alors c'est qu'on créé un compte donc on part sur la suite du formulaire
       navigate("/login/completion", { replace: true });
