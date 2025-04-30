@@ -22,51 +22,106 @@ const Login = () => {
       setError("Format d'email invalide ou mot de passe différents");
       return;
     }
+//sauvegarde au cas où si changement de la réponse de l'api, sinon version actuelle plus bas
+  //   const endpoint = isLogin ? "/api/auth/login" : "/api/auth/signup"; //Si l'user veut se login, appelle la route login, sinon signup
+  //   const payload = { user: { email, password } }; //charge les données dans la requete API
 
-    const endpoint = isLogin ? "/api/auth/login" : "/api/auth/signup"; //Si l'user veut se login, appelle la route login, sinon signup
-    const payload = { user: { email, password } }; //charge les données dans la requete API
+  //   // Ne fonctionne pas car l'api ne renvoie pas de code ni de message, ce qui a pour conséquence que je n'ai rien à parser sur le front pour confirmer que ma creation passe bien
+  //   // donc message d'erreur et la creation ne passe pas meme si l'email et le mdp sont pris en compte.
+  //   try { //on attend la réponse de l'API
+  //     const res = await fetch(`http://localhost:3000${endpoint}`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(payload),
+  //     });
 
-    // Ne fonctionne pas car l'api ne renvoie pas de code ni de message, ce qui a pour conséquence que je n'ai rien à parser sur le front pour confirmer que ma creation passe bien
-    // donc message d'erreur et la creation ne passe pas meme si l'email et le mdp sont pris en compte.
-    try { //on attend la réponse de l'API
-      const res = await fetch(`http://localhost:3000${endpoint}`, {
+  //     if (!res.ok) {
+  //       if (res.status === 409) {
+  //         throw new Error("Cet email est déjà utilisé.");
+  //       }
+  //       throw new Error("Erreur dans la requête");}
+
+  //     const data = await res.json();
+
+  //     // Stockage du token et de l'ID
+  //     localStorage.setItem("token", data.token); //il faut quand meme faire attention au localStorage pour les attaques XSS
+  //     localStorage.setItem("userId", data.id);  //mais bon c'est plus pratique pour l'instant et il n'y a pas vraiment de risque actuellement
+
+  //     if (isLogin){
+  //     // Récupérer les infos du user (nom, prénom...)
+  //     const userRes = await fetch(`http://localhost:3000/api/user/${data.id}`, {
+  //       headers: { Authorization: `Bearer ${data.token}` },
+  //     });
+  //     const userData = await userRes.json();
+
+  //     // Stocker le nom complet
+  //     localStorage.setItem("userName", `${userData.firstname} ${userData.lastname}`);
+
+  //     // Redirection vers la page précédente
+  //     navigate(from, { replace: true });
+  //     } else { //si pas login alors c'est qu'on créé un compte donc on part sur la suite du formulaire
+  //       navigate("/login/completion", { replace: true });
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     setError(err.message);
+  //   }
+  // };
+  try { //changement apres avoir conclu qu'il fallait login apres le signup pour avoir un retour
+    if (isLogin) {
+      // Connexion simple
+      const res = await fetch("http://localhost:3000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ user: { email, password } }),
       });
 
-      if (!res.ok) {
-        if (res.status === 409) {
-          throw new Error("Cet email est déjà utilisé.");
-        }
-        throw new Error("Erreur dans la requête");}
+      if (!res.ok) throw new Error("Échec de la connexion");
 
       const data = await res.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.id);
 
-      // Stockage du token et de l'ID
-      localStorage.setItem("token", data.token); //il faut quand meme faire attention au localStorage pour les attaques XSS
-      localStorage.setItem("userId", data.id);  //mais bon c'est plus pratique pour l'instant et il n'y a pas vraiment de risque actuellement
-
-      if (isLogin){
-      // Récupérer les infos du user (nom, prénom...)
+      // infos utilisateur
       const userRes = await fetch(`http://localhost:3000/api/user/${data.id}`, {
         headers: { Authorization: `Bearer ${data.token}` },
       });
       const userData = await userRes.json();
-
-      // Stocker le nom complet
       localStorage.setItem("userName", `${userData.firstname} ${userData.lastname}`);
 
-      // Redirection vers la page précédente
       navigate(from, { replace: true });
-      } else { //si pas login alors c'est qu'on créé un compte donc on part sur la suite du formulaire
-        navigate("/login/completion", { replace: true });
-      }
-    } catch (err) {
-      console.error(err);
-      setError(err.message);
+    } else {
+      // Inscription avec signup
+      const signupRes = await fetch("http://localhost:3000/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user: { email, password } }),
+      });
+
+      if (signupRes.status === 409) throw new Error("Cet email est déjà utilisé.");
+      if (!signupRes.ok) throw new Error("Échec de l'inscription");
+
+      // Puis login automatique
+      const loginRes = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user: { email, password } }),
+      });
+
+      if (!loginRes.ok) throw new Error("Échec de la connexion après inscription");
+
+      const data = await loginRes.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.id);
+
+      //si pas login alors c'est qu'on créé un compte donc on part sur la suite du formulaire
+      navigate("/login/completion", { replace: true });
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setError(err.message);
+  }
+};
 
 
     return (
