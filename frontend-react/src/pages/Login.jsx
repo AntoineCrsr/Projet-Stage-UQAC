@@ -83,11 +83,12 @@ const Login = () => {
       localStorage.setItem("userId", data._id);
 
       // infos utilisateur
-      const userRes = await fetch(`http://localhost:3000/api/user/${data.id}`, {
+      const userRes = await fetch(`http://localhost:3000/api/auth/${data._id}`, {
         headers: { Authorization: `Bearer ${data.token}` },
       });
       const userData = await userRes.json();
-      localStorage.setItem("userName", `${userData.firstname} ${userData.lastname}`);
+      localStorage.setItem("userName", `${userData.name.firstName} ${userData.name.lastName}`);
+      window.dispatchEvent(new Event("storage"));
 
       navigate(from, { replace: true });
     } else {

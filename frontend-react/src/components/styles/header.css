@@ -57,3 +57,21 @@ button.theme:hover {
     margin-right: 20px;
     cursor: pointer;
 }
+
+.user-name {
+    color: white;
+    margin-left: 15px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.profil-button{
+    background-color: white;
+    color: #034123;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+}
