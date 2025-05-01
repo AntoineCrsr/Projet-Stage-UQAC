@@ -8,6 +8,7 @@ import Footer from "./components/footer";
 import JourneyDetails from "./components/journeyDetails";
 import "./theme.css";
 import Header from "./components/header";
+import Profil from "./pages/Profil";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -20,6 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/login" element={<Login />} />
           <Route path="/journey/:id" element={<JourneyDetails />} />
           <Route path="/login/completion" element={<LoginCompletion />} />
+         <Route path="/profil" element={<Profil />} />
         </Routes>
         </div>
         <Footer />

@@ -77,6 +77,7 @@ const LoginCompletion = () => {
       }
       // MAJ nom localstorage
       localStorage.setItem("userName", `${firstName} ${lastName}`);
+      window.dispatchEvent(new Event("storage"));
       navigate("/"); // retour à l'accueil une fois le formulaire complété (pas encore testé)
     } catch (err) {
       console.error(err);
