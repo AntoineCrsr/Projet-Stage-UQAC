@@ -21,10 +21,14 @@ textarea {
     width: 100%;
     height: 80px;
     resize: none;
+    background-color: var(--bg-color);
 }
 
 .profil-buttons {
     display: flex;
     justify-content: space-between;
     gap: 10px;
+}
+.profil-info {
+    margin-bottom: 0.5rem;
 }

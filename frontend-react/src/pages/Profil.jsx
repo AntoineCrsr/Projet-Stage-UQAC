@@ -72,10 +72,13 @@ const Profil = () => {
         </div>
 
         <div className="profil-section">
-        <strong>Nom :</strong> {user.name?.firstName} {user.name?.lastName}</div>
+        <strong>Nom :</strong>{user.name?.lastName}</div>
+
+        <div className="profil-section">
+        <strong>Prenom :</strong>{user.name?.firstName}</div>
         
         <div className="profil-section">
-        <strong>Nom public :</strong> {user.name?.publicName}</div>
+        <strong>Nom public :</strong>{user.name?.publicName}</div>
         
         {/* <div className="profil-section"> //pas des infos accessibles dans la route que j'utilise, je cherche encore un moyen de les recup
         <strong>Email :</strong> {user.email}</div>
@@ -107,6 +110,20 @@ const Profil = () => {
             placeholder="Décrivez-vous en quelques mots"
         />
         </div>
+
+        <h3>Évaluations</h3>
+        <div className="profil-info">⭐️ Ponctualité : {user.rating?.punctualityRating ?? "Pas encore évalué"}/5</div>
+        <div className="profil-info">🛡️ Sécurité : {user.rating?.securityRating ?? "Pas encore évalué"}/5</div>
+        <div className="profil-info">🛋️ Confort : {user.rating?.comfortRating ?? "Pas encore évalué"}/5</div>
+        <div className="profil-info">🤝 Courtoisie : {user.rating?.courtesyRating ?? "Pas encore évalué"}/5</div>
+        <div className="profil-info">🗳️ Nombre de votes : {user.rating?.nbRating}</div>
+
+        <h3>Statistiques</h3>
+        <div className="profil-info">🧾 Trajets complétés : {user.statistics?.nbRidesCompleted}</div>
+        <div className="profil-info">🛣️ Km parcourus : {user.statistics?.nbKmTravelled}</div>
+        <div className="profil-info">👥 Personnes rencontrées : {user.statistics?.nbPeopleTravelledWith}</div>
+        <div className="profil-info">🌱 Tonnes de CO₂ économisées : {user.statistics?.nbTonsOfCO2Saved}</div>
+
 
         <div className="profil-buttons">
         <button onClick={handleSave}>Enregistrer</button>
