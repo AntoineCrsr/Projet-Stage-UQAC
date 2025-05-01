@@ -22,5 +22,6 @@
             "com",
             "ca"
         ]
-    }
+    },
+    "genders": ["M", "F", "O", "unknowed"]
 }

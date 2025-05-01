@@ -78,6 +78,8 @@ Si la requete contient un email invalide, renvoie 400 avec "L'email n'est pas va
 
 Si la requete contient un phone invalide, renvoie 400 avec "Le téléphone fourni est invalide."
 
+Si la requete contient un genre invalide, renvoie 400 avec "Le genre fourni est invalide."
+
 Si le user renseigné n'est pas trouvé, renvoie un 404 avec "L'utilisateur n'a pas été trouvé."
 
 Si l'utilisateur n'est pas connecté, renvoie un 401 avec code = "unauthorized" et name = "L'utilisateur doit être connecté pour effectuer cette action.".

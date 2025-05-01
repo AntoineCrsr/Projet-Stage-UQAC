@@ -1,6 +1,7 @@
 const ErrorReport = require("../../workspace/ErrorReport")
 const EmailVerifier = require("./emailVerifier")
 const PhoneVerifier = require("./phoneVerifier")
+const GenderVerifier = require("./GenderVerifier")
 const errorTable = require("./UserErrors.json")
 const userSeeker = require("../userSeeker")
 const generalErrorManager = require("../../workspace/GeneralError/GeneralErrorManager")
@@ -121,6 +122,7 @@ exports.getModificationError = (newUser, reqFile, reqProtocol, reqHost) => {
     if (newUser != undefined 
         && newUser.email == undefined
         && newUser.password == undefined
+        && newUser.gender == undefined
         && newUser.name == undefined
         && newUser.phone == undefined
         && newUser.isStudent == undefined
@@ -135,7 +137,8 @@ exports.getModificationError = (newUser, reqFile, reqProtocol, reqHost) => {
     if ((newUser != undefined && typeof(newUser) !== "object")
         && (newUser.email == undefined && typeof(newUser.email) !== "string")
         && (newUser.password == undefined && typeof(newUser.password) !== "string")
-        && (newUser.name == undefined && typeof(newUser.name) !== "string")
+        && (newUser.gender == undefined && typeof(newUser.gender) !== "string")
+        && (newUser.name == undefined && typeof(newUser.name) !== "object")
         && (newUser.phone == undefined && typeof(newUser.phone) !== "object")
         && (newUser.isStudent == undefined && typeof(newUser.isStudent) !== "boolean")
         && (newUser.parameters == undefined && typeof(newUser.parameters) !== "object")
@@ -156,6 +159,11 @@ exports.getModificationError = (newUser, reqFile, reqProtocol, reqHost) => {
         && newUser.phone != undefined
         && !PhoneVerifier.verifyPhone(newUser.phone)
     ) return new ErrorReport(true, errorTable["badPhone"])
+
+    if (newUser != undefined
+        && newUser.gender != undefined
+        && !GenderVerifier.verifyGender(newUser.gender)
+    ) return new ErrorReport(true, errorTable["badGender"])
 
     // Vérification des paramètres
     if (newUser != undefined
