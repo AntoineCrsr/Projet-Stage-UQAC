@@ -18,7 +18,7 @@ const Profil = () => {
         return;
     }
 
-    fetch(`http://localhost:3000/api/auth/${userId}`, {
+    fetch(`http://localhost:3000/api/auth/${userId}?private=true`, {
         headers: { Authorization: `Bearer ${token}` },
     })
         .then((res) => res.json())
@@ -80,15 +80,19 @@ const Profil = () => {
         <div className="profil-section">
         <strong>Nom public :</strong>{user.name?.publicName}</div>
         
-        {/* <div className="profil-section"> //pas des infos accessibles dans la route que j'utilise, je cherche encore un moyen de les recup
+        <div className="profil-section"> 
         <strong>Email :</strong> {user.email}</div>
         
+        <div className="profil-section"> 
+        <strong>Telephone :</strong> Type {user.phone.type} : {user.phone.prefix}{user.phone.number} </div>
+
+
         <div className="profil-section">
         <strong>Genre :</strong> {user.gender}</div>
         
         <div className="profil-section">
         <strong>Date de naissance :</strong>{" "}
-        {new Date(user.dateBirthday).toLocaleDateString()}</div> */}
+        {new Date(user.dateBirthday).toLocaleDateString()}</div>
         
 
         <div className="profil-section">
@@ -112,17 +116,17 @@ const Profil = () => {
         </div>
 
         <h3>Évaluations</h3>
-        <div className="profil-info">⭐️ Ponctualité : {user.rating?.punctualityRating ?? "Pas encore évalué"}/5</div>
-        <div className="profil-info">🛡️ Sécurité : {user.rating?.securityRating ?? "Pas encore évalué"}/5</div>
-        <div className="profil-info">🛋️ Confort : {user.rating?.comfortRating ?? "Pas encore évalué"}/5</div>
-        <div className="profil-info">🤝 Courtoisie : {user.rating?.courtesyRating ?? "Pas encore évalué"}/5</div>
-        <div className="profil-info">🗳️ Nombre de votes : {user.rating?.nbRating}</div>
+        <div className="profil-info"> Ponctualité : {user.rating?.punctualityRating ?? "Pas encore évalué"}/5</div>
+        <div className="profil-info"> Sécurité : {user.rating?.securityRating ?? "Pas encore évalué"}/5</div>
+        <div className="profil-info"> Confort : {user.rating?.comfortRating ?? "Pas encore évalué"}/5</div>
+        <div className="profil-info"> Courtoisie : {user.rating?.courtesyRating ?? "Pas encore évalué"}/5</div>
+        <div className="profil-info"> Nombre de votes : {user.rating?.nbRating}</div>
 
         <h3>Statistiques</h3>
-        <div className="profil-info">🧾 Trajets complétés : {user.statistics?.nbRidesCompleted}</div>
-        <div className="profil-info">🛣️ Km parcourus : {user.statistics?.nbKmTravelled}</div>
-        <div className="profil-info">👥 Personnes rencontrées : {user.statistics?.nbPeopleTravelledWith}</div>
-        <div className="profil-info">🌱 Tonnes de CO₂ économisées : {user.statistics?.nbTonsOfCO2Saved}</div>
+        <div className="profil-info"> Trajets complétés : {user.statistics?.nbRidesCompleted}</div>
+        <div className="profil-info"> Km parcourus : {user.statistics?.nbKmTravelled}</div>
+        <div className="profil-info"> Personnes rencontrées : {user.statistics?.nbPeopleTravelledWith}</div>
+        <div className="profil-info"> Tonnes de CO₂ économisées : {user.statistics?.nbTonsOfCO2Saved}</div>
 
 
         <div className="profil-buttons">
