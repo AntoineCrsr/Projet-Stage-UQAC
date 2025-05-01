@@ -20,7 +20,7 @@ exports.createUser = async (email, password, preferredLangage="FR") => {
                 alternateEmail: null,
                 testimonial: null,
                 imageUrl: null,
-                gender: "unknowed",
+                gender: null,
 
                 name: {
                     publicName: null,

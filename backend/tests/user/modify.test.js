@@ -182,7 +182,7 @@ describe('PUT /api/auth/id', () => {
           .send({"user": {
             "email": "john.doe2@gmail.com",
             "password": "password12345",
-            "gender": "M",
+            "gender": "homme",
             "name": {
                 "publicName": "MatthiasLeChauffeur",
                 "firstName": "Matthias",

@@ -23,5 +23,5 @@
             "ca"
         ]
     },
-    "genders": ["M", "F", "O", "unknowed"]
+    "genders": ["homme", "femme", "autre", "inconnu"]
 }

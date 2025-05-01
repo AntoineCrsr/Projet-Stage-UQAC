@@ -285,6 +285,7 @@ exports.getRegistrationCompletedError = (user) => {
     if (user.dateBirthday == undefined
         || user.name == undefined
         || user.phone == undefined
+        || user.gender == undefined
     ) return new ErrorReport(true, errorTable["registrationIncomplete"])
 
     // Validation email / phone
