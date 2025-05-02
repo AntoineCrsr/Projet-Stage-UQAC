@@ -20,6 +20,7 @@ exports.createUser = async (email, password, preferredLangage="FR") => {
                 alternateEmail: null,
                 testimonial: null,
                 imageUrl: null,
+                gender: null,
 
                 name: {
                     publicName: null,
@@ -270,6 +271,11 @@ exports.validateNonceEmail = (user) => {
 exports.validateNoncePhone = (user) => {
     user.hasVerifiedPhone = true
     user.phoneNonce = null
+    return user
+}
+
+exports.modifyGender = (user, gender) => {
+    user.gender = gender.toLowerCase()
     return user
 }
 

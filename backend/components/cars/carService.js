@@ -77,11 +77,14 @@ exports.getOneCar = async (carId, userAuthId, showPrivate) => {
 
 
 exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol, reqHost) => {
+    const isConnected = GeneralErrorManager.getAuthError(userAuthId)
+    if (isConnected.hasError) return new Service_Response(undefined, 401, true, isConnected.error)
+
     let newCarReq = typeof carReq == "string" ? JSON.parse(carReq) : {...carReq}
     if (reqFile !== undefined) newCarReq.imageUrl = `${reqProtocol}://${reqHost}/images/${reqFile.filename}` 
 
     delete newCarReq._userId;
-    const verifId = CarErrorManager.getOneCarError(id)
+    const verifId = GeneralErrorManager.isValidId(id)
     if (verifId.hasError) return new Service_Response(undefined, 400, true, verifId.error)
 
     const modifError = CarErrorManager.getModifyError(carReq)
@@ -104,7 +107,7 @@ exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol, reqH
 
 
  exports.deleteOneCar = async (id, userAuthId) => {
-    const verifId = CarErrorManager.getOneCarError(id)
+    const verifId = GeneralErrorManager.isValidId(id)
     if (verifId.hasError) return new Service_Response(undefined, 400, true, verifId.error)
 
     return await CarSeeker.getOne(id)

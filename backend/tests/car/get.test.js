@@ -156,23 +156,23 @@ describe('GET /api/car/', () => {
     expect(response.body.length).toBe(20)
 
     for (let i = 0; i < response.body.length; i++) {
-      let randomCar = response.body[i]
+      let car = response.body[i]
 
-      const keys = Object.keys(randomCar)
+      const keys = Object.keys(car)
       
       // Should not contain
       expect(keys).not.toContain("name")
       expect(keys).not.toContain("licensePlate")
   
       // Values of the other elements
-      expect(randomCar.userId).toBe(id)
-      expect(randomCar.carType).toBe("VUS 2016")
-      expect(randomCar.manufacturer).toBe("Peugeot")
-      expect(randomCar.year).toBe("2016")
-      expect(randomCar.model).toBe("208")
-      expect(randomCar.color).toBe("Rouge")
-      expect(randomCar.airConditioner).toBe(true)
-      expect(randomCar.imageUrl).toBe(null)
+      expect(car.userId).toBe(id)
+      expect(car.carType).toBe("VUS 2016")
+      expect(car.manufacturer).toBe("Peugeot")
+      expect(car.year).toBe("2016")
+      expect(car.model).toBe("208")
+      expect(car.color).toBe("Rouge")
+      expect(car.airConditioner).toBe(true)
+      expect(car.imageUrl).toBe(null)
     }
 });
 });

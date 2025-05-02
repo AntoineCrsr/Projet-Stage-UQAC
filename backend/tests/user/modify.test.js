@@ -132,6 +132,49 @@ describe('PUT /api/auth/id', () => {
           })
     })
 
+    it('should return 400 bad email', async () => {
+        // Modification complète pour tester tout en même temps (sauf image)
+        await request(app)
+          .put('/api/auth/' + id)
+          .set('Authorization', `Bearer ${token}`)
+          .send({"user": {
+            "email": "INVALIDEMAIL", // Invalid email
+            }}) 
+          .expect(400)
+          .then(response => {
+             expect(response.body.errors).toEqual({"user": {"code": "bad-request", "name": "L'email n'est pas valide."}})
+          })
+    })
+
+    it('should return 400 bad phone', async () => {
+        // Modification complète pour tester tout en même temps (sauf image)
+        await request(app)
+          .put('/api/auth/' + id)
+          .set('Authorization', `Bearer ${token}`)
+          .send({"user": {
+            "phone": {
+                "type": "mobile",
+                "prefix": "+1",
+                "number": "invalidNumber" // not enough numbers
+            }}}) 
+          .expect(400)
+          .then(response => {
+             expect(response.body.errors).toEqual({"user": {"code": "bad-request", "name": "Le téléphone fourni est invalide."}})
+          })
+    })
+
+    it('should return 400 bad gender', async () => {
+        // Modification complète pour tester tout en même temps (sauf image)
+        await request(app)
+          .put('/api/auth/' + id)
+          .set('Authorization', `Bearer ${token}`)
+          .send({"user": { "gender": "INVALIDGENDER" }}) 
+          .expect(400)
+          .then(response => {
+             expect(response.body.errors).toEqual({"user": {"code": "bad-request", "name": "Le genre fourni est invalide."}})
+          })
+    })
+
     it('should return 200', async () => {
         // Modification complète pour tester tout en même temps (sauf image)
         await request(app)
@@ -139,6 +182,7 @@ describe('PUT /api/auth/id', () => {
           .send({"user": {
             "email": "john.doe2@gmail.com",
             "password": "password12345",
+            "gender": "homme",
             "name": {
                 "publicName": "MatthiasLeChauffeur",
                 "firstName": "Matthias",

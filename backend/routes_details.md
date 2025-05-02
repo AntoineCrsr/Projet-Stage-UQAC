@@ -78,6 +78,8 @@ Si la requete contient un email invalide, renvoie 400 avec "L'email n'est pas va
 
 Si la requete contient un phone invalide, renvoie 400 avec "Le téléphone fourni est invalide."
 
+Si la requete contient un genre invalide, renvoie 400 avec "Le genre fourni est invalide."
+
 Si le user renseigné n'est pas trouvé, renvoie un 404 avec "L'utilisateur n'a pas été trouvé."
 
 Si l'utilisateur n'est pas connecté, renvoie un 401 avec code = "unauthorized" et name = "L'utilisateur doit être connecté pour effectuer cette action.".
@@ -111,6 +113,7 @@ Si elle n'existe pas, renvoie un 404 avec code = "not-found" et name = "La voitu
 
 
 #### GET /car/id?private=true
+
 Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
 
 Si elle n'existe pas, renvoie un 404 avec code = "not-found" et name = "La voiture n'a pas été trouvée.". 
@@ -137,3 +140,16 @@ Si l'utilisateur n'est pas connecté, renvoie 401 avec "unauthorized" et name = 
 Si l'utilisateur connecté n'a pas complété son inscription, renvoie 401 avec "unauthorized" et name = "L'utilisateur doit compléter son inscription avant de pouvoir créer des objets.".
 
 Sinon renvoie 201, avec un header Location pointant vers l'objet (/api/car/id)
+
+
+#### PUT /api/car
+
+Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si l'utilisateur est connecté mais n'est pas propriétaire du char, renvoie 401 code = "unauthorized" et name = "Vous n'êtes pas autorisé à modifier un objet dont vous n'êtes pas le propriétaire."
+
+Si un des éléments à modifier n'est pas dans un format valide (ex: licensePlate != "AAAAAAAAA") renvoie 400 "bad-request", "Au moins un des attributs ne respecte pas le format attendu.".
+
+Si l'utilisateur modifie une licensePlate, mais que celle ci est déjà renseignée dans la database, renvoie 409 "conflict", "Une voiture possède déjà cette plaque d'immatriculation.".
+
+Sinon renvoie 200 avec header location. 

@@ -22,5 +22,6 @@
             "com",
             "ca"
         ]
-    }
+    },
+    "genders": ["homme", "femme", "autre", "inconnu"]
 }

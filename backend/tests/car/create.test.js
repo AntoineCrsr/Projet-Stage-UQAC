@@ -15,6 +15,7 @@ describe('POST /api/car/', () => {
         await UserFactory.modifyPhone(user, "mobile", "+1", "641369490")
         await UserFactory.validateNonceEmail(user)
         await UserFactory.validateNoncePhone(user)
+        await UserFactory.modifyGender(user, "homme")
         await user.save()
 
         // Login 
@@ -135,9 +136,9 @@ describe('POST /api/car/', () => {
         // User with registration incomplete
         const resCar = await request(app)
             .post('/api/car/')
-            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${other_token}`)
+            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}})
             .expect(401)
 
         expect(resCar.body.errors).toEqual({
@@ -152,9 +153,9 @@ describe('POST /api/car/', () => {
     it ("should return 201", async () => {
         const resCar = await request(app)
             .post('/api/car/')
-            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
+            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}})
             .expect(201)
         
         // Testing if the header location is giving an id

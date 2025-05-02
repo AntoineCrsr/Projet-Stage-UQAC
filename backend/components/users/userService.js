@@ -127,6 +127,7 @@ exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, r
             if (reqFile !== undefined) UserFactory.modifyProfilePicture(user, reqFile, reqProtocol, reqHost)
             if (newUser.email != undefined) UserFactory.modifyEmail(user, newUser.email)
             if (newUser.password != undefined) await UserFactory.modifyPassword(user, newUser.password)
+            if (newUser.gender != undefined) UserFactory.modifyGender(user, newUser.gender)
             if (newUser.name != undefined) UserFactory.modifyName(user, newUser.name.firstName, newUser.name.lastName, newUser.name.publicName)
             if (newUser.phone != undefined) UserFactory.modifyPhone(user, newUser.phone.type, newUser.phone.prefix, newUser.phone.number, newUser.phone.phoneExt, newUser.phone.phoneDescription)
             if (newUser.dateBirthday != undefined) UserFactory.modifyBirth(user, newUser.dateBirthday)

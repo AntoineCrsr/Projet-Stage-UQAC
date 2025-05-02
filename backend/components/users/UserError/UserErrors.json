@@ -71,6 +71,14 @@
             }
         }
     },
+    "badGender": {
+        "errors": {
+            "user": {
+                "code": "bad-request",
+                "name": "Le genre fourni est invalide."
+            }
+        }
+    },
     "loginBadArgs": {
         "errors": {
             "user": {
