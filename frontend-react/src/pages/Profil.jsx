@@ -7,6 +7,7 @@ const Profil = () => {
     const [isStudent, setIsStudent] = useState(false);
     const [aboutMe, setAboutMe] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
     const navigate = useNavigate();
 
     const userId = localStorage.getItem("userId");
@@ -34,22 +35,38 @@ const Profil = () => {
     const handleImageUpload = (e) => {    // Envoie au backend à rajouter pour enregister l'image 
     const file = e.target.files[0];
     if (file) setImagePreview(URL.createObjectURL(file));
+    /*if (file) {
+        setSelectedFile(file);
+        setImagePreview(URL.createObjectURL(file));
+        }*/
     };
 
     const handleSave = () => {
-    fetch(`http://localhost:3000/api/auth/${userId}`, {
-        method: "PUT",
-        headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        },
+        /*const formData = new FormData();
+        formData.append(
+            "user",
+            JSON.stringify({
+                isStudent,
+                aboutMe,
+            })
+        );
+        if (selectedFile) {
+        formData.append("image", selectedFile);
+        }*/
+        fetch(`http://localhost:3000/api/auth/${userId}`, {
+            method: "PUT",
+            headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+            },
+        //body: formData,
         body: JSON.stringify({
         user: {
             isStudent,
             aboutMe,
         },
         }),
-    })
+        })
         .then((res) => {
         if (res.ok) alert("Votre profil a été mis à jour !");
         else throw new Error();
@@ -66,6 +83,7 @@ const Profil = () => {
         <div className="profil-section">
         <label>Photo de profil :</label>
         <input type="file" onChange={handleImageUpload} />
+        {/* <input type="file" accept="image/*" onChange={handleImageUpload} /> */}
         {imagePreview && (
             <img src={imagePreview} alt="profil" className="profil-image" />
         )}
