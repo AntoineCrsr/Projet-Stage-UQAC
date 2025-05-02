@@ -21,7 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/login" element={<Login />} />
           <Route path="/journey/:id" element={<JourneyDetails />} />
           <Route path="/login/completion" element={<LoginCompletion />} />
-         <Route path="/profil" element={<Profil />} />
+          <Route path="/profil" element={<Profil />} />
         </Routes>
         </div>
         <Footer />
