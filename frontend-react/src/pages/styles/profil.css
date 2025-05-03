@@ -32,3 +32,17 @@ textarea {
 .profil-info {
     margin-bottom: 0.5rem;
 }
+
+.car-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 1rem;
+}
+
+.car-item {
+    background-color: var(--bg-color);
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--text-color);
+    border-radius: 4px;
+}

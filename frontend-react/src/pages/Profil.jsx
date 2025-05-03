@@ -8,6 +8,7 @@ const Profil = () => {
     const [aboutMe, setAboutMe] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [cars, setCars] = useState([]);
     const navigate = useNavigate();
 
     const userId = localStorage.getItem("userId");
@@ -23,13 +24,42 @@ const Profil = () => {
         headers: { Authorization: `Bearer ${token}` },
     })
         .then((res) => res.json())
-        .then((data) => {
+        .then(async(data) => {
         setUser(data);
         setIsStudent(data.isStudent || false);
         setAboutMe(data.aboutMe || "");
         if (data.imageUrl) setImagePreview(data.imageUrl);
+        // Validation automatique de l'email
+        if (!data.hasVerifiedEmail) {
+            await fetch(`http://localhost:3000/api/auth/${userId}/emailValidation`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ user: { nonce: "000" } }),
+            });
+        }
+
+        // Validation automatique du téléphone 
+        if (!data.hasVerifiedPhone) {
+            await fetch(`http://localhost:3000/api/auth/${userId}/phoneValidation`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ user: { nonce: "000" } }),
+            });
+        }
+        fetch(`http://localhost:3000/api/car?userId=${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
         })
-        .catch((err) => console.error("Erreur chargement profil :", err));
+        .then((res) => res.json())
+        .then((carData) => setCars(carData))
+        .catch((err) => console.error("Erreur chargement voitures :", err));
+    })
+    .catch((err) => console.error("Erreur chargement profil :", err));
     }, [userId, token, navigate]);
 
     const handleImageUpload = (e) => {    // Envoie au backend à rajouter pour enregister l'image 
@@ -41,7 +71,27 @@ const Profil = () => {
         }*/
     };
 
-    const handleSave = () => {
+    const handleDeleteCar = async (carId) => {
+    if (!window.confirm("Confirmer la suppression de ce véhicule ?")) return;
+
+    try {
+        const res = await fetch(`http://localhost:3000/api/car/${carId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error();
+        alert("Véhicule supprimé !");
+        setCars((prev) => prev.filter((car) => car._id !== carId));
+    } catch {
+        alert("Erreur lors de la suppression.");
+    }
+    };
+
+    const handleEditCar = (carId) => {
+    navigate(`/modifier-voiture/${carId}`);
+    };
+
+    const handleSave = () => { //tests aussi avec formdata pour l'ajout d'images mais pas encore réussi donc on garde à l'ancienne pour le moment
         /*const formData = new FormData();
         formData.append(
             "user",
@@ -149,8 +199,27 @@ const Profil = () => {
 
         <div className="profil-buttons">
         <button onClick={handleSave}>Enregistrer</button>
+        <button onClick={() => navigate("/ajout-voiture")}>Ajouter un véhicule</button>
         <button onClick={() => navigate("/")}>Retour à l'accueil</button>
         </div>
+        <h3>Mes véhicules</h3>
+        {cars.length == 0 ? (
+        <p>Aucun véhicule</p>
+        ) : (
+        <ul className="car-list">
+        {cars.map((car) => (
+            <li key={car._id} className="car-item">
+            Marque : {car.manufacturer} | Modele : {car.model} | Année : ({car.year}) | Couleur : {car.color}
+            <br />
+            Type : {car.carType} | Climatisation : {car.airConditioner ? "Oui" : "Non"}
+            <div className="car-actions">
+                <button onClick={() => handleEditCar(car._id)}>Modifier</button>
+                <button onClick={() => handleDeleteCar(car._id)}>Supprimer</button>
+            </div>
+            </li>
+        ))}
+        </ul>
+        )}
     </div>
     );
 };

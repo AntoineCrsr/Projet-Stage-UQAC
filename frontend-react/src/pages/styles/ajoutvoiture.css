@@ -1,0 +1,43 @@
+.ajout-voiture-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 2rem;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-radius: 8px;
+}
+
+.ajout-voiture-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.ajout-voiture-form input[type="text"],
+.ajout-voiture-form input[type="number"] {
+    padding: 0.5rem;
+    border: 1px solid black;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-radius: 4px;
+}
+
+.ajout-voiture-form label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ajout-voiture-form button {
+    padding: 0.6rem 1rem;
+    border: none;
+    background-color: #036635;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.ajout-voiture-form button:hover {
+    background-color: #024926;
+}

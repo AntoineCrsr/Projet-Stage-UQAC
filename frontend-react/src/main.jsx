@@ -9,6 +9,7 @@ import JourneyDetails from "./components/journeyDetails";
 import "./theme.css";
 import Header from "./components/header";
 import Profil from "./pages/Profil";
+import AjoutVoiture from "./pages/AjoutVoiture";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -22,6 +23,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/journey/:id" element={<JourneyDetails />} />
           <Route path="/login/completion" element={<LoginCompletion />} />
           <Route path="/profil" element={<Profil />} />
+          <Route path="/ajout-voiture" element={<AjoutVoiture />} />
+          <Route path="/modifier-voiture/:carId" element={<AjoutVoiture />} />
         </Routes>
         </div>
         <Footer />
