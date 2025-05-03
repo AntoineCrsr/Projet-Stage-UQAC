@@ -16,7 +16,7 @@
 .ajout-voiture-form input[type="text"],
 .ajout-voiture-form input[type="number"] {
     padding: 0.5rem;
-    border: 1px solid black;
+    border: 1px solid var(--text-color);
     background-color: var(--bg-color);
     color: var(--text-color);
     border-radius: 4px;
