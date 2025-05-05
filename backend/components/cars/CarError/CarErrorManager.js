@@ -1,6 +1,7 @@
 const errorTable = require("./CarErrors.json")
 const ErrorReport = require("../../workspace/ErrorReport")
 const CarSeeker = require("../../cars/CarSeeker")
+const JourneySeeker = require("../../journeys/JourneySeeker")
 
 exports.verifyCarCreation = (reqCar) => {
     // Attributs définis
@@ -131,5 +132,13 @@ exports.getCarAlreadyExistError = async (licensePlate, carId=null) => {
         return true
     }))
         return new ErrorReport(true, errorTable["immatError"])
+    return new ErrorReport(false)
+}
+
+
+exports.carInJourneyError = async (carId) => {
+    const existJourney = await JourneySeeker.getLastJourneys(20, {"carId": carId})
+        .then(journeys => journeys.length > 0)
+    if (existJourney) return new ErrorReport(true, errorTable["existJourneyWithCar"])
     return new ErrorReport(false)
 }

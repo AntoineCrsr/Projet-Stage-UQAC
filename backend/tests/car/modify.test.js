@@ -99,7 +99,7 @@ describe('PUT /api/car/id', () => {
         expect(res.body.errors).toEqual({
             "user": {
                 "code": "unauthorized",
-                "name": "Vous n'êtes pas autorisé à modifier un objet dont vous n'êtes pas le propriétaire."
+                "name": "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
             }
         })
 

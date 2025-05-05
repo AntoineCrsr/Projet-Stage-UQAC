@@ -84,7 +84,7 @@ Si le user renseigné n'est pas trouvé, renvoie un 404 avec "L'utilisateur n'a 
 
 Si l'utilisateur n'est pas connecté, renvoie un 401 avec code = "unauthorized" et name = "L'utilisateur doit être connecté pour effectuer cette action.".
 
-Si le user n'est pas le propriétaire du compte, renvoie 401 avec code = "unauthorized" et name = "Vous n'êtes pas autorisé à modifier un objet dont vous n'êtes pas le propriétaire."
+Si le user n'est pas le propriétaire du compte, renvoie 401 avec code = "unauthorized" et name = "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
 
 Si l'utilisateur tente de modifier un téléphone vers un qui existe déjà, renvoie un 409 avec "Un utilisateur utilise déjà ce numéro de téléphone." et code = "conflict"
 
@@ -120,7 +120,7 @@ Si elle n'existe pas, renvoie un 404 avec code = "not-found" et name = "La voitu
 
 Si l'utilisateur n'est pas connecté, renvoie un 401 avec code = "unauthorized" et name = "L'utilisateur doit être connecté pour effectuer cette action.".
 
-Si l'utilisateur qui envoie la requête n'est pas le propriétaire de cette dernière, renvoie un 401 avec code = "unauthorized" et name = "Vous n'êtes pas autorisé à modifier un objet dont vous n'êtes pas le propriétaire."
+Si l'utilisateur qui envoie la requête n'est pas le propriétaire de cette dernière, renvoie un 401 avec code = "unauthorized" et name = "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
 
 Si la voiture existe, renvoie un status 302 avec les infos de la voiture enregistrée (toutes les informations de la voiture). 
 
@@ -146,10 +146,21 @@ Sinon renvoie 201, avec un header Location pointant vers l'objet (/api/car/id)
 
 Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
 
-Si l'utilisateur est connecté mais n'est pas propriétaire du char, renvoie 401 code = "unauthorized" et name = "Vous n'êtes pas autorisé à modifier un objet dont vous n'êtes pas le propriétaire."
+Si l'utilisateur est connecté mais n'est pas propriétaire du char, renvoie 401 code = "unauthorized" et name = "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
 
 Si un des éléments à modifier n'est pas dans un format valide (ex: licensePlate != "AAAAAAAAA") renvoie 400 "bad-request", "Au moins un des attributs ne respecte pas le format attendu.".
 
 Si l'utilisateur modifie une licensePlate, mais que celle ci est déjà renseignée dans la database, renvoie 409 "conflict", "Une voiture possède déjà cette plaque d'immatriculation.".
 
 Sinon renvoie 200 avec header location. 
+
+
+#### DELETE /api/car/id
+
+Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si l'utilisateur est connecté mais n'est pas propriétaire du char, renvoie 401 code = "unauthorized" et name = "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
+
+Si la voiture est enregistrée dans des trajets, alors renvoie 409, "conflict", "Vous ne pouvez pas supprimer une voiture qui est renseignée dans un trajet."
+
+Si l'utilisateur est connecté, qu'il a le droit et que la voiture peut être supprimée, alors renvoie 200. 

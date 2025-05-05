@@ -112,13 +112,21 @@ exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol, reqH
     const verifId = GeneralErrorManager.isValidId(id)
     if (verifId.hasError) return new Service_Response(undefined, 400, true, verifId.error)
 
+    const isConnected = GeneralErrorManager.getAuthError(userAuthId)
+    if (isConnected.hasError) return new Service_Response(undefined, 401, true, isConnected.error)
+
+
     return await CarSeeker.getOne(id)
-        .then(car => {
+        .then(async car => {
             const notFound = CarErrorManager.getNotFound(car)
             if (notFound.hasError) return new Service_Response(undefined, 404, true, authError.error)
 
-            const authError = CarErrorManager.getAuthError(userAuthId, car.userId)
+            const authError = GeneralErrorManager.isUserOwnerOfObject(car.userId, userAuthId)
             if (authError.hasError) return new Service_Response(undefined, 401, true, authError.error)
+    
+            const carInJourney = await CarErrorManager.carInJourneyError(id)
+            if (carInJourney.hasError) return new Service_Response(undefined, 409, true, carInJourney.error)
+
             else {
                 return CarFactory.deleteCar(id, car.imageUrl)
                     .then(() => new Service_Response(undefined))
