@@ -138,7 +138,7 @@ describe('GET /api/car/', () => {
 
       expect(response.status).toBe(401);
 
-      expect(response.body.errors).toEqual({"user": {"code": "unauthorized", "name": "Vous n'êtes pas autorisé à modifier un objet dont vous n'êtes pas le propriétaire."}});
+      expect(response.body.errors).toEqual({"user": {"code": "unauthorized", "name": "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."}});
   });
 
 

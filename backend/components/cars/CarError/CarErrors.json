@@ -86,5 +86,13 @@
                 "name": "Une voiture possède déjà cette plaque d'immatriculation."
             }
         }
+    },
+    "existJourneyWithCar": {
+        "errors": {
+            "car": {
+                "code": "conflict",
+                "name": "Vous ne pouvez pas supprimer une voiture qui est renseignée dans un trajet."
+            }
+        }
     }
 }

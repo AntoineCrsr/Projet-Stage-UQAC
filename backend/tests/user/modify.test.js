@@ -73,7 +73,7 @@ describe('PUT /api/auth/id', () => {
             .set('Authorization', `Bearer ${other_token}`)
             .expect(401)
             .then(response => {
-                expect(response.body.errors).toEqual({"user": {"code": "unauthorized", "name": "Vous n'êtes pas autorisé à modifier un objet dont vous n'êtes pas le propriétaire."}})
+                expect(response.body.errors).toEqual({"user": {"code": "unauthorized", "name": "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."}})
             })
     });
 

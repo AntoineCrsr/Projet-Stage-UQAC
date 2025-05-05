@@ -1,6 +1,7 @@
 const errorTable = require("./CarErrors.json")
 const ErrorReport = require("../../workspace/ErrorReport")
 const CarSeeker = require("../../cars/CarSeeker")
+const JourneySeeker = require("../../journeys/JourneySeeker")
 
 exports.verifyCarCreation = (reqCar) => {
     // Attributs définis
@@ -116,8 +117,28 @@ exports.getCarVerifError = (userId, carId) => {
 }
 
 
-exports.getCarAlreadyExistError = async (licensePlate) => {
-    if(await CarSeeker.getAll({"licensePlate": licensePlate}).then((cars) => cars.length > 0))
+/**
+ * Retourne vrai s'il y a un conflit
+ * faux s'il n'y en a pas
+ * Avec carId on évite de dire qu'il y a un conflit quand la voiture qu'on modifie est celle qu'on
+ * vient de trouver
+ * @param {string} licensePlate 
+ * @param {string} carId 
+ * @returns {ErrorReport}
+ */
+exports.getCarAlreadyExistError = async (licensePlate, carId=null) => {
+    if(await CarSeeker.getAll({"licensePlate": licensePlate}).then((cars) => {
+        if (cars.length <= 0 || cars[0]._id === carId) return false
+        return true
+    }))
         return new ErrorReport(true, errorTable["immatError"])
+    return new ErrorReport(false)
+}
+
+
+exports.carInJourneyError = async (carId) => {
+    const existJourney = await JourneySeeker.getLastJourneys(20, {"carId": carId})
+        .then(journeys => journeys.length > 0)
+    if (existJourney) return new ErrorReport(true, errorTable["existJourneyWithCar"])
     return new ErrorReport(false)
 }
