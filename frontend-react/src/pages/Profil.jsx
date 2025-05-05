@@ -8,6 +8,7 @@ const Profil = () => {
     const [aboutMe, setAboutMe] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [myJourneys, setMyJourneys] = useState([]);
     const [cars, setCars] = useState([]);
     const navigate = useNavigate();
 
@@ -29,6 +30,7 @@ const Profil = () => {
         setIsStudent(data.isStudent || false);
         setAboutMe(data.aboutMe || "");
         if (data.imageUrl) setImagePreview(data.imageUrl);
+        
         // Validation automatique de l'email
         if (!data.hasVerifiedEmail) {
             await fetch(`http://localhost:3000/api/auth/${userId}/emailValidation`, {
@@ -52,6 +54,17 @@ const Profil = () => {
             body: JSON.stringify({ user: { nonce: "000" } }),
             });
         }
+
+        fetch(`http://localhost:3000/api/journey`, {
+        headers: { Authorization: `Bearer ${token}` }
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            const mine = data.filter(j => j.ownerId === userId);
+            setMyJourneys(mine);
+        })
+        .catch(err => console.error("Erreur lors du chargement des trajets :", err));
+
         fetch(`http://localhost:3000/api/car?userId=${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
         })
@@ -203,7 +216,7 @@ const Profil = () => {
         <button onClick={() => navigate("/")}>Retour à l'accueil</button>
         </div>
         <h3>Mes véhicules</h3>
-        {cars.length == 0 ? (
+        {cars.length === 0 ? (
         <p>Aucun véhicule</p>
         ) : (
         <ul className="car-list">
@@ -218,6 +231,20 @@ const Profil = () => {
             </div>
             </li>
         ))}
+        </ul>
+        )}
+
+        <h3>Mes trajets créés</h3>
+        {myJourneys.length === 0 ? (
+        <p>Vous n'avez pas encore créé de trajet</p>
+        ) : (
+        <ul className="mes-trajets">
+            {myJourneys.map(j => ( //je recupere en dictionnaire tous les trajets créés par mon user et je vais pour chaque id de trajet afficher les infos
+            <li key={j._id}> 
+                {j.starting.city} vers {j.arrival.city} le {new Date(j.date).toLocaleDateString()} à {new Date(j.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} <br />
+                {j.seats.left} places restantes <br />
+            </li>
+            ))}
         </ul>
         )}
     </div>
