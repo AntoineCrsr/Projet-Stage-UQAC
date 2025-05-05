@@ -17,6 +17,7 @@ const CreerTrajet = () => {
     arrivalAdress: "",
     date: "",
     totalSeats: 1,
+    available : 1,
     price: 0,
   });
 
@@ -57,7 +58,17 @@ const CreerTrajet = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (parseInt(form.available) > parseInt(form.totalSeats)) {
+      alert("Les places disponibles ne peuvent pas dépasser le nombre total de places dans le véhicule");
+      return;
+    }
 
+    if (parseInt(form.available) == 0) {
+      alert("Vous ne pouvez pas creer un trajet avec 0 places disponibles");
+      return;
+    }
+    
     const journey = {
       carId: form.carId,
       starting: {
@@ -71,7 +82,7 @@ const CreerTrajet = () => {
       date: form.date,
       seats: {
         total: parseInt(form.totalSeats),
-        left: parseInt(form.totalSeats),
+        left: parseInt(form.available),
       },
       price: parseFloat(form.price),
       state: "disponible",
@@ -116,7 +127,8 @@ const CreerTrajet = () => {
         <input type="text" name="arrivalCity" placeholder="Ville d’arrivée" onChange={handleChange} required />
         <input type="text" name="arrivalAdress" placeholder="Adresse d’arrivée" onChange={handleChange} required />
         <input type="datetime-local" name="date" onChange={handleChange} required />
-        <input type="number" name="totalSeats" min="1" placeholder="Places disponibles" onChange={handleChange} required />
+        <input type="number" name="totalSeats" min="1" placeholder="Places totales du véhicule" onChange={handleChange} required />
+        <input type="number" name="available" min="1" placeholder="Places disponibles pour le trajet" onChange={handleChange} required />
         <input type="number" name="price" step="0.01" placeholder="Prix (en $ CAD)" onChange={handleChange} required />
 
         <button type="submit">Créer le trajet</button>
