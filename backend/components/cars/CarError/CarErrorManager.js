@@ -116,8 +116,20 @@ exports.getCarVerifError = (userId, carId) => {
 }
 
 
-exports.getCarAlreadyExistError = async (licensePlate) => {
-    if(await CarSeeker.getAll({"licensePlate": licensePlate}).then((cars) => cars.length > 0))
+/**
+ * Retourne vrai s'il y a un conflit
+ * faux s'il n'y en a pas
+ * Avec carId on évite de dire qu'il y a un conflit quand la voiture qu'on modifie est celle qu'on
+ * vient de trouver
+ * @param {string} licensePlate 
+ * @param {string} carId 
+ * @returns {ErrorReport}
+ */
+exports.getCarAlreadyExistError = async (licensePlate, carId=null) => {
+    if(await CarSeeker.getAll({"licensePlate": licensePlate}).then((cars) => {
+        if (cars.length <= 0 || cars[0]._id === carId) return false
+        return true
+    }))
         return new ErrorReport(true, errorTable["immatError"])
     return new ErrorReport(false)
 }
