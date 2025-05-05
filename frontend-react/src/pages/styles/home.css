@@ -3,3 +3,18 @@ body {
     margin: 0;
 }
 
+.creer-trajet {
+    margin-left: 46%;
+    margin-top: 2%;
+    padding: 20px 28px;
+    background-color: #025522;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.creer-trajet:hover {
+    background-color: #00796b;
+}
