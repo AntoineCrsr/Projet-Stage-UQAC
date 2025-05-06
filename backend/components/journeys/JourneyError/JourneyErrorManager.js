@@ -175,16 +175,6 @@ exports.getModifyError = async (req, userAuthId, ownerId, seats) => {
 
     if (!coherent) return new ErrorReport(true, errorTable["leftUpperThanTotal"])
 
-    // Vérification du state
-    if (req.state != null) {
-        if (!(req.state === "w" || req.state === "d")) return new ErrorReport(true, errorTable["incorrectState"])
-    }
-
-    if (req.carId != null) {
-        const hasCar = await this.verifyIfUserHasCar(ownerId, req.carId)
-        if (hasCar.hasError) return hasCar
-    }
-
     return new ErrorReport(false)
 }
 
@@ -218,7 +208,7 @@ exports.getConstraintsJourneys = (constraints) => {
  */
 exports.verifyIfUserHasCar = async (userId, carId) => {
     // Bonne utilisation de la fonction:
-    if (userId == null || carId == null || userId.toString().length !== 24 || carId.length !== 24)
+    if (userId == null || carId == null || userId.length !== 24 || carId.length !== 24)
         return new ErrorReport(true, errorTable["internalError"])
 
     // Vérification de l'inclusion de la voiture

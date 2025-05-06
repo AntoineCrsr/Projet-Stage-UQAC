@@ -71,6 +71,9 @@ exports.getModifyError = (carReq) => {
     if (!/^[a-z0-9]{9}$/.test(carReq.licensePlate.toLowerCase()))
         return new ErrorReport(true, errorTable["typeError"]);
 
+    if (!/^[0-9]*$/.test(carReq.year.toLowerCase()))
+        return new ErrorReport(true, errorTable["typeError"]);
+
     return new ErrorReport(false)
 }
 
@@ -131,7 +134,7 @@ exports.getCarVerifError = (userId, carId) => {
  */
 exports.getCarAlreadyExistError = async (licensePlate, carId=null) => {
     if(await CarSeeker.getAll({"licensePlate": licensePlate}).then((cars) => {
-        if (cars.length <= 0 || cars[0]._id === carId) return false
+        if (cars.length === 0 || cars[0]._id.toString() === carId) return false
         return true
     }))
         return new ErrorReport(true, errorTable["immatError"])

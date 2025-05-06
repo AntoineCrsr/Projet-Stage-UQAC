@@ -124,30 +124,105 @@ describe('PUT /api/car/id', () => {
     }) 
 
 
-    it ("should return 400 typerror", async () => {
-        // Setting a template to modify attributes indivually
-        const carTemplate = {"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}}
-        // Test for each sensible attribute if the type detector finds the error
-        await (["year", "color", "licensePlate", "airConditioner"]).forEach(async sensibleAttribute => {
-            let toSend = {...carTemplate}
-            toSend["car"][sensibleAttribute] = "INVALID"
+    it ("should return 400 typerror year", async () => {
+        const carTemplate = {"car": {"carType":"VUS 2016","year":"INVALID","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}}
 
-            // The invalid request
-            const res = await request(app)
-                .put('/api/car/' + carId)
-                .set('Authorization', `Bearer ${token}`)
-                .send(toSend)
-                .set('Accept', 'application/json')
-                .expect(400)
-
-            // Testing if this is the right error
-            expect(res.body.errors).toEqual({
-                "car": {
-                    "code": "bad-request",
-                    "name": "Au moins un des attributs ne respecte pas le format attendu."
-                }
+        // The invalid request
+        await request(app)
+            .put('/api/car/' + carId)
+            .set('Authorization', `Bearer ${token}`)
+            .send(carTemplate)
+            .set('Accept', 'application/json')
+            .expect(400)
+            .then(res => {
+                // Testing if this is the right error
+                expect(res.body.errors).toEqual({
+                    "car": {
+                        "code": "bad-request",
+                        "name": "Au moins un des attributs ne respecte pas le format attendu."
+                    }
+                })
             })
-        })
+
+        // Getting back the object to see if something has changed unexpectedly
+        const response = await request(app)
+            .get('/api/car/' + carId + '?private=true')
+            .set('Authorization', `Bearer ${token}`)
+
+        let car = response.body
+
+        // Attributes should not be modified
+        expect(car).toBeDefined()
+        expect(car.year).toBe("2016")
+        expect(car.carType).toBe("VUS 2016")
+        expect(car.manufacturer).toBe("Peugeot") 
+        expect(car.color).toBe("Rouge") 
+        expect(car.model).toBe("208") 
+        expect(car.licensePlate).toBe("ABCDEFGHI") 
+        expect(car.airConditioner).toBe(true) 
+        expect(car.name).toBe("Mon char !!") 
+    })  
+    
+    
+    it ("should return 400 typerror licensePlate", async () => {
+        const carTemplate = {"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"INVALID","airConditioner":true,"name":"Mon char !!"}}
+
+        // The invalid request
+        await request(app)
+            .put('/api/car/' + carId)
+            .set('Authorization', `Bearer ${token}`)
+            .send(carTemplate)
+            .set('Accept', 'application/json')
+            .expect(400)
+            .then(res => {
+                // Testing if this is the right error
+                expect(res.body.errors).toEqual({
+                    "car": {
+                        "code": "bad-request",
+                        "name": "Au moins un des attributs ne respecte pas le format attendu."
+                    }
+                })
+            })
+
+        // Getting back the object to see if something has changed unexpectedly
+        const response = await request(app)
+            .get('/api/car/' + carId + '?private=true')
+            .set('Authorization', `Bearer ${token}`)
+
+        let car = response.body
+
+        // Attributes should not be modified
+        expect(car).toBeDefined()
+        expect(car.year).toBe("2016")
+        expect(car.carType).toBe("VUS 2016")
+        expect(car.manufacturer).toBe("Peugeot") 
+        expect(car.color).toBe("Rouge") 
+        expect(car.model).toBe("208") 
+        expect(car.licensePlate).toBe("ABCDEFGHI") 
+        expect(car.airConditioner).toBe(true) 
+        expect(car.name).toBe("Mon char !!") 
+    }) 
+    
+    
+    it ("should return 400 typerror airConditionner", async () => {
+        const carTemplate = {"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":"INVALID","name":"Mon char !!"}}
+
+        // The invalid request
+        await request(app)
+            .put('/api/car/' + carId)
+            .set('Authorization', `Bearer ${token}`)
+            .send(carTemplate)
+            .set('Accept', 'application/json')
+            .expect(400)
+            .then(res => {
+                // Testing if this is the right error
+                expect(res.body.errors).toEqual({
+                    "car": {
+                        "code": "bad-request",
+                        "name": "Au moins un des attributs ne respecte pas le format attendu."
+                    }
+                })
+            })
 
         // Getting back the object to see if something has changed unexpectedly
         const response = await request(app)
