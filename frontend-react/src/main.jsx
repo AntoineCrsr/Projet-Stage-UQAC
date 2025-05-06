@@ -27,6 +27,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/ajout-voiture" element={<AjoutVoiture />} />
           <Route path="/modifier-voiture/:carId" element={<AjoutVoiture />} />
           <Route path="/creer-trajet" element={<CreerTrajet />} />
+          <Route path="/modifier-trajet/:journeyId" element={<CreerTrajet />} />
         </Routes>
         </div>
         <Footer />

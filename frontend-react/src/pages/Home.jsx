@@ -12,7 +12,7 @@ const Home = () => {
     <div>
       <main>
       {token && (
-        <button class="creer-trajet" onClick={() => navigate("/creer-trajet")}>
+        <button className="creer-trajet" onClick={() => navigate("/creer-trajet")}>
           Créer un trajet
         </button>
       )}
