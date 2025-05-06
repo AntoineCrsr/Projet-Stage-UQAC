@@ -16,6 +16,16 @@ useEffect(() => {
 
     if (!journey) {
     return <p style={{ textAlign: "center", marginTop: "100px" }}>Recupération des détails du trajet ... </p>;}
+
+    const format = new Date(journey.date).toLocaleString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    });
+
     return (
     <div className="journey-container">
       {/* bouton retour */}
@@ -28,8 +38,8 @@ useEffect(() => {
             <h2>Détails du trajet</h2>
             <p><strong>Départ :</strong> {journey.starting.city} - {journey.starting.adress}</p>
             <p><strong>Arrivée :</strong> {journey.arrival.city} - {journey.arrival.adress}</p>
-            <p><strong>Date :</strong> {journey.date}</p>
-            <p><strong>Places restantes :</strong> {journey.seats.left} / {journey.seats.total}</p>
+            <p><strong>Date :</strong> {format}</p>
+            <p><strong>Places restantes :</strong> {journey.seats.total - journey.seats.left} / {journey.seats.total}</p>
             <p><strong>Prix :</strong> {journey.price} $ CAD</p>
         </div>
 

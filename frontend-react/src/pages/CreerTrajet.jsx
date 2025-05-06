@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./styles/creerTrajet.css";
 
 const CreerTrajet = () => {
+  const { journeyId } = useParams();
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
@@ -16,8 +17,9 @@ const CreerTrajet = () => {
     arrivalCity: "",
     arrivalAdress: "",
     date: "",
-    totalSeats: 1,
-    price: 0,
+    totalSeats: null,
+    left : null,
+    price: null,
   });
 
   useEffect(() => {
@@ -47,8 +49,29 @@ const CreerTrajet = () => {
               setCars(myCars);
             }
           });
-      });
-  }, [token, userId, navigate]);
+          //si on fourni un id de trajet
+        if (journeyId) {
+                  fetch(`http://localhost:3000/api/journey/${journeyId}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                  })
+                    .then((res) => res.json())
+                    .then((j) => {
+                      setForm({
+                        carId: j.carId,
+                        startingCity: j.starting.city,
+                        startingAdress: j.starting.adress,
+                        arrivalCity: j.arrival.city,
+                        arrivalAdress: j.arrival.adress,
+                        date: j.date.slice(0, 16),
+                        totalSeats: j.seats.total,
+                        left: j.seats.left,
+                        price: j.price,
+                      });
+                    })
+                    .catch(() => alert("Erreur de chargement du trajet"));
+                }
+              });
+          }, [token, userId, journeyId, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,7 +80,17 @@ const CreerTrajet = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (parseInt(form.left) > parseInt(form.totalSeats)) {
+      alert("Les places disponibles ne peuvent pas dépasser le nombre total de places dans le véhicule");
+      return;
+    }
 
+    if (parseInt(form.left) == 0) {
+      alert("Vous ne pouvez pas creer un trajet avec 0 places disponibles");
+      return;
+    }
+    
     const journey = {
       carId: form.carId,
       starting: {
@@ -71,15 +104,20 @@ const CreerTrajet = () => {
       date: form.date,
       seats: {
         total: parseInt(form.totalSeats),
-        left: parseInt(form.totalSeats),
+        left: parseInt(form.left),
       },
       price: parseFloat(form.price),
-      state: "disponible",
     };
 
+    const url = journeyId //comme pour l'ajout de voiture, va permettre d'utiliser la bonne route si on a un journeyId
+    ? `http://localhost:3000/api/journey/${journeyId}` : "http://localhost:3000/api/journey";
+
+    const method = journeyId ? "PUT" : "POST";
+
     try {
-      const res = await fetch("http://localhost:3000/api/journey", {
-        method: "POST",
+      console.log("Données envoyées :", JSON.stringify({ journey }, null, 2));
+      const res = await fetch(url, {
+        method,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -87,8 +125,8 @@ const CreerTrajet = () => {
         body: JSON.stringify({ journey }),
       });
 
-      if (!res.ok) throw new Error("Erreur lors de la création du trajet.");
-      alert("Trajet créé avec succès !");
+      if (!res.ok) throw new Error("Erreur lors de l'envoi du trajet.");
+      alert(journeyId ? "Trajet modifié !" : "Trajet créé !");
       navigate("/");
     } catch (err) {
       alert(err.message);
@@ -99,7 +137,7 @@ const CreerTrajet = () => {
 
   return (
     <div className="creer-trajet-container">
-      <h2>Créer un trajet</h2>
+      <h2>{journeyId ? "Modifier un trajet" : "Créer un trajet"}</h2>
       <form onSubmit={handleSubmit} className="creer-trajet-form">
         <label>Véhicule :</label>
         <select name="carId" value={form.carId} onChange={handleChange} required>
@@ -111,15 +149,16 @@ const CreerTrajet = () => {
           ))}
         </select>
 
-        <input type="text" name="startingCity" placeholder="Ville de départ" onChange={handleChange} required />
-        <input type="text" name="startingAdress" placeholder="Adresse de départ" onChange={handleChange} required />
-        <input type="text" name="arrivalCity" placeholder="Ville d’arrivée" onChange={handleChange} required />
-        <input type="text" name="arrivalAdress" placeholder="Adresse d’arrivée" onChange={handleChange} required />
-        <input type="datetime-local" name="date" onChange={handleChange} required />
-        <input type="number" name="totalSeats" min="1" placeholder="Places disponibles" onChange={handleChange} required />
-        <input type="number" name="price" step="0.01" placeholder="Prix (en $ CAD)" onChange={handleChange} required />
+        <input type="text" name="startingCity" placeholder="Ville de départ" value={form.startingCity} onChange={handleChange} required />
+        <input type="text" name="startingAdress" placeholder="Adresse de départ" value={form.startingAdress} onChange={handleChange} required />
+        <input type="text" name="arrivalCity" placeholder="Ville d’arrivée" value={form.arrivalCity} onChange={handleChange} required />
+        <input type="text" name="arrivalAdress" placeholder="Adresse d’arrivée" value={form.arrivalAdress} onChange={handleChange} required />
+        <input type="datetime-local" placeholder="Date de départ et horaire" name="date" value={form.date} onChange={handleChange} required />
+        <input type="number" name="totalSeats" min="1" placeholder="Places totales du véhicule" value={form.totalSeats} onChange={handleChange} required />
+        <input type="number" name="left" min="1" placeholder="Places disponibles pour le trajet" value={form.left} onChange={handleChange} required />
+        <input type="number" name="price" step="0.01" placeholder="Prix (en $ CAD)" value={form.price} onChange={handleChange} required />
 
-        <button type="submit">Créer le trajet</button>
+        <button type="submit">{journeyId ? "Modifier le trajet" : "Créer le trajet"}</button>
       </form>
     </div>
   );
