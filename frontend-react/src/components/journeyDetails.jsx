@@ -8,11 +8,19 @@ const JourneyDetails = () => {
     const [journey, setJourney] = useState(null);
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
+    const [ownerPublicName, setOwnerPublicName] = useState(null);
 
 useEffect(() => {
     fetch(`http://localhost:3000/api/journey/${id}`)
         .then((res) => res.json())
-        .then((data) => setJourney(data))
+        .then((data) => {setJourney(data);
+            // On récupère ensuite le publicName du créateur du trajet'
+            return fetch(`http://localhost:3000/api/auth/${data.ownerId}`);
+        })
+        .then((res) => res.json())
+        .then((userData) => {
+            setOwnerPublicName(userData.name?.publicName || "Utilisateur inconnu");
+        })
         .catch((err) => console.error("Erreur :", err));
     }, [id]);
 
@@ -69,6 +77,7 @@ useEffect(() => {
         {/* colonne gauche : infos */}
         <div className="journey-infos">
             <h2>Détails du trajet</h2>
+            <p><strong>Annonce publiée par :</strong> {ownerPublicName}</p>
             <p><strong>Départ :</strong> {journey.starting.city} - {journey.starting.adress}</p>
             <p><strong>Arrivée :</strong> {journey.arrival.city} - {journey.arrival.adress}</p>
             <p><strong>Date :</strong> {format}</p>
