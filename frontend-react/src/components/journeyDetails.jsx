@@ -6,6 +6,8 @@ const JourneyDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [journey, setJourney] = useState(null);
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
 
 useEffect(() => {
     fetch(`http://localhost:3000/api/journey/${id}`)
@@ -25,6 +27,37 @@ useEffect(() => {
     hour: "2-digit",
     minute: "2-digit",
     });
+
+    const handleReservation = async () => {
+        if (!token || !userId) {
+        alert("Vous devez être connecté pour réserver un trajet.");
+        navigate("/login");
+        return;
+        }
+
+        try {
+        const res = await fetch("http://localhost:3000/api/reservation", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                reservation: {
+                    journeyId: id
+                }
+            }),
+        });
+
+        if (!res.ok) throw new Error("Échec de la réservation");
+
+        alert("Réservation réussie !");
+        navigate("/");
+        } catch (err) {
+        console.error(err);
+        alert("Une erreur est survenue lors de la réservation.");
+        }
+    };
 
     return (
     <div className="journey-container">
@@ -48,8 +81,8 @@ useEffect(() => {
         </div>
         */}
     </div>
-    {/* bouton réserver qui sera relié plus tard*/}
-    <button className="btn-reserver">Réserver ce trajet</button>
+    {/* bouton pour reserver */}
+    <button className="btn-reserver" onClick={handleReservation} >Réserver ce trajet</button>
     </div>
     );
 };
