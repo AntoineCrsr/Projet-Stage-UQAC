@@ -65,7 +65,11 @@ const Profil = () => {
             reservations.map(async (res) => {
                 const response = await fetch(`http://localhost:3000/api/journey/${res.journeyId}`);
                 if (!response.ok) return null;
-                return await response.json();
+                const journey = await response.json();
+                return {
+                ...journey,
+                reservationId: res._id, 
+                };
             })
             );
             setReservedJourneys(journeys.filter(j => j)); // On enlève les null si erreur
@@ -167,6 +171,23 @@ const Profil = () => {
         else throw new Error();
         })
         .catch(() => alert("Erreur lors de la mise à jour."));
+    };
+
+    const handleCancelReservation = async (reservationId) => {
+    if (!window.confirm("Voulez-vous vraiment annuler cette réservation ?")) return;
+
+    try {
+        const res = await fetch(`http://localhost:3000/api/reservation/${reservationId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) throw new Error();
+        alert("Réservation annulée !");
+        setReservedJourneys(prev => prev.filter(j => j.reservationId !== reservationId));
+    } catch {
+        alert("Erreur lors de l'annulation.");
+        }
     };
 
     if (!user) return <p>Chargement</p>;
@@ -297,6 +318,9 @@ const Profil = () => {
                 {new Date(j.date).toLocaleDateString()} à{" "}
                 {new Date(j.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 <br />
+                <div className="car-actions">
+                <button onClick={() => handleCancelReservation(j.reservationId)}>Annuler la reservation</button>
+            </div>
             </li>
             ))}
         </ul>
