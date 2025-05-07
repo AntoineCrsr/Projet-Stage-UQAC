@@ -9,7 +9,7 @@ const JourneyDetails = () => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
     const [ownerPublicName, setOwnerPublicName] = useState(null);
-
+    
 useEffect(() => {
     fetch(`http://localhost:3000/api/journey/${id}`)
         .then((res) => res.json())
@@ -27,6 +27,8 @@ useEffect(() => {
     if (!journey) {
     return <p style={{ textAlign: "center", marginTop: "100px" }}>Recupération des détails du trajet ... </p>;}
 
+    const isCreator = journey.ownerId === userId;
+
     const format = new Date(journey.date).toLocaleString("fr-FR", {
     weekday: "long",
     day: "numeric",
@@ -42,6 +44,9 @@ useEffect(() => {
         navigate("/login");
         return;
         }
+
+        const confirm = window.confirm("Souhaitez-vous vraiment réserver ce trajet ?");
+        if (!confirm) return;
 
         try {
         const res = await fetch("http://localhost:3000/api/reservation", {
@@ -91,7 +96,11 @@ useEffect(() => {
         */}
     </div>
     {/* bouton pour reserver */}
-    <button className="btn-reserver" onClick={handleReservation} >Réserver ce trajet</button>
+    {!isCreator && (
+    <button className="btn-reserver" onClick={handleReservation}>
+        Réserver ce trajet
+    </button>
+    )}
     </div>
     );
 };
