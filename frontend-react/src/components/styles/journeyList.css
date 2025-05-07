@@ -37,3 +37,26 @@
 .btn-details-liste:hover {
     background-image: var(--component-gradient);
 }
+
+.disabled-row {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.creator-row {
+    background-color: #007784;
+}
+
+.btn-disabled {
+    color: gray;
+    font-style: italic;
+    cursor: not-allowed;
+}
+
+.badge-reserved {
+    background-color: #97f24c;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
