@@ -31,6 +31,7 @@ exports.createJourney = (userId, starting, arrival, date, seats, price, carId) =
 exports.updateJourney = (journeyId, newJourney) => {
     delete newJourney._id
     delete newJourney.ownerId
+    delete newJourney.state
     newJourney.starting.city = newJourney.starting.city.toLowerCase()
     newJourney.arrival.city = newJourney.arrival.city.toLowerCase()
     return Journey.updateOne({ _id: journeyId }, { ...newJourney, _id: journeyId })

@@ -91,6 +91,11 @@ exports.modifyOneJourney = async (newJourneyId, newJourney, userAuthId) => {
             const modifyError = await JourneyErrorManager.getModifyError(newJourney, userAuthId, currentJourneyResp.result.ownerId, currentJourneyResp.result.seats)
             if (modifyError.hasError) return new Service_Response(undefined, 400, true, modifyError.error)
             
+            if (currentJourneyResp.result.ownerId !== undefined) {
+                const ownerError = await JourneyErrorManager.verifyIfUserHasCar(userAuthId.toString(), currentJourneyResp.result.carId.toString())
+                if (ownerError.hasError) return new Service_Response(undefined, 401, true, ownerError.error)    
+            }
+            
             return JourneyFactory.updateJourney(newJourneyId, newJourney)
                 .then(() => (new Service_Response(undefined)).setLocation('/journey/' + newJourneyId))
                 .catch(error => new Service_Response(undefined, 500, true, error))
