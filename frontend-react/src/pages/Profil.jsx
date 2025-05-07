@@ -11,6 +11,7 @@ const Profil = () => {
     const [myJourneys, setMyJourneys] = useState([]);
     const [cars, setCars] = useState([]);
     const navigate = useNavigate();
+    const [reservedJourneys, setReservedJourneys] = useState([]);
 
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("token");
@@ -54,6 +55,22 @@ const Profil = () => {
             body: JSON.stringify({ user: { nonce: "000" } }),
             });
         }
+
+        fetch(`http://localhost:3000/api/reservation?userId=${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(res => res.json())
+        .then(async (reservations) => {
+            const journeys = await Promise.all(
+            reservations.map(async (res) => {
+                const response = await fetch(`http://localhost:3000/api/journey/${res.journeyId}`);
+                if (!response.ok) return null;
+                return await response.json();
+            })
+            );
+            setReservedJourneys(journeys.filter(j => j)); // On enlève les null si erreur
+        })
+        .catch(err => console.error("Erreur chargement des réservations :", err));
 
         fetch(`http://localhost:3000/api/journey`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -262,6 +279,24 @@ const Profil = () => {
                 <button onClick={() => navigate(`/modifier-trajet/${j._id}`)}>Modifier</button>
                 <button onClick={() => handleDeleteJourney(j._id)}>Supprimer</button>
                 </div>
+            </li>
+            ))}
+        </ul>
+        )}
+        <h3>Mes trajets réservés</h3>
+        {reservedJourneys.length === 0 ? (
+        <p>Aucune réservation effectuée</p>
+        ) : (
+        <ul className="mes-trajets">
+            {reservedJourneys.map(j => (
+            <li key={j._id}>
+                {j.starting.city} → {j.arrival.city} <br />
+                Adresse de départ : {j.starting.adress}<br />
+                Adresse d'arrivée : {j.arrival.adress}<br />
+                le{" "}
+                {new Date(j.date).toLocaleDateString()} à{" "}
+                {new Date(j.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                <br />
             </li>
             ))}
         </ul>
