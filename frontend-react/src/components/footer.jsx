@@ -1,5 +1,7 @@
 import "./styles/footer.css";
 import { FaGithub, FaLinkedin} from "react-icons/fa";
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
     <footer className="footer-container">
@@ -10,23 +12,29 @@ const Footer = () => {
         <div className="footer-columns">
           <div className="footer-column">
             <ul>
-              <li><a href="#">Je fais un super test</a></li>
-              <li><a href="#">Lien 2</a></li>
-              <li><a href="#">Lien 3</a></li>
+              <li><b>Notre projet : </b></li>
+              <li><a href="#">À propos du projet</a></li>
+              <li><a href="#">Notre équipe </a></li>
+              <li><a href="#">Nous contacter</a></li>
             </ul>
           </div>
           <div className="footer-column">
             <ul>
-              <li><a href="#">Pour voir l'espacement des colonnes</a></li>
-              <li><a href="#">Lien 5</a></li>
-              <li><a href="#">Lien 6</a></li>
+              <li><b>Accès rapides : </b></li>
+              <li><Link to="/creer-trajet">Créer un trajet</Link></li>
+              <li><a href="#">Rechercher un trajet</a></li>
+              <li><Link to="/profil">Mes réservations</Link></li>
+              <li><Link to="/profil">Mes véhicules</Link></li>
+              <li><a href="#">Foire aux questions (FAQ)</a></li>
             </ul>
           </div>
           <div className="footer-column">
             <ul>
-              <li><a href="#">avec des longs nom de liens pour les redirections</a></li>
-              <li><a href="#">Lien 8</a></li>
-              <li><a href="#">Lien 9</a></li>
+              <li><b>Informations importantes : </b></li>
+              <li><a href="#">Conditions générales d’utilisation</a></li>
+              <li><a href="#">Politique de confidentialité</a></li>
+              <li><a href="#">Mentions légales</a></li>
+              <li><a href="#">Signaler un problème</a></li>
             </ul>
           </div>
         </div>
