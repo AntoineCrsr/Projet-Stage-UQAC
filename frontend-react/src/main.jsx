@@ -1,16 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./theme.css";
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import LoginCompletion from "./pages/LoginCompletion";
 import Footer from "./components/footer";
 import JourneyDetails from "./components/journeyDetails";
-import "./theme.css";
 import Header from "./components/header";
 import Profil from "./pages/Profil";
 import AjoutVoiture from "./pages/AjoutVoiture";
 import CreerTrajet from "./pages/creerTrajet";
+
+import APropos from "./pages/APropos";
+import NotreEquipe from "./pages/NotreEquipe";
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -19,6 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <div style={{ flex: 1 }}>
         <Header />
         <Routes>
+          {/* Partie principales pour les fonctionnalités */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/journey/:id" element={<JourneyDetails />} />
@@ -28,6 +34,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/modifier-voiture/:carId" element={<AjoutVoiture />} />
           <Route path="/creer-trajet" element={<CreerTrajet />} />
           <Route path="/modifier-trajet/:journeyId" element={<CreerTrajet />} />
+          {/* Partie des routes du footer */}
+          <Route path="/a-propos" element={<APropos />} />
+          <Route path="/notre-equipe" element={<NotreEquipe />} />
         </Routes>
         </div>
         <Footer />
