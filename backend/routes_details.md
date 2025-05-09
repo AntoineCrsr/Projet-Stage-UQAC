@@ -164,3 +164,25 @@ Si l'utilisateur est connecté mais n'est pas propriétaire du char, renvoie 401
 Si la voiture est enregistrée dans des trajets, alors renvoie 409, "conflict", "Vous ne pouvez pas supprimer une voiture qui est renseignée dans un trajet."
 
 Si l'utilisateur est connecté, qu'il a le droit et que la voiture peut être supprimée, alors renvoie 200. 
+
+
+### Journey
+
+#### GET /api/journey
+
+Renvoie un tableau de toutes les journey, avec status 200. 
+
+Tableau vide si aucune journey ne correspond à la requête.
+
+Il doit être possible de spécifier des contraintes à la requetes avec un query string (par exemple GET /api/journey?ownerId=xxx)
+
+Pour optimiser les recherches, il doit également être possible les choses suivantes:
+- Rechercher une journey en spécifiant une city (arrival ou starting)
+- Rechercher par date minimum (exemple GET /api/journey?minDate=...)
+
+
+#### POST /api/journey
+
+La requête doit contenir un starting (city + adress), un arrival (city + adress), un carId, une date (format ..?), des seats (total + left), et un prix. 
+
+Si un de ces éléments n'est pas dans le requête, renvoie un 400 code ""
