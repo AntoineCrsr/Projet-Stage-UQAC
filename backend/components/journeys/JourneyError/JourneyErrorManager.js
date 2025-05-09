@@ -68,26 +68,6 @@ exports.getCreationError = (req) => {
 
 
 /**
- * Teste les erreurs pour le get d'une journey
- * @param {string} id 
- * @returns {ErrorReport}
- */
-exports.getOneError = (id) => {
-    // Missing fields
-    if (id == undefined) {
-        return new ErrorReport(true, errorTable["missingId"])
-    }
-
-    // Type error (ceci ne devrait jamais arriver vu que normalement le req.params est systématiquement un string)
-    if (typeof(id) !== "string") {
-        return new ErrorReport(true, errorTable["typeError"])
-    }
-    
-    return new ErrorReport(false)
-}
-
-
-/**
  * Teste l'authentifaication
  * @param {string} ownerId 
  * @param {string} userAuthId 
@@ -175,20 +155,6 @@ exports.getModifyError = async (req, userAuthId, ownerId, seats) => {
 
     if (!coherent) return new ErrorReport(true, errorTable["leftUpperThanTotal"])
 
-    return new ErrorReport(false)
-}
-
-
-exports.getConstraintsJourneys = (constraints) => {
-    if (constraints != undefined) {
-        if (
-            ((constraints.starting != null && typeof(constraints.starting) !== "string")
-            || (constraints.arrival != null && typeof(constraints.arrival) !== "string")
-            || (constraints.date != null && typeof(constraints.date) !== "string")
-            || (constraints.minDate != null && typeof(constraints.minDate) !== "string"))
-        )
-        return new ErrorReport(true, errorTable["researchTypeError"])
-    }
     return new ErrorReport(false)
 }
 

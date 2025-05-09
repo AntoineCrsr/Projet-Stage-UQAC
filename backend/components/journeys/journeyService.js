@@ -43,9 +43,6 @@ exports.createJourney = async (reqJourney, userId) => {
  * @returns {Service_Response}
  */
 exports.getLastJourneys = async (query, limit=20) => {
-    const verifConstraints = JourneyErrorManager.getConstraintsJourneys(query)
-    if (verifConstraints.hasError) return new Service_Response(undefined, 400, true, verifConstraints.error)
-
     return await JourneySeeker.getLastJourneys(limit, query)
         .then(elts => {
             JourneyFilter.filterMultipleJourneys(elts)
@@ -60,15 +57,16 @@ exports.getLastJourneys = async (query, limit=20) => {
  * @returns {Promise} 
  */
 exports.getOneJourney = async (journeyId) => {
-    const getOneJourneyError = JourneyErrorManager.getOneError(journeyId)
+    const getOneJourneyError = GeneralErrorManager.isValidId(journeyId, "journey")
     if (getOneJourneyError.hasError) 
         return new Service_Response(undefined, 400, true, getOneJourneyError.error)
 
     return await JourneySeeker.getOneJourney(journeyId)
         .then(journey => {
-            if (journey == null) return new Service_Response(undefined, 404, true)
-                JourneyFilter.filterOneJourney(journey)
-            return new Service_Response(journey)
+            const notFound = JourneyErrorManager.getNotFoundError(journey)
+            if (notFound.hasError) return new Service_Response(undefined, 404, true, notFound.error)
+            JourneyFilter.filterOneJourney(journey)
+            return new Service_Response(journey, 302)
         })
         .catch(error => new Service_Response(undefined, 500, true, error))
 }

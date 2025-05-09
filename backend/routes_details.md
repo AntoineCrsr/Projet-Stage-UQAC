@@ -181,6 +181,16 @@ Pour optimiser les recherches, il doit également être possible les choses suiv
 - Rechercher par date minimum (exemple GET /api/journey?minDate=...)
 
 
+#### GET /api/journey/<id>
+
+Renvoie la journey dont l'id est celle de la requête, avec status 302. 
+
+Si la journey demandée n'existe pas, renvoie 404 "not-found", "Le trajet n'a pas été trouvé."
+
+Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
+
+
+
 #### POST /api/journey
 
 La requête doit contenir un starting (city + adress), un arrival (city + adress), un carId, une date (format ..?), des seats (total + left), et un prix. 

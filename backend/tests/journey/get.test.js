@@ -75,4 +75,27 @@ describe('GET /api/journey/', () => {
         expect(response.body.length).toBe(1)
         expect(response.body[0]._id).toBe(j2._id.toString())
     })
+
+
+    // Get one (/api/journey/id)
+
+    it ("should return 302", async () => {
+        const response = await request(app).get('/api/journey/' + j1._id.toString());
+        expect(response.status).toBe(302);
+        expect(response.body._id).toBe(j1._id.toString())
+    })
+
+    it ("should return 404", async () => {
+        // Correct id format but not existing
+        const response = await request(app).get('/api/journey/000000000000000000000000');
+        expect(response.status).toBe(404);
+        expect(response.body.errors).toEqual({"journey": {"code": "not-found", "name": "Le trajet n'a pas été trouvé."}});
+    })
+
+    it ("should return 400", async () => {
+        // Invalid format id
+        const response = await request(app).get('/api/journey/notvalid');
+        expect(response.status).toBe(400);
+        expect(response.body.errors).toEqual({"journey": {"code": "bad-request", "name": "L'identifiant renseigné n'est pas dans un format acceptable."}});
+    })
 })
