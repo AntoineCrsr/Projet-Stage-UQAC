@@ -15,7 +15,7 @@ import CreerTrajet from "./pages/creerTrajet";
 
 import APropos from "./pages/APropos";
 import NotreEquipe from "./pages/NotreEquipe";
-
+import FAQ from "./pages/FAQ";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -37,6 +37,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           {/* Partie des routes du footer */}
           <Route path="/a-propos" element={<APropos />} />
           <Route path="/notre-equipe" element={<NotreEquipe />} />
+          <Route path="/faq" element={<FAQ/>} />
         </Routes>
         </div>
         <Footer />

@@ -25,7 +25,7 @@ const Footer = () => {
               <li><a href="#">Rechercher un trajet</a></li>
               <li><Link to="/profil">Mes réservations</Link></li>
               <li><Link to="/profil">Mes véhicules</Link></li>
-              <li><a href="#">Foire aux questions (FAQ)</a></li>
+              <li><Link to="/faq">Foire aux questions (FAQ)</Link></li>
             </ul>
           </div>
           <div className="footer-column">
