@@ -164,3 +164,47 @@ Si l'utilisateur est connecté mais n'est pas propriétaire du char, renvoie 401
 Si la voiture est enregistrée dans des trajets, alors renvoie 409, "conflict", "Vous ne pouvez pas supprimer une voiture qui est renseignée dans un trajet."
 
 Si l'utilisateur est connecté, qu'il a le droit et que la voiture peut être supprimée, alors renvoie 200. 
+
+
+### Journey
+
+#### GET /api/journey
+
+Renvoie un tableau de toutes les journey, avec status 200. 
+
+Tableau vide si aucune journey ne correspond à la requête.
+
+Il doit être possible de spécifier des contraintes à la requetes avec un query string (par exemple GET /api/journey?ownerId=xxx)
+
+Pour optimiser les recherches, il doit également être possible les choses suivantes:
+- Rechercher une journey en spécifiant une city (arrival ou starting)
+- Rechercher par date minimum (exemple GET /api/journey?minDate=...)
+
+
+#### GET /api/journey/<id>
+
+Renvoie la journey dont l'id est celle de la requête, avec status 302. 
+
+Si la journey demandée n'existe pas, renvoie 404 "not-found", "Le trajet n'a pas été trouvé."
+
+Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
+
+
+
+#### POST /api/journey
+
+La requête doit contenir un starting (city + adress), un arrival (city + adress), un carId, une date (format ..?), des seats (total + left), et un prix. 
+
+Si la requete ne contient au moins pas un de ces attributs, renvoie 400 avec code = "bad-request" et name = "La requête ne contient pas tous les attributs nécessaires à la création de l'objet.".
+
+Si la date renseignée pour la journey est inférieure à la date à laquelle la requete est reçue, renvoie 400 "bad-request", "La date renseignée doit être supérieure ou égale à la date actuelle."
+
+Si le nombre de place est inférieur ou égal à zero, renvoie 400 avec "bad-request", "Le nombre de places restantes doit au moins être de 1."
+
+Si le nombre de place restant est supérieur au nombre de place total, 400 "Le nombre de place restant doit être inférieur au nombre de place total."
+
+Si le prix est inférieur à zero, renvoie 400, "Le prix d'un trajet ne peut pas aller en dessous de 0."
+
+Si la voiture renseignée dans la journey n'appartient pas à l'utilisateur, renvoie 401 "unauthorized" avec "La voiture renseignée n'est pas possédée par l'utilisateur.".
+
+Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".

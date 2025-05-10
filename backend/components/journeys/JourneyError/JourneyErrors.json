@@ -114,8 +114,8 @@
     "journeyNotFound": {
         "errors": {
             "journey": {
-                "code": "not found",
-                "name": "La journey n'a pas été trouvée."
+                "code": "not-found",
+                "name": "Le trajet n'a pas été trouvé."
             }
         }
     },
