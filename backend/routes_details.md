@@ -197,9 +197,11 @@ La requête doit contenir un starting (city + adress), un arrival (city + adress
 
 Si la requete ne contient au moins pas un de ces attributs, renvoie 400 avec code = "bad-request" et name = "La requête ne contient pas tous les attributs nécessaires à la création de l'objet.".
 
+Si la date est dans un format incorrect (ne respectant pas 2011-10-10T14:48:00), renvoie 400, "La date renseignée n'est pas dans le format attendu."
+
 Si la date renseignée pour la journey est inférieure à la date à laquelle la requete est reçue, renvoie 400 "bad-request", "La date renseignée doit être supérieure ou égale à la date actuelle."
 
-Si le nombre de place est inférieur ou égal à zero, renvoie 400 avec "bad-request", "Le nombre de places restantes doit au moins être de 1."
+Si le nombre de places totales ou restantes est inférieur ou égal à zero, renvoie 400 avec "bad-request", "Le nombre de places doit au moins être de 1."
 
 Si le nombre de place restant est supérieur au nombre de place total, 400 "Le nombre de place restant doit être inférieur au nombre de place total."
 
@@ -208,3 +210,5 @@ Si le prix est inférieur à zero, renvoie 400, "Le prix d'un trajet ne peut pas
 Si la voiture renseignée dans la journey n'appartient pas à l'utilisateur, renvoie 401 "unauthorized" avec "La voiture renseignée n'est pas possédée par l'utilisateur.".
 
 Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si tout convient, renvoie 201 sans body, avec header location. La journey doit être définie sur le state "w" (waiting).

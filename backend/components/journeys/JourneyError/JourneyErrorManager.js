@@ -45,23 +45,17 @@ exports.getCreationError = (req) => {
     }
 
     // Bon sens des valeurs
-    if (
-        req.seats.total < 0
-        || req.seats.left < 0
-        || req.price < 0
-    ) {
-        return new ErrorReport(true, errorTable["badValues"])
-    }
-
-    // Cohérence
-    if (
-        req.seats.left > req.seats.total
-    ) {
-        return new ErrorReport(true, errorTable["leftUpperThanTotal"])
-    }
+    if (req.seats.left < 0 || req.seats.total < 0) return new ErrorReport(true, errorTable["badPlace"])
+    if (req.seats.left > req.seats.total) return new ErrorReport(true, errorTable["badPlaceLogic"])
+    if (req.price < 0) return new ErrorReport(true, errorTable["badPrice"])
     
     // Format de carId
     if (req.carId.length !== 24) return new ErrorReport(true, errorTable["carIdError"])
+
+    // Cohérence date
+    const date = new Date(req.date)
+    if (date.toString() === "Invalid Date") return new ErrorReport(true, errorTable["badDate"])
+    if (date.getHours() < (new Date(Date.now()).getHours())) return new ErrorReport(true, errorTable["passedDate"])
 
     return new ErrorReport(false)
 }

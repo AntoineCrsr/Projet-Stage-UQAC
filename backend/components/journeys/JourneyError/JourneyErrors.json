@@ -10,8 +10,24 @@
     "missingArg": {
         "errors": {
             "journey": {
-                "code": "missing-fields",
-                "name": "La requete ne dispose pas des attributs nécessaires (starting, arrival, date, seats, price, carId)"
+                "code": "bad-request",
+                "name": "La requête ne contient pas tous les attributs nécessaires à la création de l'objet."
+            }
+        }
+    },
+    "badDate": {
+        "errors": {
+            "journey": {
+                "code": "bad-request",
+                "name": "La date renseignée n'est pas dans le format attendu."
+            }
+        }
+    },
+    "passedDate": {
+        "errors": {
+            "journey": {
+                "code": "bad-request",
+                "name": "La date renseignée doit être supérieure ou égale à la date actuelle."
             }
         }
     },
@@ -31,11 +47,27 @@
             }
         }
     },
-    "badValues": {
+    "badPlaceLogic": {
         "errors": {
             "journey": {
-                "code": "bad-values",
-                "name": "Les valeurs 'seats' ou 'price' doivent être >= 0."
+                "code": "bad-request",
+                "name": "Le nombre de place restant doit être inférieur au nombre de place total."
+            }
+        }
+    },
+    "badPlace": {
+        "errors": {
+            "journey": {
+                "code": "bad-request",
+                "name": "Le nombre de places doit au moins être de 1."
+            }
+        }
+    },
+    "badPrice": {
+        "errors": {
+            "journey": {
+                "code": "bad-request",
+                "name": "Le prix d'un trajet ne peut pas aller en dessous de 0."
             }
         }
     },
@@ -52,14 +84,6 @@
             "journey": {
                 "code": "type-error",
                 "name": "Les variables ne peuvent pas être nulles."
-            }
-        }
-    },
-    "leftUpperThanTotal": {
-        "errors": {
-            "journey": {
-                "code": "consistency-error",
-                "name": "Le nombre de sièges libres doit être inférieur ou égal au nombre de sièges au total."
             }
         }
     },
