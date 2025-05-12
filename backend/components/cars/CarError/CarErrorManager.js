@@ -39,7 +39,7 @@ exports.verifyCarCreation = (reqCar) => {
     )
         return new ErrorReport(true, errorTable["typeError"])
 
-    if (!/^[a-z0-9]{9}$/.test(reqCar.licensePlate.toLowerCase()))
+    if (!/^(?:[a-z0-9]{6}|[a-z0-9]{9})$/.test(reqCar.licensePlate.toLowerCase()))
         return new ErrorReport(true, errorTable["typeError"]);
 
     return new ErrorReport(false)

@@ -150,12 +150,31 @@ describe('POST /api/car/', () => {
     }) 
 
 
-    it ("should return 201", async () => {
+    it ("should return 201 licensePlate 9 chars", async () => {
         const resCar = await request(app)
             .post('/api/car/')
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
             .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}})
+            .expect(201)
+        
+        // Testing if the header location is giving an id
+        expect(typeof(resCar.get("Location"))).toBe("string")
+        const locationElts = resCar.get("Location").split("/") // should be [ '', 'api', 'car', '<id>' ]
+        expect(locationElts[1]).toBe("api")
+        expect(locationElts[2]).toBe("car")
+        expect(typeof(locationElts[3])).toBe("string")
+        expect(locationElts[3].length).toBe(24) 
+        expect(resCar.body).toBe("") // No body
+    })
+
+
+    it ("should return 201 licensePlate 6 chars", async () => {
+        const resCar = await request(app)
+            .post('/api/car/')
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${token}`)
+            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":"Peugeot","model":"208","color":"Rouge","licensePlate":"123ABC","airConditioner":true,"name":"Mon char !!"}})
             .expect(201)
         
         // Testing if the header location is giving an id
