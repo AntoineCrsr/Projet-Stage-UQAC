@@ -1,4 +1,12 @@
 {
+    "internalError": {
+        "errors": {
+            "app": {
+                "code": "internal-error",
+                "name": "L'application a rencontré une erreur innattendue."
+            }
+        }
+    },
     "authError": {
         "errors": {
             "user": {
@@ -20,6 +28,22 @@
             "any": {
                 "code": "bad-request",
                 "name": "L'identifiant renseigné n'est pas dans un format acceptable."
+            }
+        }
+    },
+    "adressMissingFields": {
+        "errors": {
+            "journey": {
+                "code": "bad-request",
+                "name": "L'adresse renseignée comporte un composant manquant, non résolu ou inattendu."
+            }
+        }
+    },
+    "adressInv": {
+        "errors": {
+            "journey": {
+                "code": "bad-request",
+                "name": "L'adresse renseignée est invalide ou est trop imprécise."
             }
         }
     }

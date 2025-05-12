@@ -6,11 +6,13 @@ const journey = mongoose.Schema({
     carId: { type: mongoose.Schema.Types.ObjectId, ref: "Car", required: true},
     starting: {
         city: { type: String, required: true },
-        adress: { type: String, required: true }
+        address: { type: Array, required: true },
+        regionCode: { type: String, required: true }
     },
     arrival: {
         city: { type: String, required: true },
-        adress: { type: String, required: true }
+        address: { type: Array, required: true },
+        regionCode: { type: String, required: true }
     },
     date: { type: String, required: true },
     seats: {
