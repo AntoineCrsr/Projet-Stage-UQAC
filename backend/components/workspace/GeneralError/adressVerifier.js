@@ -1,14 +1,12 @@
 const ErrorReport = require("../ErrorReport");
 const errorTable = require("./GeneralErrors.json")
 require("dotenv").config();
-const { execSync } = require('child_process');
 
 exports.isAddressCorrect = async (addressLines, regionCode, locality=undefined) => {
     // Pré-vérification des attributs
     if (!Array.isArray(addressLines) || typeof(regionCode) !== "string" || regionCode.length!==2) {
         return new ErrorReport(true, errorTable["adressInv"])
     }
-
     // Requete API 
     return await fetch(process.env.ADRESS_VERIF_URL, {
         method: "POST",

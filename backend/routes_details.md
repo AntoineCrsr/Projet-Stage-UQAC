@@ -211,4 +211,6 @@ Si la voiture renseignée dans la journey n'appartient pas à l'utilisateur, ren
 
 Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
 
+Si l'API Google de Vérification d'adresse renvoie un inputGranularity ou un validationGranularity qui ne vaut pas au moins PREMISE ou SUB_PREMISE, (ou PREMISE_PROXIMITY en supplément pour inputGranularity), renvoie un 400 code = "bad-request" et name = "L'adresse renseignée est invalide ou est trop imprécise.".
+
 Si tout convient, renvoie 201 sans body, avec header location. La journey doit être définie sur le state "w" (waiting).

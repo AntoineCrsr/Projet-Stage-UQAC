@@ -10,6 +10,24 @@ describe('POST /api/journey/', () => {
     let carId = undefined
 
     beforeEach(async () => {
+        // Mocker l'appel à l'API GMAPS
+        global.fetch = jest.fn()
+
+        const mockResponse = {
+            json: async () => ({
+                result: {
+                    verdict: {
+                        inputGranularity: "PREMISE",
+                        validationGranularity: "PREMISE"
+                    }
+                }
+            })
+        }
+
+        global.fetch
+            .mockResolvedValueOnce(mockResponse) // pour l'adresse de départ
+            .mockResolvedValueOnce(mockResponse) // pour l'adresse d'arrivée
+
         // Création d'un user et récupération du token de connexion
         const user = await UserFactory.createUser("john.doe@gmail.com", "StrongPassword1234")
         await UserFactory.modifyBirth(user, "2003-02-12T20:52:39.890Z")
@@ -35,11 +53,16 @@ describe('POST /api/journey/', () => {
     });
 
 
+    afterEach(() => {
+        jest.clearAllMocks()
+    })
+
+
     it ("should return 400 missing fields", async () => {
         // Missing carId
         const res = await request(app)
             .post('/api/journey')
-            .send({"journey": {"starting": {"city": "TORRONTO","adress": "1 rue Torronto"},"arrival": {"city": "MontReal","adress": "10 Rue St-Pierre"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": 40.0}})
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"], "regionCode": "CA"},"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"], "regionCode": "CA"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": 40.0}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
@@ -56,7 +79,7 @@ describe('POST /api/journey/', () => {
     it ("should return 400 bad date", async () => {
         const res = await request(app)
             .post('/api/journey')
-            .send({"journey": {"starting": {"city": "TORRONTO","adress": "1 rue Torronto"},"carId": carId,"arrival": {"city": "MontReal","adress": "10 Rue St-Pierre"},"date": (new Date(Date.now()-3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": 40.0}})
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"], "regionCode": "CA"},"carId": carId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"], "regionCode": "CA"},"date": (new Date(Date.now()-3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": 40.0}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
@@ -73,7 +96,7 @@ describe('POST /api/journey/', () => {
     it ("should return 400 date bad format", async () => {
         const res = await request(app)
             .post('/api/journey')
-            .send({"journey": {"starting": {"city": "TORRONTO","adress": "1 rue Torronto"},"carId": carId,"arrival": {"city": "MontReal","adress": "10 Rue St-Pierre"},"date": "Not valid","seats": {"total": 5,"left": 3},"price": 40.0}})
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"], "regionCode": "CA"},"carId": carId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"], "regionCode": "CA"},"date": "Not valid","seats": {"total": 5,"left": 3},"price": 40.0}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
@@ -90,7 +113,7 @@ describe('POST /api/journey/', () => {
     it ("should return 400 bad seats", async () => {
         const res = await request(app)
             .post('/api/journey')
-            .send({"journey": {"starting": {"city": "TORRONTO","adress": "1 rue Torronto"},"carId": carId,"arrival": {"city": "MontReal","adress": "10 Rue St-Pierre"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": -1},"price": 40.0}})
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"], "regionCode": "CA"},"carId": carId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"], "regionCode": "CA"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": -1},"price": 40.0}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
@@ -107,7 +130,7 @@ describe('POST /api/journey/', () => {
     it ("should return 400 total seats", async () => {
         const res = await request(app)
             .post('/api/journey')
-            .send({"journey": {"starting": {"city": "TORRONTO","adress": "1 rue Torronto"},"carId": carId,"arrival": {"city": "MontReal","adress": "10 Rue St-Pierre"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 7},"price": 40.0}})
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"], "regionCode": "CA"},"carId": carId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"], "regionCode": "CA"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 7},"price": 40.0}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
@@ -124,7 +147,7 @@ describe('POST /api/journey/', () => {
     it ("should return 400 bad price", async () => {
         const res = await request(app)
             .post('/api/journey')
-            .send({"journey": {"starting": {"city": "TORRONTO","adress": "1 rue Torronto"},"carId": carId,"arrival": {"city": "MontReal","adress": "10 Rue St-Pierre"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": -40.0}})
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"], "regionCode": "CA"},"carId": carId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"], "regionCode": "CA"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": -40.0}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
@@ -141,7 +164,7 @@ describe('POST /api/journey/', () => {
     it ("should return 401 not authenticated", async () => {
         const res = await request(app)
             .post('/api/journey')
-            .send({"journey": {"starting": {"city": "TORRONTO","adress": "1 rue Torronto"},"carId": carId,"arrival": {"city": "MontReal","adress": "10 Rue St-Pierre"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": -40.0}})
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"], "regionCode": "CA"},"carId": carId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"], "regionCode": "CA"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": -40.0}})
             .set('Accept', 'application/json')
 
         expect(res.status).toBe(401)
@@ -172,7 +195,7 @@ describe('POST /api/journey/', () => {
 
         const res = await request(app)
             .post('/api/journey')
-            .send({"journey": {"starting": {"city": "TORRONTO","adress": "1 rue Torronto"},"carId": otherCarId,"arrival": {"city": "MontReal","adress": "10 Rue St-Pierre"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": 40.0}})
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"], "regionCode": "CA"},"carId": otherCarId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"], "regionCode": "CA"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": 40.0}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
@@ -189,7 +212,7 @@ describe('POST /api/journey/', () => {
     it ("should return 201", async () => {
         const res = await request(app)
             .post('/api/journey')
-            .send({"journey": {"starting": {"city": "TORRONTO","adress": "1 rue Torronto"},"carId": carId,"arrival": {"city": "MontReal","adress": "10 Rue St-Pierre"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": 40.0}})
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"], "regionCode": "CA"},"carId": carId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"], "regionCode": "CA"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": 40.0}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
