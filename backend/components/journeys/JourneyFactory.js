@@ -48,6 +48,6 @@ exports.deleteJourney = (journeyId) => {
     // Sinon considérer que tu ne peux pas la supp, seulement la passer dans l'état annuler ?
 } 
 
-exports.addReservation = (journey) => {
-    journey.seats.left--
+exports.addReservation = (journey, nbReservation) => {
+    journey.seats.left -= nbReservation
 }

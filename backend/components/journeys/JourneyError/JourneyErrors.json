@@ -154,8 +154,8 @@
     "addReservationError": {
         "errors": {
             "journey": {
-                "code": "consistency-error",
-                "name": "Le trajet est déjà à son niveau maximal de réservations."
+                "code": "internal-error",
+                "name": "Le nombre de réservations à éditer renvoie à une valeur incohérente de sièges restant."
             }
         }
     },

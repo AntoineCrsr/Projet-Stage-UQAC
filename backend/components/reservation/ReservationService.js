@@ -27,7 +27,7 @@ exports.createReservation = async (reqRes, userAuthId) => {
     
     // Création
     const reservation = ReservationFactory.createReservation(userAuthId, reqRes.journeyId)
-    const journeyAddResponse = await JourneyService.addReservation(reqRes.journeyId)
+    const journeyAddResponse = await JourneyService.editReservation(reqRes.journeyId, 1)
     if (journeyAddResponse.has_error) return journeyAddResponse
 
     return await reservation.save()
@@ -69,6 +69,9 @@ exports.deleteReservation = async (reservationId, userAuthId) => {
     const journeyId = (await ReservationSeeker.getReservations({"_id": reservationId}))[0].journeyId.toString()
     const isDone = await JourneyService.isDoneJourney(journeyId)
     if (isDone.has_error) return isDone
+
+    const journeyAddResponse = await JourneyService.editReservation(journeyId, -1)
+    if (journeyAddResponse.has_error) return journeyAddResponse
     // Action
     return await ReservationFactory.deleteReservation(reservationId)
         .then(() => new Service_Response(undefined))

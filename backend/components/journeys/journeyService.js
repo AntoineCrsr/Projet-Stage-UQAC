@@ -161,12 +161,18 @@ exports.canAddAReservation = async (journeyId, userId) => {
             const journeyDoneError = JourneyErrorManager.getDoneError(journey)
             if (journeyDoneError.hasError) return new Service_Response(undefined, 400, true, journeyDoneError.error)
 
-            return new Service_Response(journey.seats.left < journey.seats.total)
+            return new Service_Response(journey.seats.left > 0)
         })
 }
 
 
-exports.addReservation = async (journeyId) => {
+/**
+ * 
+ * @param {string} journeyId 
+ * @param {Number} nbReservation could be positive to add reservations, or negative to remove ones
+ * @returns {Service_Response}
+ */
+exports.editReservation = async (journeyId, nbReservation) => {
     const journeyIdError = JourneyErrorManager.getIdError(journeyId)
     if (journeyIdError.hasError) return new Service_Response(undefined, 400, true, journeyIdError.error)
     
@@ -175,10 +181,10 @@ exports.addReservation = async (journeyId) => {
             const notFound = JourneyErrorManager.getNotFoundError(journey)
             if (notFound.hasError) return new Service_Response(undefined, 404, true, notFound.error)
             
-            const verifyAddingLogic = JourneyErrorManager.verifyAddReservation(journey)
-            if (verifyAddingLogic.hasError) return new Service_Response(undefined, 400, true, verifyAddingLogic.error)
+            const verifyAddingLogic = JourneyErrorManager.verifyAddReservation(journey, nbReservation)
+            if (verifyAddingLogic.hasError) return new Service_Response(undefined, 500, true, verifyAddingLogic.error)
             
-            JourneyFactory.addReservation(journey)
+            JourneyFactory.addReservation(journey, nbReservation)
             return journey.save()
                 .then(() => new Service_Response(undefined))
                 .catch(error => new Service_Response(undefined, 500, true, error))

@@ -192,8 +192,9 @@ exports.verifyRightsOfReservationOfUserOnJourney = (journey, userId) => {
     return new ErrorReport(false)
 }
 
-exports.verifyAddReservation = (journey) => {
-    if (journey.seats.left <= 0) return new ErrorReport(true, errorTable["addReservationError"])
+exports.verifyAddReservation = (journey, nbReservation) => {
+    const newNbLeft = journey.seats.left - nbReservation
+    if (newNbLeft < 0 || newNbLeft > journey.seats.total) return new ErrorReport(true, errorTable["addReservationError"])
     return new ErrorReport(false)
 }
 
