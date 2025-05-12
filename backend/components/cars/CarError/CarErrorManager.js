@@ -68,7 +68,7 @@ exports.getModifyError = (carReq) => {
         || typeof(carReq.name) !== "string"
     ) return new ErrorReport(true, errorTable["typeError"])
 
-    if (!/^[a-z0-9]{9}$/.test(carReq.licensePlate.toLowerCase()))
+    if (!/^(?:[a-z0-9]{6}|[a-z0-9]{9})$/.test(carReq.licensePlate.toLowerCase()))
         return new ErrorReport(true, errorTable["typeError"]);
 
     if (!/^[0-9]*$/.test(carReq.year.toLowerCase()))

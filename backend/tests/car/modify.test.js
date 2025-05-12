@@ -285,7 +285,7 @@ describe('PUT /api/car/id', () => {
     }) 
 
 
-    it ("should return 200", async () => {
+    it ("should return 200 - 9 chars LicensePlate", async () => {
         const res = await request(app)
             .put('/api/car/' + carId)
             .set('Authorization', `Bearer ${token}`)
@@ -316,6 +316,42 @@ describe('PUT /api/car/id', () => {
         expect(car.color).toBe("Noir") 
         expect(car.model).toBe("308") 
         expect(car.licensePlate).toBe("AAAAAAAA2") 
+        expect(car.airConditioner).toBe(false) 
+        expect(car.name).toBe("My car") 
+    }) 
+
+
+    it ("should return 200 - 6 chars LicensePlate", async () => {
+        const res = await request(app)
+            .put('/api/car/' + carId)
+            .set('Authorization', `Bearer ${token}`)
+            .send({"car": {"carType":"VUS 2017","year":"2017","manufacturer":"Citroen","model":"308","color":"Noir","licensePlate":"123ABC","airConditioner":false,"name":"My car"}})
+            .set('Accept', 'application/json')
+            .expect(200)
+
+        // Testing if the header location is giving an id
+        expect(typeof(res.get("Location"))).toBe("string")
+        const locationElts = res.get("Location").split("/") // should be [ '', 'api', 'car', '<id>' ]
+        expect(locationElts[1]).toBe("api")
+        expect(locationElts[2]).toBe("car")
+        expect(typeof(locationElts[3])).toBe("string")
+        expect(locationElts[3].length).toBe(24) 
+        expect(res.body).toBe("") // No body
+
+        // Getting back the object to see if something has changed unexpectedly
+        const response = await request(app)
+            .get('/api/car/' + carId + '?private=true')
+            .set('Authorization', `Bearer ${token}`)
+
+        let car = response.body
+
+        expect(car).toBeDefined()
+        expect(car.year).toBe("2017")
+        expect(car.carType).toBe("VUS 2017")
+        expect(car.manufacturer).toBe("Citroen") 
+        expect(car.color).toBe("Noir") 
+        expect(car.model).toBe("308") 
+        expect(car.licensePlate).toBe("123ABC") 
         expect(car.airConditioner).toBe(false) 
         expect(car.name).toBe("My car") 
     }) 

@@ -148,7 +148,7 @@ Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur d
 
 Si l'utilisateur est connecté mais n'est pas propriétaire du char, renvoie 401 code = "unauthorized" et name = "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
 
-Si un des éléments à modifier n'est pas dans un format valide (ex: licensePlate != "AAAAAAAAA") renvoie 400 "bad-request", "Au moins un des attributs ne respecte pas le format attendu.".
+Si un des éléments à modifier n'est pas dans un format valide (notamment licensePlate qui doit être composé soit de 6 chars A-Z0-9, soit de 9 A-Z0-9) renvoie 400 "bad-request", "Au moins un des attributs ne respecte pas le format attendu.".
 
 Si l'utilisateur modifie une licensePlate, mais que celle ci est déjà renseignée dans la database, renvoie 409 "conflict", "Une voiture possède déjà cette plaque d'immatriculation.".
 
