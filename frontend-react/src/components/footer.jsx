@@ -15,14 +15,14 @@ const Footer = () => {
               <li><b>Notre projet : </b></li>
               <li><Link to="/a-propos">À propos du projet</Link></li>
               <li><Link to="notre-equipe">Notre équipe </Link></li>
-              <li><Link to="/contact">Nous contacter</Link></li>
+              <li><Link to="/nous-contacter">Nous contacter</Link></li>
             </ul>
           </div>
           <div className="footer-column">
             <ul>
               <li><b>Accès rapides : </b></li>
               <li><Link to="/creer-trajet">Créer un trajet</Link></li>
-              <li><a href="#">Rechercher un trajet</a></li>
+              <li><Link to="/">Rechercher un trajet</Link></li>
               <li><Link to="/profil">Mes réservations</Link></li>
               <li><Link to="/profil">Mes véhicules</Link></li>
               <li><Link to="/faq">Foire aux questions (FAQ)</Link></li>

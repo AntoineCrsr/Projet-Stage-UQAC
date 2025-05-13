@@ -1,6 +1,10 @@
-.a-propos, .FAQ, .notre-equipe{
+.a-propos, .FAQ, .notre-equipe, .nous-contacter{
     margin-left: 25%;
     margin-right: 20%;
     
 }
 
+.nous-contacter  ul {
+    list-style-type: none;
+    padding: 0;
+}
