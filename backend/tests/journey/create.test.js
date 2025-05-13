@@ -177,6 +177,41 @@ describe('POST /api/journey/', () => {
     })
 
 
+    it ("should return 400 bad address", async () => {
+        jest.clearAllMocks() // Annuler le mock de retour correct
+        // Créer un mock avec résultats de mauvaise adresse
+        global.fetch = jest.fn() 
+        const mockResponse = {
+            json: async () => ({
+                result: {
+                    verdict: {
+                        inputGranularity: "BLOCK",
+                        validationGranularity: "STREET" // Trop peu précis
+                    }
+                }
+            })
+        }
+        global.fetch
+            .mockResolvedValueOnce(mockResponse) // pour l'adresse de départ
+            .mockResolvedValueOnce(mockResponse) // pour l'adresse d'arrivée
+        
+        const res = await request(app)
+            .post('/api/journey')
+            .send({"journey": {"starting": {"city": "BADCITY","address": ["Not existing address"], "regionCode": "CA"},"carId": carId,"arrival": {"city": "Also Bad Vity","address": ["This is not an address"], "regionCode": "CA"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": 40.0}})
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${token}`)
+
+        expect(res.status).toBe(400)
+
+        expect(res.body.errors).toEqual({
+            "journey": {
+                "code": "bad-request",
+                "name": "L'adresse renseignée est invalide ou est trop imprécise."
+            }
+        })
+    })
+
+
     it ("should return 400 not owner of car", async () => {
         // Creating a valid user:
         const user = await UserFactory.createUser("john.doe2@gmail.com", "StrongPassword1234")
