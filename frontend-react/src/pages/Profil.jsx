@@ -247,6 +247,7 @@ const Profil = () => {
             onChange={(e) => setAboutMe(e.target.value)}
             placeholder="Décrivez-vous en quelques mots"
         />
+        <button onClick={() => navigate("/modifier-profil")}>Modifier mon profil</button>
         </div>
 
         <h3>Évaluations</h3>
