@@ -15,6 +15,22 @@
             }
         }
     },
+    "missingArgModify": {
+        "errors": {
+            "journey": {
+                "code": "bad-request",
+                "name": "La requête ne contient pas tous les attributs nécessaires à l'édition de l'objet."
+            }
+        }
+    },
+    "alreadyTerminated": {
+        "errors": {
+            "journey": {
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas modifier un trajet déjà terminé."
+            }
+        }
+    },
     "badDate": {
         "errors": {
             "journey": {
@@ -51,7 +67,7 @@
         "errors": {
             "journey": {
                 "code": "bad-request",
-                "name": "Le nombre de place restant doit être inférieur au nombre de place total."
+                "name": "Le nombre de places restantes doit être inférieur au nombre de place total."
             }
         }
     },

@@ -285,6 +285,16 @@ describe('PUT /api/car/id', () => {
     }) 
 
 
+    it ("should return 404", async () => {
+        const res = await request(app)
+            .put('/api/car/000000000000000000000000')
+            .set('Authorization', `Bearer ${token}`)
+            .send({"car": {"carType":"VUS 2017","year":"2017","manufacturer":"Citroen","model":"308","color":"Noir","licensePlate":"AAAAAAAA2","airConditioner":false,"name":"My car"}})
+            .set('Accept', 'application/json')
+            .expect(404)
+    }) 
+
+
     it ("should return 200 - 9 chars LicensePlate", async () => {
         const res = await request(app)
             .put('/api/car/' + carId)

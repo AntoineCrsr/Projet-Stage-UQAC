@@ -89,26 +89,38 @@ exports.getOneJourney = async (journeyId) => {
  * @param {string} userAuthId 
  * @returns {Service_Response}
  */
-exports.modifyOneJourney = async (newJourneyId, newJourney, userAuthId) => {
-    // Utilise le service pour éviter la répétition de code
-    return await this.getOneJourney(newJourneyId)
-        .then(async currentJourneyResp => {
-            if (currentJourneyResp.has_error) 
-                return currentJourneyResp
+exports.modifyOneJourney = async (newJourneyId, reqJourney, userId) => {
+    const getOneJourneyError = GeneralErrorManager.isValidId(newJourneyId, "journey")
+    if (getOneJourneyError.hasError) return new Service_Response(undefined, 400, true, getOneJourneyError.error)
 
-            // Vérification de la validité des données
-            const modifyError = await JourneyErrorManager.getModifyError(newJourney, userAuthId, currentJourneyResp.result.ownerId, currentJourneyResp.result.seats)
-            if (modifyError.hasError) return new Service_Response(undefined, 400, true, modifyError.error)
-            
-            if (currentJourneyResp.result.ownerId !== undefined) {
-                const ownerError = await JourneyErrorManager.verifyIfUserHasCar(userAuthId.toString(), currentJourneyResp.result.carId.toString())
-                if (ownerError.hasError) return new Service_Response(undefined, 401, true, ownerError.error)    
-            }
-            
-            return JourneyFactory.updateJourney(newJourneyId, newJourney)
-                .then(() => (new Service_Response(undefined)).setLocation('/journey/' + newJourneyId))
-                .catch(error => new Service_Response(undefined, 500, true, error))
-        })
+    const journey = await JourneySeeker.getOneJourney(newJourneyId)
+    const isNotFound = JourneyErrorManager.getNotFoundError(journey)
+    if (isNotFound.hasError) return new Service_Response(undefined, 404, true, isNotFound.error)
+
+    const isConnected = GeneralErrorManager.getAuthError(userId)
+    if (isConnected.hasError) return new Service_Response(undefined, 401, true, isConnected.error)
+    
+    const userRegistrationCompleteError = await GeneralErrorManager.isUserVerified(userId)
+    if (userRegistrationCompleteError.hasError) return new Service_Response(undefined, 401, true, userRegistrationCompleteError.error)
+    
+    const creationError = JourneyErrorManager.getModifyError(reqJourney)
+    if (creationError.hasError) return new Service_Response(undefined, 400, true, creationError.error)
+
+    const alreadyTerminated = JourneyErrorManager.isAlreadyTerminated(journey)
+    if (alreadyTerminated.hasError) return new Service_Response(undefined, 401, true, alreadyTerminated.error)
+
+    const verifyIfUserHasCar = await JourneyErrorManager.verifyIfUserHasCar(userId, reqJourney.carId)
+    if (verifyIfUserHasCar.hasError) return new Service_Response(undefined, 401, true, verifyIfUserHasCar.error)
+    
+    const verifyStartingAddress = await AdressVerifier.isAddressCorrect(reqJourney.starting.address, reqJourney.starting.regionCode, reqJourney.starting.city)
+    if (verifyStartingAddress.hasError) return new Service_Response(undefined, 400, true, verifyStartingAddress.error)
+
+    const verifyArrivalAddress = await AdressVerifier.isAddressCorrect(reqJourney.arrival.address, reqJourney.arrival.regionCode, reqJourney.arrival.city)
+    if (verifyArrivalAddress.hasError) return new Service_Response(undefined, 400, true, verifyArrivalAddress.error)
+    
+    return JourneyFactory.updateJourney(newJourneyId, reqJourney)
+        .then(() => (new Service_Response(undefined)).setLocation('/journey/' + newJourneyId))
+        .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
 
