@@ -140,38 +140,38 @@ const Profil = () => {
     }
     };
 
-    const handleSave = () => { //tests aussi avec formdata pour l'ajout d'images mais pas encore réussi donc on garde à l'ancienne pour le moment
-        /*const formData = new FormData();
-        formData.append(
-            "user",
-            JSON.stringify({
-                isStudent,
-                aboutMe,
-            })
-        );
-        if (selectedFile) {
-        formData.append("image", selectedFile);
-        }*/
-        fetch(`http://localhost:3000/api/auth/${userId}`, {
-            method: "PUT",
-            headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-            },
-        //body: formData,
-        body: JSON.stringify({
-        user: {
-            isStudent,
-            aboutMe,
-        },
-        }),
-        })
-        .then((res) => {
-        if (res.ok) alert("Votre profil a été mis à jour !");
-        else throw new Error();
-        })
-        .catch(() => alert("Erreur lors de la mise à jour."));
-    };
+    // const handleSave = () => { //tests aussi avec formdata pour l'ajout d'images mais pas encore réussi donc on garde à l'ancienne pour le moment
+    //     /*const formData = new FormData();
+    //     formData.append(
+    //         "user",
+    //         JSON.stringify({
+    //             isStudent,
+    //             aboutMe,
+    //         })
+    //     );
+    //     if (selectedFile) {
+    //     formData.append("image", selectedFile);
+    //     }*/
+    //     fetch(`http://localhost:3000/api/auth/${userId}`, {
+    //         method: "PUT",
+    //         headers: {
+    //         "Content-Type": "application/json",
+    //         Authorization: `Bearer ${token}`,
+    //         },
+    //     //body: formData,
+    //     body: JSON.stringify({
+    //     user: {
+    //         isStudent,
+    //         aboutMe,
+    //     },
+    //     }),
+    //     })
+    //     .then((res) => {
+    //     if (res.ok) alert("Votre profil a été mis à jour !");
+    //     else throw new Error();
+    //     })
+    //     .catch(() => alert("Erreur lors de la mise à jour."));
+    // };
 
     const handleCancelReservation = async (reservationId) => {
     if (!window.confirm("Voulez-vous vraiment annuler cette réservation ?")) return;
@@ -234,7 +234,7 @@ const Profil = () => {
             <input
             type="checkbox"
             checked={isStudent}
-            onChange={(e) => setIsStudent(e.target.checked)}
+            // onChange={(e) => setIsStudent(e.target.checked)}
             />
             Je suis étudiant(e)
         </label>
@@ -244,7 +244,7 @@ const Profil = () => {
         <label>À propos de moi :</label>
         <textarea
             value={aboutMe}
-            onChange={(e) => setAboutMe(e.target.value)}
+            // onChange={(e) => setAboutMe(e.target.value)}
             placeholder="Décrivez-vous en quelques mots"
         />
         <button onClick={() => navigate("/modifier-profil")}>Modifier mon profil</button>
@@ -265,7 +265,7 @@ const Profil = () => {
 
 
         <div className="profil-buttons">
-        <button onClick={handleSave}>Enregistrer</button>
+        {/* <button onClick={handleSave}>Enregistrer</button> */}
         <button onClick={() => navigate("/ajout-voiture")}>Ajouter un véhicule</button>
         <button onClick={() => navigate("/")}>Retour à l'accueil</button>
         </div>
