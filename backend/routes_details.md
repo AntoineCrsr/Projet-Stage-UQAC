@@ -197,6 +197,8 @@ Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z
 
 La requête doit contenir un starting (city + address), un arrival (city + address), un carId, une date (format ISO String), des seats (total + left), et un prix. 
 
+Si le type de ces attributs ne correspondent pas aux attendus, renvoi "bad-request", "Le type des variables ne correspond pas aux attendus."
+
 Si la requete ne contient au moins pas un de ces attributs, renvoie 400 avec code = "bad-request" et name = "La requête ne contient pas tous les attributs nécessaires à la création de l'objet.".
 
 Si la date est dans un format incorrect (ne respectant pas 2011-10-10T14:48:00), renvoie 400, "La date renseignée n'est pas dans le format attendu."
@@ -232,6 +234,8 @@ Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z
 
 Sinon, elle constitue presque les mêmes retours que la création, soit:
 Si la requete ne contient au moins pas un de ces attributs, renvoie 400 avec code = "bad-request" et name = "La requête ne contient pas tous les attributs nécessaires à la modification de l'objet.".
+
+Si le type de ces attributs ne correspondent pas aux attendus, renvoi "bad-request", "Le type des variables ne correspond pas aux attendus."
 
 Si la date est dans un format incorrect (ne respectant pas 2011-10-10T14:48:00), renvoie 400, "La date renseignée n'est pas dans le format attendu."
 

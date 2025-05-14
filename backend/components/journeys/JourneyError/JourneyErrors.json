@@ -39,27 +39,19 @@
             }
         }
     },
+    "typeError": {
+        "errors": {
+            "journey": {
+                "code": "bad-request",
+                "name": "Le type des variables ne correspond pas aux attendus."
+            }
+        }
+    },
     "passedDate": {
         "errors": {
             "journey": {
                 "code": "bad-request",
                 "name": "La date renseignée doit être supérieure ou égale à la date actuelle."
-            }
-        }
-    },
-    "missingId": {
-        "errors": {
-            "journey": {
-                "code": "missing-fields",
-                "name": "Il est nécessaire de renseigner une id pour obtenir la requete visée."
-            }
-        }
-    },
-    "idTypeError": {
-        "errors": {
-            "journey": {
-                "code": "type error",
-                "name": "L'identifiant de la journey n'est pas au format exigé (24 char)."
             }
         }
     },
@@ -84,62 +76,6 @@
             "journey": {
                 "code": "bad-request",
                 "name": "Le prix d'un trajet ne peut pas aller en dessous de 0."
-            }
-        }
-    },
-    "typeError": {
-        "errors": {
-            "journey": {
-                "code": "type-error",
-                "name": "Les types des variables ne correspondent pas aux attendus."
-            }
-        }
-    },
-    "nullError": {
-        "errors": {
-            "journey": {
-                "code": "type-error",
-                "name": "Les variables ne peuvent pas être nulles."
-            }
-        }
-    },
-    "incorrectState": {
-        "errors": {
-            "journey": {
-                "code": "consistency-error",
-                "name": "Le status d'une journey ne peut être que 'd' (done) ou 'w' (wainting)"
-            }
-        }
-    },
-    "badResearch": {
-        "errors": {
-            "journey": {
-                "code": "bad values",
-                "name": "La recherche demandée est incorrecte, doit contenir au moins un des 3 attributs: starting (string), arrival (string), date (string)"
-            }
-        }
-    },
-    "researchTypeError": {
-        "errors": {
-            "journey": {
-                "code": "bad values",
-                "name": "Les attributs de la recherche sont invalides: starting (string), arrival (string), date (string)"
-            }
-        }
-    },
-    "carIdError": {
-        "errors": {
-            "journey": {
-                "code": "bad values",
-                "name": "L'identifiant de Car doit être exactement de 24 char."
-            }
-        }
-    },
-    "internalError": {
-        "errors": {
-            "journey": {
-                "code": "bad values",
-                "name": "L'identifiant de Car doit être exactement de 24 char."
             }
         }
     },

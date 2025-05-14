@@ -89,7 +89,7 @@ describe('DELETE /api/car/id', () => {
     it ("should return 409", async () => {
         // Creating a journey with the car
         const journey = JourneyFactory.createJourney(id, {"city":"Chicoutimi", "address": "10 Rue St-Pierre"}, {"city": "Montreal", "address": "1 rue Torronto"}, "07/08/2025", {"total":5, "left": 4}, 20, carId)
-        journey.save()
+        await journey.save()
 
         // Trying to delete the car
         const res = await request(app)

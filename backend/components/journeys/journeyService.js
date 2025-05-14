@@ -138,9 +138,7 @@ exports.modifyOneJourney = async (newJourneyId, reqJourney, userId) => {
 
     const isCorrectProvince = JourneyErrorManager.getProvinceError(reqJourney)
     if (isCorrectProvince.hasError) return new Service_Response(undefined, 400, true, isCorrectProvince.error)
-    
-    console.log(reqJourney)
-    
+        
     return JourneyFactory.updateJourney(newJourneyId, reqJourney)
         .then(() => (new Service_Response(undefined)).setLocation('/journey/' + newJourneyId))
         .catch(error => new Service_Response(undefined, 500, true, error))
