@@ -19,22 +19,8 @@ TODO:
 > Fin automatique des journeys (lors d'un GET = update ?)
 > Mise à jour des statistiques utilisateur quand le trajet a été fini
 > Vérification de l'âge de l'utilisateur
-> Vérifier les adresses avec l'API google maps?
 > Vérifier la cohérence des attributs de car (couleur, model etc.) // model --> API voiture ?
-> Si demandé, faire de l'abstraction sur les erreurs
-> Test de l'app incluant les erreurs (tests unitaires)
-> Documentation
-
-
-Pour chaque "auth required", cela signifie avoir un header Authorization avec comme contenu "Bearer {TOKEN}", avec TOKEN le token obtenu avec le login.  
-
-
-Les routes:
-
-> User:
-
-POST /auth/login
-POST /auth/signup 
-
-GET /auth/<id>
-GET /auth/<id>?private=true
+> Region code en CA Par défault 
+> vérification que l'adresse est au QC 
+> remplacer address par formattedAdress
+> Image user profile

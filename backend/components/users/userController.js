@@ -20,12 +20,7 @@ exports.getUser = (req, res, next) => {
  * @param {Function} next 
  */
 exports.signup = (req, res, next) => {
-    if (typeof req.body.user == "string") { // Formdata avec image (body multipart)
-        user = JSON.parse(req.body.user)
-    } else { // Body json 
-        user = req.body.user
-    }
-    userService.createUser(user)
+    userService.createUser(req.body.user)
         .then(service_response => service_response.buildResponse(res))
 }
 

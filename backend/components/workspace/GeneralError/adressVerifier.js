@@ -23,6 +23,7 @@ exports.isAddressCorrect = async (addressLines, regionCode, locality=undefined) 
       })
         .then(async (res) => {
             const response = await res.json()
+            console.log(response)
             if (!(
                 // Ceci vérifie que l'adresse ait au moins une précision de l'ordre d'un batiment
                 response.result.verdict.inputGranularity === "PREMISE" 
