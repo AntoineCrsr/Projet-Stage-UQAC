@@ -33,28 +33,28 @@ const Profil = () => {
         if (data.imageUrl) setImagePreview(data.imageUrl);
         
         // Validation automatique de l'email
-        if (!data.hasVerifiedEmail) {
-            await fetch(`http://localhost:3000/api/auth/${userId}/emailValidation`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ user: { nonce: "000" } }),
-            });
-        }
+        // if (!data.hasVerifiedEmail) {
+        //     await fetch(`http://localhost:3000/api/auth/${userId}/emailValidation`, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         Authorization: `Bearer ${token}`,
+        //     },
+        //     body: JSON.stringify({ user: { nonce: "000" } }),
+        //     });
+        // }
 
-        // Validation automatique du téléphone 
-        if (!data.hasVerifiedPhone) {
-            await fetch(`http://localhost:3000/api/auth/${userId}/phoneValidation`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ user: { nonce: "000" } }),
-            });
-        }
+        // // Validation automatique du téléphone 
+        // if (!data.hasVerifiedPhone) {
+        //     await fetch(`http://localhost:3000/api/auth/${userId}/phoneValidation`, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         Authorization: `Bearer ${token}`,
+        //     },
+        //     body: JSON.stringify({ user: { nonce: "000" } }),
+        //     });
+        // }
 
         fetch(`http://localhost:3000/api/reservation?userId=${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -140,6 +140,42 @@ const Profil = () => {
     }
     };
 
+    const handleValidateEmail = async () => {
+        try {
+            const res = await fetch(`http://localhost:3000/api/auth/${userId}/emailValidation`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ user: { nonce: "000" } }),
+            });
+            if (!res.ok) throw new Error();
+            alert("Email validé !");
+            setUser(prev => ({ ...prev, hasVerifiedEmail: true }));
+        } catch {
+            alert("Erreur lors de la validation de l'email.");
+        }
+    };
+    
+    const handleValidatePhone = async () => {
+        try {
+            const res = await fetch(`http://localhost:3000/api/auth/${userId}/phoneValidation`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ user: { nonce: "000" } }),
+            });
+            if (!res.ok) throw new Error();
+            alert("Téléphone validé !");
+            setUser(prev => ({ ...prev, hasVerifiedPhone: true }));
+        } catch {
+            alert("Erreur lors de la validation du téléphone.");
+        }
+    };
+
     // const handleSave = () => { //tests aussi avec formdata pour l'ajout d'images mais pas encore réussi donc on garde à l'ancienne pour le moment
     //     /*const formData = new FormData();
     //     formData.append(
@@ -214,11 +250,21 @@ const Profil = () => {
         <div className="profil-section">
         <strong>Nom public :</strong>{user.name?.publicName}</div>
         
-        <div className="profil-section"> 
-        <strong>Email :</strong> {user.email}</div>
-        
-        <div className="profil-section"> 
-        <strong>Telephone :</strong> Type {user.phone.type} : {user.phone.prefix}{user.phone.number} </div>
+        <div className="profil-section">
+        <strong>Email :</strong> {user.email}{" "}
+        {user.hasVerifiedEmail ? (
+            <span title="Email vérifié">✅</span>
+        ) : (
+            <button onClick={handleValidateEmail}>Vérifier</button>)}
+        </div>
+
+        <div className="profil-section">
+        <strong>Téléphone :</strong> Type {user.phone.type} : {user.phone.prefix}{user.phone.number}{" "}
+        {user.hasVerifiedPhone ? (
+            <span title="Téléphone vérifié">✅</span>
+        ) : (
+            <button onClick={handleValidatePhone}>Vérifier</button>)}
+        </div>
 
 
         <div className="profil-section">
