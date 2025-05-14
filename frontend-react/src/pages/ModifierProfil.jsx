@@ -100,11 +100,11 @@ const ModifierProfil = () => {
 
         Numéro :
         <input type="text" name="phoneNumber" value={form.phoneNumber} onChange={handleChange} required />    
-        addresse mail :<input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        pseudo publique : <input type="text" name="publicName" placeholder="Nom public" value={form.publicName} onChange={handleChange} required />
-        prenom(s) :<input type="text" name="firstName" placeholder="Prénom" value={form.firstName} onChange={handleChange} required />
-        nom de famille :<input type="text" name="lastName" placeholder="Nom de famille" value={form.lastName} onChange={handleChange} required />
-        genre : <select name="gender" value={form.gender} onChange={handleChange} required>
+        Addresse mail :<input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+        Pseudo publique : <input type="text" name="publicName" placeholder="Nom public" value={form.publicName} onChange={handleChange} required />
+        Prenom(s) :<input type="text" name="firstName" placeholder="Prénom" value={form.firstName} onChange={handleChange} required />
+        Nom de famille :<input type="text" name="lastName" placeholder="Nom de famille" value={form.lastName} onChange={handleChange} required />
+        Genre : <select name="gender" value={form.gender} onChange={handleChange} required>
             <option value="">Choisir un genre</option>
             <option value="homme">Homme</option>
             <option value="femme">Femme</option>

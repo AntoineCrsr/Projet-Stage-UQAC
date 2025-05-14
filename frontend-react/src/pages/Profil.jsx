@@ -280,6 +280,7 @@ const Profil = () => {
             <input
             type="checkbox"
             checked={isStudent}
+            readOnly
             // onChange={(e) => setIsStudent(e.target.checked)}
             />
             Je suis étudiant(e)
@@ -292,6 +293,7 @@ const Profil = () => {
             value={aboutMe}
             // onChange={(e) => setAboutMe(e.target.value)}
             placeholder="Décrivez-vous en quelques mots"
+            readOnly
         />
         <button onClick={() => navigate("/modifier-profil")}>Modifier mon profil</button>
         </div>
