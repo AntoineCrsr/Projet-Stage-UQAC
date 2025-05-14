@@ -1,5 +1,5 @@
 // Exemple de test : journeyService.test.js
-const { isAddressCorrect } = require('../../components/workspace/GeneralError/adressVerifier')
+const { getCorrectAddress } = require('../../components/workspace/GoogleAPI/adressVerifier')
 
 describe('Address Verifier', () => {
     beforeEach(() => {
@@ -13,35 +13,35 @@ describe('Address Verifier', () => {
     it('Should return no error', async () => {
         global.fetch.mockResolvedValueOnce({
             json: async () => ({
-            result: {
-                verdict: {
-                    inputGranularity: "PREMISE",
-                    validationGranularity: "PREMISE"
+                result: {
+                    verdict: {
+                        inputGranularity: "PREMISE",
+                        validationGranularity: "PREMISE"
+                    },
+                    address: {
+                        formattedAddress: '999 Boulevard Talbot, Chicoutimi, QC G7H 4B5, Canada'
+                    }
                 }
-            }
             })
         })
 
-        const result = await isAddressCorrect(["123 Rue Principale"], "QC", "Montréal")
-        expect(result.hasError).toBe(false)
+        const result = await getCorrectAddress(["123 Rue Principale"], "Montréal")
+        expect(result).toBe("999 Boulevard Talbot, Chicoutimi, QC G7H 4B5, Canada")
     })
 
-    it('Should return an error', async () => {
+    it('Should return null', async () => {
         global.fetch.mockResolvedValueOnce({
             json: async () => ({
-            result: {
-                verdict: {
-                    inputGranularity: "BLOCK",
-                    validationGranularity: "STREET"
+                result: {
+                    verdict: {
+                        inputGranularity: "BLOCK",
+                        validationGranularity: "STREET"
+                    }
                 }
-            }
             })
         })
 
-        const result = await isAddressCorrect(["Quelque part"], "QC", "Ville inconnue")
-        expect(result.hasError).toBe(true)
-        expect(result.error).toBeDefined()
-        expect(result.error.errors).toBeDefined()
-        expect(result.error.errors.journey).toEqual({"code": "bad-request","name": "L'adresse renseignée est invalide ou est trop imprécise."})
+        const result = await getCorrectAddress(["Quelque part"], "Ville inconnue")
+        expect(result).toBe(null)
     })
 })

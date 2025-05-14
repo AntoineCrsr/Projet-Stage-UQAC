@@ -35,11 +35,11 @@ describe('GET /api/journey/', () => {
 
         // Création de journeys
         // La première est à venir
-        j1 = await JourneyFactory.createJourney(id, {"city": "TORRONTO","adress": ["1 rue Torronto"], "regionCode": "CA"}, {"city": "MontReal","adress": ["10 Rue St-Pierre"], "regionCode": "CA"}, "2025-06-12T20:52:39.890Z", {"total": 5,"left": 3}, 40, car._id)
+        j1 = await JourneyFactory.createJourney(id, {"city": "TORRONTO","address": "1 rue Torronto"}, {"city": "MontReal","address": "10 Rue St-Pierre"}, "2025-06-12T20:52:39.890Z", {"total": 5,"left": 3}, 40, car._id)
         await j1.save()
 
         // La second est passée
-        j2 = await JourneyFactory.createJourney(id, {"city": "Montreal","adress": ["1 rue Torronto"], "regionCode": "CA"}, {"city": "TorronTo","adress": ["10 Rue St-Pierre"], "regionCode": "CA"}, "2025-04-12T20:52:39.890Z", {"total": 5,"left": 3}, 40, car._id)
+        j2 = await JourneyFactory.createJourney(id, {"city": "Montreal","address": "1 rue Torronto"}, {"city": "TorronTo","address": "10 Rue St-Pierre"}, "2025-04-12T20:52:39.890Z", {"total": 5,"left": 3}, 40, car._id)
         await j2.save()
     });
 

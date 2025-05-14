@@ -23,4 +23,4 @@ TODO:
 > Region code en CA Par défault 
 > vérification que l'adresse est au QC 
 > remplacer address par formattedAdress
-> Image user profile
+> Tester la sécurité

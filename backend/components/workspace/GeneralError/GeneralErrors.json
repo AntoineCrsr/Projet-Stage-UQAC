@@ -38,13 +38,5 @@
                 "name": "L'adresse renseignée comporte un composant manquant, non résolu ou inattendu."
             }
         }
-    },
-    "adressInv": {
-        "errors": {
-            "journey": {
-                "code": "bad-request",
-                "name": "L'adresse renseignée est invalide ou est trop imprécise."
-            }
-        }
     }
 }

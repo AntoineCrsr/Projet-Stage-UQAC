@@ -22,6 +22,9 @@ describe('PUT /api/journey/id', () => {
                     verdict: {
                         inputGranularity: "PREMISE",
                         validationGranularity: "PREMISE"
+                    },
+                    address: {
+                        formattedAddress: '999 Boulevard Talbot, Chicoutimi, QC G7H 4B5, Canada'
                     }
                 }
             })
@@ -55,7 +58,7 @@ describe('PUT /api/journey/id', () => {
         carId = car._id.toString()
 
         // Journey à modifier
-        journey = await JourneyFactory.createJourney(id, {"city": "TORRONTO","address": ["1 rue Torronto"], "regionCode": "CA"}, {"city": "MontReal","address": ["10 Rue St-Pierre"], "regionCode": "CA"}, (new Date(Date.now()+3600000)).toISOString(), {"total": 5,"left": 3}, 40.0, carId)
+        journey = await JourneyFactory.createJourney(id, {"city": "TORRONTO","address": "1 rue Torronto"}, {"city": "MontReal","address": "10 Rue St-Pierre"}, (new Date(Date.now()+3600000)).toISOString(), {"total": 5,"left": 3}, 40.0, carId)
         await journey.save()
         journeyId = journey._id.toString()
     });
@@ -304,6 +307,46 @@ describe('PUT /api/journey/id', () => {
             "journey": {
                 "code": "unauthorized",
                 "name": "Vous ne pouvez pas modifier un trajet déjà terminé."
+            }
+        })
+    })
+
+
+    it ("should return 400 address not in QC", async () => {
+        // Setting a return of API not in QC
+        jest.clearAllMocks()
+
+        global.fetch = jest.fn()
+
+        const mockResponse = {
+            json: async () => ({
+                result: {
+                    verdict: {
+                        inputGranularity: "PREMISE",
+                        validationGranularity: "PREMISE"
+                    },
+                    address: {
+                        formattedAddress: '999 Boulevard Talbot, Chicoutimi, ON G7H 4B5, Canada'
+                    }
+                }
+            })
+        }
+
+        global.fetch
+            .mockResolvedValueOnce(mockResponse) // pour l'adresse de départ
+            .mockResolvedValueOnce(mockResponse) // pour l'adresse d'arrivée
+
+        const res = await request(app)
+            .put('/api/journey/'+journeyId)
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"]},"carId": carId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"]},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": 40.0}})
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${token}`)
+
+        expect(res.status).toBe(400)
+        expect(res.body.errors).toEqual({
+            "journey": {
+                "code": "bad-request",
+                "name": "Le covoiturage doit avoir lieu au Québec."
             }
         })
     })

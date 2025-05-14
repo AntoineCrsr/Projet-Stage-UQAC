@@ -195,7 +195,7 @@ Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z
 
 #### POST /api/journey
 
-La requête doit contenir un starting (city + adress), un arrival (city + adress), un carId, une date (format ISO String), des seats (total + left), et un prix. 
+La requête doit contenir un starting (city + address), un arrival (city + address), un carId, une date (format ISO String), des seats (total + left), et un prix. 
 
 Si la requete ne contient au moins pas un de ces attributs, renvoie 400 avec code = "bad-request" et name = "La requête ne contient pas tous les attributs nécessaires à la création de l'objet.".
 
@@ -215,7 +215,9 @@ Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur d
 
 Si l'API Google de Vérification d'adresse renvoie un inputGranularity ou un validationGranularity qui ne vaut pas au moins PREMISE ou SUB_PREMISE, (ou PREMISE_PROXIMITY en supplément pour inputGranularity), renvoie un 400 code = "bad-request" et name = "L'adresse renseignée est invalide ou est trop imprécise.".
 
-Si tout convient, renvoie 201 sans body, avec header location. La journey doit être définie sur le state "w" (waiting).
+Si la province d'une des deux adresses renseignées n'est pas au Québec, renvoie 400, "Le covoiturage doit avoir lieu au Québec.".
+
+Si tout convient, renvoie 201 sans body, avec header location. La journey doit être définie sur le state "w" (waiting), avec comme addresse le correctif de l'API GMAPS, et la ville correctif de l'API, pour starting et arrival, avec les cities en toLowerCase. 
 
 
 #### PUT /api/journey/id
@@ -247,4 +249,6 @@ Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur d
 
 Si l'API Google de Vérification d'adresse renvoie un inputGranularity ou un validationGranularity qui ne vaut pas au moins PREMISE ou SUB_PREMISE, (ou PREMISE_PROXIMITY en supplément pour inputGranularity), renvoie un 400 code = "bad-request" et name = "L'adresse renseignée est invalide ou est trop imprécise.".
 
-Si tout convient, renvoie 200 sans body, avec header location. La journey doit être définie sur le state "w" (waiting).
+Si la province d'une des deux adresses renseignées n'est pas au Québec, renvoie 400, "Le covoiturage doit avoir lieu au Québec.".
+
+Si tout convient, renvoie 200 sans body, avec header location. La journey doit être définie sur le state "w" (waiting), avec comme addresse le correctif de l'API GMAPS, et la ville correctif de l'API, pour starting et arrival, avec les cities en toLowerCase. 

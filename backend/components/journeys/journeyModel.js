@@ -6,13 +6,11 @@ const journey = mongoose.Schema({
     carId: { type: mongoose.Schema.Types.ObjectId, ref: "Car", required: true},
     starting: {
         city: { type: String, required: true },
-        address: { type: Array, required: true },
-        regionCode: { type: String, required: true }
+        address: { type: String, required: true }
     },
     arrival: {
         city: { type: String, required: true },
-        address: { type: Array, required: true },
-        regionCode: { type: String, required: true }
+        address: { type: String, required: true }
     },
     date: { type: String, required: true },
     seats: {
@@ -21,10 +19,6 @@ const journey = mongoose.Schema({
     },
     price: { type: Number, required: true },
     state: { type: String, required: true }
-    // Maybe add payment type one day
-    // Also considering the preferences such as smoking, animals etc.
-    // Desc / commentaire
-    // Maybe also driver license ?
 })
 
 journey.plugin(validator)

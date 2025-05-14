@@ -1,11 +1,20 @@
 const ErrorReport = require("../ErrorReport");
-const errorTable = require("./GeneralErrors.json")
+const errorTable = require("../GeneralError/GeneralErrors.json")
 require("dotenv").config();
 
-exports.isAddressCorrect = async (addressLines, regionCode, locality=undefined) => {
+
+/**
+ * 
+ * @param {Array} addressLines 
+ * @param {string} regionCode 
+ * @param {string} locality 
+ * @returns 
+ */
+exports.getCorrectAddress = async (addressLines, locality) => {
+    const regionCode = "QC"
     // Pré-vérification des attributs
-    if (!Array.isArray(addressLines) || typeof(regionCode) !== "string" || regionCode.length!==2) {
-        return new ErrorReport(true, errorTable["adressInv"])
+    if (!Array.isArray(addressLines)) {
+        return null
     }
     // Requete API 
     return await fetch(process.env.ADRESS_VERIF_URL, {
@@ -23,23 +32,23 @@ exports.isAddressCorrect = async (addressLines, regionCode, locality=undefined) 
       })
         .then(async (res) => {
             const response = await res.json()
-            console.log(response)
             if (!(
                 // Ceci vérifie que l'adresse ait au moins une précision de l'ordre d'un batiment
                 response.result.verdict.inputGranularity === "PREMISE" 
                 || response.result.verdict.inputGranularity === "SUB_PREMISE"
                 || response.result.verdict.inputGranularity === "PREMISE_PROXIMITY"
             ))
-                return new ErrorReport(true, errorTable["adressInv"]) // Adresse invalide ou trop imprécise
+                return null // Adresse invalide ou trop imprécise
             if (!(
                 // Qualité de l'adresse
                 response.result.verdict.validationGranularity === "PREMISE"
                 || response.result.verdict.validationGranularity === "SUB_PREMISE"
             ))
-                return new ErrorReport(true, errorTable["adressInv"]) // Niveau de détail trop faible
-            return new ErrorReport(false)
+                // return new ErrorReport(true, errorTable["adressInv"]) // Niveau de détail trop faible
+                return null
+            return response.result.address.formattedAddress
         })
-        .catch(e => new ErrorReport(true, errorTable["internalError"]))
+        .catch(e => null)
 }
 
 /*

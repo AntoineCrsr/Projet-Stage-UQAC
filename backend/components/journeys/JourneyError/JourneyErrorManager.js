@@ -13,11 +13,9 @@ exports.getCreationError = (req) => {
         req.starting == undefined
         || req.starting.city == undefined
         || req.starting.address == undefined
-        || req.starting.regionCode == undefined
         || req.arrival == undefined
         || req.arrival.city == undefined
         || req.arrival.address == undefined
-        || req.arrival.regionCode == undefined
         || req.date == undefined
         || req.seats == undefined
         || req.seats.total == undefined
@@ -33,11 +31,9 @@ exports.getCreationError = (req) => {
         typeof(req.starting) !== "object"
         || typeof(req.starting.city) !== "string"
         || !Array.isArray(req.starting.address)
-        || typeof(req.starting.regionCode) !== "string"
         || typeof(req.arrival) !== "object"
         || typeof(req.arrival.city) !== "string"
         || !Array.isArray(req.arrival.address)
-        || typeof(req.arrival.regionCode) !== "string"
         || typeof(req.date) !== "string"
         || typeof(req.seats) !== "object"
         || typeof(req.seats.total) !== "number"
@@ -116,6 +112,11 @@ exports.getNotFoundError = (journey) => {
     return new ErrorReport(false)
 }
 
+exports.getInvalidAddress = (correctAddress) => {
+    if (correctAddress == null) return new ErrorReport(true, errorTable["adressInv"])
+    return new ErrorReport(false)
+}
+
 exports.isAlreadyTerminated = (journey) => {
     if (journey.state === "d") return new ErrorReport(true, errorTable["alreadyTerminated"])
     return new ErrorReport(false)
@@ -135,5 +136,11 @@ exports.verifyAddReservation = (journey, nbReservation) => {
 
 exports.getDoneError = (journey) => {
     if (journey.state === "d") return new ErrorReport(true, errorTable["doneError"])
+    return new ErrorReport(false)
+}
+
+exports.getProvinceError = (journey) => {
+    if (journey.starting.province !== "QC" || journey.arrival.province !== "QC")
+        return new ErrorReport(true, errorTable["invProvince"])
     return new ErrorReport(false)
 }

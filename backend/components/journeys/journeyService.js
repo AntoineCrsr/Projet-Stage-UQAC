@@ -1,11 +1,12 @@
 const Service_Response = require("../workspace/service_response.js")
 const JourneyErrorManager = require("./JourneyError/JourneyErrorManager.js")
 const GeneralErrorManager = require("../workspace/GeneralError/GeneralErrorManager.js")
-const AdressVerifier = require("../workspace/GeneralError/adressVerifier.js")
+const AdressVerifier = require("../workspace/GoogleAPI/adressVerifier.js")
 const JourneyFactory = require("./JourneyFactory.js")
 const JourneySeeker = require("./JourneySeeker.js")
 const JourneyFilter = require("./JourneyFilter.js")
 const ReservationService = require("../reservation/ReservationService.js")
+const JourneyFormater = require("./JourneyFormater.js")
 const CarSeeker = require("../cars/CarSeeker.js")
 
 
@@ -34,11 +35,21 @@ exports.createJourney = async (reqJourney, userId) => {
     const verifyIfUserHasCar = await JourneyErrorManager.verifyIfUserHasCar(userId, reqJourney.carId)
     if (verifyIfUserHasCar.hasError) return new Service_Response(undefined, 401, true, verifyIfUserHasCar.error)
     
-    const verifyStartingAddress = await AdressVerifier.isAddressCorrect(reqJourney.starting.address, reqJourney.starting.regionCode, reqJourney.starting.city)
+    const correctStartingAddress = await AdressVerifier.getCorrectAddress(reqJourney.starting.address, reqJourney.starting.city)
+
+    const verifyStartingAddress = JourneyErrorManager.getInvalidAddress(correctStartingAddress)
     if (verifyStartingAddress.hasError) return new Service_Response(undefined, 400, true, verifyStartingAddress.error)
 
-    const verifyArrivalAddress = await AdressVerifier.isAddressCorrect(reqJourney.arrival.address, reqJourney.arrival.regionCode, reqJourney.arrival.city)
+    const correctArrivalAddress = await AdressVerifier.getCorrectAddress(reqJourney.arrival.address, reqJourney.arrival.city)
+
+    const verifyArrivalAddress = JourneyErrorManager.getInvalidAddress(correctArrivalAddress)
     if (verifyArrivalAddress.hasError) return new Service_Response(undefined, 400, true, verifyArrivalAddress.error)
+
+    // Remplacer l'entrée user par celle corrigée par GMAPS et récupérer la province
+    JourneyFormater.formatJourney(reqJourney, correctStartingAddress, correctArrivalAddress)
+
+    const isCorrectProvince = JourneyErrorManager.getProvinceError(reqJourney)
+    if (isCorrectProvince.hasError) return new Service_Response(undefined, 400, true, isCorrectProvince.error)
 
     const journey = JourneyFactory.createJourney(userId, reqJourney.starting, reqJourney.arrival, reqJourney.date, reqJourney.seats, reqJourney.price, reqJourney.carId)
     return await journey.save()
@@ -112,11 +123,23 @@ exports.modifyOneJourney = async (newJourneyId, reqJourney, userId) => {
     const verifyIfUserHasCar = await JourneyErrorManager.verifyIfUserHasCar(userId, reqJourney.carId)
     if (verifyIfUserHasCar.hasError) return new Service_Response(undefined, 401, true, verifyIfUserHasCar.error)
     
-    const verifyStartingAddress = await AdressVerifier.isAddressCorrect(reqJourney.starting.address, reqJourney.starting.regionCode, reqJourney.starting.city)
+    const correctStartingAddress = await AdressVerifier.getCorrectAddress(reqJourney.starting.address, reqJourney.starting.city)
+
+    const verifyStartingAddress = JourneyErrorManager.getInvalidAddress(correctStartingAddress)
     if (verifyStartingAddress.hasError) return new Service_Response(undefined, 400, true, verifyStartingAddress.error)
 
-    const verifyArrivalAddress = await AdressVerifier.isAddressCorrect(reqJourney.arrival.address, reqJourney.arrival.regionCode, reqJourney.arrival.city)
+    const correctArrivalAddress = await AdressVerifier.getCorrectAddress(reqJourney.arrival.address, reqJourney.arrival.city)
+
+    const verifyArrivalAddress = JourneyErrorManager.getInvalidAddress(correctArrivalAddress)
     if (verifyArrivalAddress.hasError) return new Service_Response(undefined, 400, true, verifyArrivalAddress.error)
+
+    // Remplacer l'entrée user par celle corrigée par GMAPS et récupérer la province
+    JourneyFormater.formatJourney(reqJourney, correctStartingAddress, correctArrivalAddress)
+
+    const isCorrectProvince = JourneyErrorManager.getProvinceError(reqJourney)
+    if (isCorrectProvince.hasError) return new Service_Response(undefined, 400, true, isCorrectProvince.error)
+    
+    console.log(reqJourney)
     
     return JourneyFactory.updateJourney(newJourneyId, reqJourney)
         .then(() => (new Service_Response(undefined)).setLocation('/journey/' + newJourneyId))

@@ -182,5 +182,21 @@
                 "name": "Le trajet est déjà terminé."
             }
         }
+    },
+    "adressInv": {
+        "errors": {
+            "journey": {
+                "code": "bad-request",
+                "name": "L'adresse renseignée est invalide ou est trop imprécise."
+            }
+        }
+    },
+    "invProvince": {
+        "errors": {
+            "journey": {
+                "code": "bad-request",
+                "name": "Le covoiturage doit avoir lieu au Québec."
+            }
+        }
     }
 }
