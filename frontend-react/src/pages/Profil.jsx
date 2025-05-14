@@ -64,7 +64,7 @@ const Profil = () => {
             const journeys = await Promise.all(
             reservations.map(async (res) => {
                 const response = await fetch(`http://localhost:3000/api/journey/${res.journeyId}`);
-                if (!response.ok) return null;
+                if (response.status !== 200 && response.status !== 302) return null;
                 const journey = await response.json();
                 return {
                 ...journey,
@@ -313,8 +313,8 @@ const Profil = () => {
             {reservedJourneys.map(j => (
             <li key={j._id}>
                 {j.starting.city} → {j.arrival.city} <br />
-                Adresse de départ : {j.starting.adress}<br />
-                Adresse d'arrivée : {j.arrival.adress}<br />
+                Adresse de départ : {j.starting.address}<br />
+                Adresse d'arrivée : {j.arrival.address}<br />
                 le{" "}
                 {new Date(j.date).toLocaleDateString()} à{" "}
                 {new Date(j.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
