@@ -65,6 +65,15 @@ exports.getCreationError = (req) => {
 }
 
 
+exports.getModifyError = (req) => {
+    // Exact same verifications as creation, but some words can be different
+    const error = this.getCreationError(req)
+    if (JSON.stringify(error.error) === JSON.stringify(errorTable["missingArg"]))
+        return new ErrorReport(true, errorTable["missingArgModify"])
+    return error
+}
+
+
 /**
  * Teste l'authentifaication
  * @param {string} ownerId 
@@ -77,85 +86,6 @@ exports.verifyAuthentication = (ownerId, userAuthId) => {
     }
     return new ErrorReport(false)
 }
-
-
-/**
- * Cherche des erreurs avant la modification de l'objet
- * @param {object} req 
- * @param {string} userAuthId 
- * @param {string} ownerId 
- * @param {object} seats 
- * @returns {ErrorReport}
- */
-exports.getModifyError = async (req, userAuthId, ownerId, seats) => {
-    // Attention, il est probable que la requete ne contienne que l'attribut qui doit être modifié
-    // Authentification
-    const authError = this.verifyAuthentication(ownerId, userAuthId)
-    if (authError.hasError) return authError
-
-    // Type des variables
-    if (
-        (req.starting != null && typeof(req.starting) !== "object")
-        || (req.starting.city != null && typeof(req.starting.city) !== "string")
-        || (req.starting.adress != null && typeof(req.starting.adress) !== "string")
-        || (req.arrival != null && typeof(req.arrival) !== "object")
-        || (req.arrival.adress != null && typeof(req.arrival.adress) !== "string")
-        || (req.arrival.city != null && typeof(req.arrival.city) !== "string")
-        || (req.date != null && typeof(req.date) !== "string")
-        || (req.seats != null && typeof(req.seats) !== "object")
-        || (req.seats.total != null && typeof(req.seats.total) !== "number")
-        || (req.seats.left != null && typeof(req.seats.left) !== "number")
-        || (req.price != null && typeof(req.price) !== "number")
-        || (req.state != null && typeof(req.state) !== "string")
-        || (req.carId != null && typeof(req.carId !== "string") && req.carId.length !== 24)
-    ) {
-        return new ErrorReport(true, errorTable["typeError"])
-    }
-
-    // Vérification des valeurs nulles
-    if (
-        req.starting === null
-        || req.starting.adress === null
-        || req.starting.city === null
-        || req.arrival === null
-        || req.arrival.adress === null
-        || req.arrival.city === null
-        || req.date === null
-        || req.seats === null
-        || req.seats.left === null
-        || req.seats.total === null
-        || req.price === null
-        || req.state === null
-        || req.carId === null
-    ) {
-        return new ErrorReport(true, errorTable["nullError"])
-    }
-
-    // Cohérence
-    let coherent = true
-    if (req.seats != null) {
-        // Seats est défini
-        if (req.seats.left != null) {
-            // left est défini
-            if (req.seats.left < 0) coherent = false
-
-            if (req.seats.total != null) {
-                // left et total sont définis
-                if (req.seats.total <= 1) coherent = false
-                if (req.seats.left > req.seats.total) coherent = false
-            }
-            else {
-                // seul left est défini
-                if (req.seats.left > seats.total) coherent = false // Vérification sur le seats de l'objet déjà enregistré
-            }
-        }
-    }
-
-    if (!coherent) return new ErrorReport(true, errorTable["leftUpperThanTotal"])
-
-    return new ErrorReport(false)
-}
-
 
 /**
  * Suppose userId et carId déjà vérifiés (non null et de 24 char)
@@ -183,6 +113,11 @@ exports.getIdError = (id) => {
 
 exports.getNotFoundError = (journey) => {
     if (journey == null) return new ErrorReport(true, errorTable["journeyNotFound"])
+    return new ErrorReport(false)
+}
+
+exports.isAlreadyTerminated = (journey) => {
+    if (journey.state === "d") return new ErrorReport(true, errorTable["alreadyTerminated"])
     return new ErrorReport(false)
 }
 

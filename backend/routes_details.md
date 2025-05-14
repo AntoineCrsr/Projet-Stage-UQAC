@@ -142,9 +142,11 @@ Si l'utilisateur connecté n'a pas complété son inscription, renvoie 401 avec 
 Sinon renvoie 201, avec un header Location pointant vers l'objet (/api/car/id)
 
 
-#### PUT /api/car
+#### PUT /api/car/id
 
 Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si l'id n'est pas trouvé, renvoie 404 "La voiture n'a pas été trouvée."
 
 Si l'utilisateur est connecté mais n'est pas propriétaire du char, renvoie 401 code = "unauthorized" et name = "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
 
@@ -193,7 +195,7 @@ Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z
 
 #### POST /api/journey
 
-La requête doit contenir un starting (city + adress), un arrival (city + adress), un carId, une date (format ..?), des seats (total + left), et un prix. 
+La requête doit contenir un starting (city + adress), un arrival (city + adress), un carId, une date (format ISO String), des seats (total + left), et un prix. 
 
 Si la requete ne contient au moins pas un de ces attributs, renvoie 400 avec code = "bad-request" et name = "La requête ne contient pas tous les attributs nécessaires à la création de l'objet.".
 
@@ -214,3 +216,35 @@ Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur d
 Si l'API Google de Vérification d'adresse renvoie un inputGranularity ou un validationGranularity qui ne vaut pas au moins PREMISE ou SUB_PREMISE, (ou PREMISE_PROXIMITY en supplément pour inputGranularity), renvoie un 400 code = "bad-request" et name = "L'adresse renseignée est invalide ou est trop imprécise.".
 
 Si tout convient, renvoie 201 sans body, avec header location. La journey doit être définie sur le state "w" (waiting).
+
+
+#### PUT /api/journey/id
+
+Contrairement à PUT de user, la modification de journey nécessite tous les attributs de cette dernière (starting (city + adress), un arrival (city + adress), un carId, une date (format ISO String), des seats (total + left), et un prix).
+
+En cas de not found, retourner 404, "Le trajet n'a pas été trouvé."
+
+Si l'utilisateur tente de modifier une journey déjà terminée, renvoie 401 unauthorized "Vous ne pouvez pas modifier un trajet déjà terminé.". 
+
+Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
+
+Sinon, elle constitue presque les mêmes retours que la création, soit:
+Si la requete ne contient au moins pas un de ces attributs, renvoie 400 avec code = "bad-request" et name = "La requête ne contient pas tous les attributs nécessaires à la modification de l'objet.".
+
+Si la date est dans un format incorrect (ne respectant pas 2011-10-10T14:48:00), renvoie 400, "La date renseignée n'est pas dans le format attendu."
+
+Si la date renseignée pour la journey est inférieure à la date à laquelle la requete est reçue, renvoie 400 "bad-request", "La date renseignée doit être supérieure ou égale à la date actuelle."
+
+Si le nombre de places totales ou restantes est inférieur ou égal à zero, renvoie 400 avec "bad-request", "Le nombre de places doit au moins être de 1."
+
+Si le nombre de place restant est supérieur au nombre de place total, 400 "Le nombre de place restant doit être inférieur au nombre de place total."
+
+Si le prix est inférieur à zero, renvoie 400, "Le prix d'un trajet ne peut pas aller en dessous de 0."
+
+Si la voiture renseignée dans la journey n'appartient pas à l'utilisateur, renvoie 401 "unauthorized" avec "La voiture renseignée n'est pas possédée par l'utilisateur.".
+
+Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si l'API Google de Vérification d'adresse renvoie un inputGranularity ou un validationGranularity qui ne vaut pas au moins PREMISE ou SUB_PREMISE, (ou PREMISE_PROXIMITY en supplément pour inputGranularity), renvoie un 400 code = "bad-request" et name = "L'adresse renseignée est invalide ou est trop imprécise.".
+
+Si tout convient, renvoie 200 sans body, avec header location. La journey doit être définie sur le state "w" (waiting).

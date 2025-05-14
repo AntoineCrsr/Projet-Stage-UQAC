@@ -175,6 +175,20 @@ describe('PUT /api/auth/id', () => {
           })
     })
 
+
+    it('should return 404 not found', async () => {
+        // Modification complète pour tester tout en même temps (sauf image)
+        await request(app)
+          .put('/api/auth/000000000000000000000000')
+          .set('Authorization', `Bearer ${token}`)
+          .send({"user": { "gender": "homme" }}) 
+          .expect(404)
+          .then(response => {
+             expect(response.body.errors).toEqual({"user": {"code": "not-found", "name": "L'utilisateur n'a pas été trouvé."}})
+          })
+    })
+
+
     it('should return 200', async () => {
         // Modification complète pour tester tout en même temps (sauf image)
         await request(app)
