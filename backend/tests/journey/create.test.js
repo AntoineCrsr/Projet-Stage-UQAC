@@ -113,6 +113,23 @@ describe('POST /api/journey/', () => {
     })
 
 
+    it ("should return 400 date bad type", async () => {
+        const res = await request(app)
+            .post('/api/journey') // Price is string instead of number
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"]},"carId": carId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"]},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": "40.0"}})
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${token}`)
+
+        expect(res.status).toBe(400)
+        expect(res.body.errors).toEqual({
+            "journey": {
+                "code": "bad-request",
+                "name": "Le type des variables ne correspond pas aux attendus."
+            }
+        })
+    })
+
+
     it ("should return 400 bad seats", async () => {
         const res = await request(app)
             .post('/api/journey')

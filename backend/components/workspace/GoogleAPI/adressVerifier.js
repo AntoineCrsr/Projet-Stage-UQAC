@@ -11,7 +11,7 @@ require("dotenv").config();
  * @returns 
  */
 exports.getCorrectAddress = async (addressLines, locality) => {
-    const regionCode = "QC"
+    const regionCode = "CA"
     // Pré-vérification des attributs
     if (!Array.isArray(addressLines)) {
         return null

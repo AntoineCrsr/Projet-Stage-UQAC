@@ -20,7 +20,4 @@ TODO:
 > Mise à jour des statistiques utilisateur quand le trajet a été fini
 > Vérification de l'âge de l'utilisateur
 > Vérifier la cohérence des attributs de car (couleur, model etc.) // model --> API voiture ?
-> Region code en CA Par défault 
-> vérification que l'adresse est au QC 
-> remplacer address par formattedAdress
 > Tester la sécurité

@@ -85,6 +85,23 @@ describe('PUT /api/journey/id', () => {
             }
         })
     })
+
+
+    it ("should return 400 date bad type", async () => {
+        const res = await request(app)
+            .put('/api/journey/'+journeyId) // Price is string instead of number
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"]},"carId": carId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"]},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": "40.0"}})
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${token}`)
+
+        expect(res.status).toBe(400)
+        expect(res.body.errors).toEqual({
+            "journey": {
+                "code": "bad-request",
+                "name": "Le type des variables ne correspond pas aux attendus."
+            }
+        })
+    })
     
 
     it ("should return 404 not found", async () => {
