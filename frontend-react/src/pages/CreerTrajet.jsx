@@ -13,9 +13,9 @@ const CreerTrajet = () => {
   const [form, setForm] = useState({
     carId: "",
     startingCity: "",
-    startingAdress: "",
+    startingAddress: "",
     arrivalCity: "",
-    arrivalAdress: "",
+    arrivalAddress: "",
     date: "",
     totalSeats: null,
     left : null,
@@ -59,9 +59,9 @@ const CreerTrajet = () => {
                       setForm({
                         carId: j.carId,
                         startingCity: j.starting.city,
-                        startingAdress: j.starting.adress,
+                        startingAddress: j.starting.address[0] || "",
                         arrivalCity: j.arrival.city,
-                        arrivalAdress: j.arrival.adress,
+                        arrivalAddress: j.arrival.address,
                         date: j.date.slice(0, 16),
                         totalSeats: j.seats.total,
                         left: j.seats.left,
@@ -95,11 +95,11 @@ const CreerTrajet = () => {
       carId: form.carId,
       starting: {
         city: form.startingCity,
-        adress: form.startingAdress,
+        address: [form.startingAddress],
       },
       arrival: {
         city: form.arrivalCity,
-        adress: form.arrivalAdress,
+        address: [form.arrivalAddress],
       },
       date: form.date,
       seats: {
@@ -150,9 +150,9 @@ const CreerTrajet = () => {
         </select>
 
         <input type="text" name="startingCity" placeholder="Ville de départ" value={form.startingCity} onChange={handleChange} required />
-        <input type="text" name="startingAdress" placeholder="Adresse de départ" value={form.startingAdress} onChange={handleChange} required />
+        <input type="text" name="startingAddress" placeholder="Adresse de départ" value={form.startingAddress} onChange={handleChange} required />
         <input type="text" name="arrivalCity" placeholder="Ville d’arrivée" value={form.arrivalCity} onChange={handleChange} required />
-        <input type="text" name="arrivalAdress" placeholder="Adresse d’arrivée" value={form.arrivalAdress} onChange={handleChange} required />
+        <input type="text" name="arrivalAddress" placeholder="Adresse d’arrivée" value={form.arrivaldAdress} onChange={handleChange} required />
         <input type="datetime-local" placeholder="Date de départ et horaire" name="date" value={form.date} onChange={handleChange} required />
         <input type="number" name="totalSeats" min="1" placeholder="Places totales du véhicule" value={form.totalSeats} onChange={handleChange} required />
         <input type="number" name="left" min="1" placeholder="Places disponibles pour le trajet" value={form.left} onChange={handleChange} required />
