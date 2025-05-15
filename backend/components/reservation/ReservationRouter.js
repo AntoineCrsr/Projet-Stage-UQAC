@@ -2,13 +2,12 @@ const express = require('express')
 const reservationController = require('./ReservationController')
 const auth = require('../users/userAuth')
 const router = express.Router()
+const JourneyUpdater = require("../workspace/JourneyStateUpdater")
 
-router.post('/', auth, reservationController.createReservation);
+router.post('/', JourneyUpdater.updateJourneys, auth, reservationController.createReservation);
   
-router.get('/', reservationController.getReservations);
-  
-// router.get('/:id', journeyController.getOneJourney);
-  
-router.delete('/:id', auth, reservationController.deleteReservation);
+router.get('/', JourneyUpdater.updateJourneys, reservationController.getReservations);
+    
+router.delete('/:id', JourneyUpdater.updateJourneys, auth, reservationController.deleteReservation);
 
 module.exports = router
