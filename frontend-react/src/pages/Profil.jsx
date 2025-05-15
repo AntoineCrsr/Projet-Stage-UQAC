@@ -33,28 +33,28 @@ const Profil = () => {
         if (data.imageUrl) setImagePreview(data.imageUrl);
         
         // Validation automatique de l'email
-        if (!data.hasVerifiedEmail) {
-            await fetch(`http://localhost:3000/api/auth/${userId}/emailValidation`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ user: { nonce: "000" } }),
-            });
-        }
+        // if (!data.hasVerifiedEmail) {
+        //     await fetch(`http://localhost:3000/api/auth/${userId}/emailValidation`, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         Authorization: `Bearer ${token}`,
+        //     },
+        //     body: JSON.stringify({ user: { nonce: "000" } }),
+        //     });
+        // }
 
-        // Validation automatique du téléphone 
-        if (!data.hasVerifiedPhone) {
-            await fetch(`http://localhost:3000/api/auth/${userId}/phoneValidation`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ user: { nonce: "000" } }),
-            });
-        }
+        // // Validation automatique du téléphone 
+        // if (!data.hasVerifiedPhone) {
+        //     await fetch(`http://localhost:3000/api/auth/${userId}/phoneValidation`, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         Authorization: `Bearer ${token}`,
+        //     },
+        //     body: JSON.stringify({ user: { nonce: "000" } }),
+        //     });
+        // }
 
         fetch(`http://localhost:3000/api/reservation?userId=${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -64,7 +64,7 @@ const Profil = () => {
             const journeys = await Promise.all(
             reservations.map(async (res) => {
                 const response = await fetch(`http://localhost:3000/api/journey/${res.journeyId}`);
-                if (!response.ok) return null;
+                if (response.status !== 200 && response.status !== 302) return null;
                 const journey = await response.json();
                 return {
                 ...journey,
@@ -138,6 +138,42 @@ const Profil = () => {
     } catch {
         alert("Erreur lors de la suppression.");
     }
+    };
+
+    const handleValidateEmail = async () => {
+        try {
+            const res = await fetch(`http://localhost:3000/api/auth/${userId}/emailValidation`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ user: { nonce: "000" } }),
+            });
+            if (!res.ok) throw new Error();
+            alert("Email validé !");
+            setUser(prev => ({ ...prev, hasVerifiedEmail: true }));
+        } catch {
+            alert("Erreur lors de la validation de l'email.");
+        }
+    };
+    
+    const handleValidatePhone = async () => {
+        try {
+            const res = await fetch(`http://localhost:3000/api/auth/${userId}/phoneValidation`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ user: { nonce: "000" } }),
+            });
+            if (!res.ok) throw new Error();
+            alert("Téléphone validé !");
+            setUser(prev => ({ ...prev, hasVerifiedPhone: true }));
+        } catch {
+            alert("Erreur lors de la validation du téléphone.");
+        }
     };
 
     // const handleSave = () => { //tests aussi avec formdata pour l'ajout d'images mais pas encore réussi donc on garde à l'ancienne pour le moment
@@ -214,11 +250,21 @@ const Profil = () => {
         <div className="profil-section">
         <strong>Nom public :</strong>{user.name?.publicName}</div>
         
-        <div className="profil-section"> 
-        <strong>Email :</strong> {user.email}</div>
-        
-        <div className="profil-section"> 
-        <strong>Telephone :</strong> Type {user.phone.type} : {user.phone.prefix}{user.phone.number} </div>
+        <div className="profil-section">
+        <strong>Email :</strong> {user.email}{" "}
+        {user.hasVerifiedEmail ? (
+            <span title="Email vérifié">✅</span>
+        ) : (
+            <button onClick={handleValidateEmail}>Vérifier</button>)}
+        </div>
+
+        <div className="profil-section">
+        <strong>Téléphone :</strong> Type {user.phone.type} : {user.phone.prefix}{user.phone.number}{" "}
+        {user.hasVerifiedPhone ? (
+            <span title="Téléphone vérifié">✅</span>
+        ) : (
+            <button onClick={handleValidatePhone}>Vérifier</button>)}
+        </div>
 
 
         <div className="profil-section">
@@ -234,6 +280,7 @@ const Profil = () => {
             <input
             type="checkbox"
             checked={isStudent}
+            readOnly
             // onChange={(e) => setIsStudent(e.target.checked)}
             />
             Je suis étudiant(e)
@@ -246,6 +293,7 @@ const Profil = () => {
             value={aboutMe}
             // onChange={(e) => setAboutMe(e.target.value)}
             placeholder="Décrivez-vous en quelques mots"
+            readOnly
         />
         <button onClick={() => navigate("/modifier-profil")}>Modifier mon profil</button>
         </div>
@@ -313,8 +361,8 @@ const Profil = () => {
             {reservedJourneys.map(j => (
             <li key={j._id}>
                 {j.starting.city} → {j.arrival.city} <br />
-                Adresse de départ : {j.starting.adress}<br />
-                Adresse d'arrivée : {j.arrival.adress}<br />
+                Adresse de départ : {j.starting.address}<br />
+                Adresse d'arrivée : {j.arrival.address}<br />
                 le{" "}
                 {new Date(j.date).toLocaleDateString()} à{" "}
                 {new Date(j.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}

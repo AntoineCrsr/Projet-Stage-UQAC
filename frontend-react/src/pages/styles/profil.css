@@ -1,49 +1,110 @@
 .profil-container {
-    max-width: 600px;
-    margin: auto;
+    max-width: 800px;
+    margin: 2rem auto;
     padding: 2rem;
     background-color: var(--bg-color);
     color: var(--text-color);
-    border-radius: 8px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
 }
 
 .profil-section {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--text-color);
+}
+
+.profil-section strong {
+    display: inline-block;
+    width: 180px;
+    font-weight: bold;
+}
+
+.profil-section label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
 }
 
 .profil-image {
-    max-width: 120px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
     border-radius: 50%;
-    margin-top: 0.5rem;
+    border: 2px solid var(--text-color);
+    margin-top: 1rem;
 }
 
 textarea {
     width: 100%;
-    height: 80px;
-    resize: none;
+    height: 100px;
+    resize: vertical;
     background-color: var(--bg-color);
     color: var(--text-color);
+    padding: 0.5rem;
+    border: 1px solid var(--text-color);
+    border-radius: 5px;
+    margin-top: 0.5rem;
 }
 
 .profil-buttons {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     gap: 10px;
-}
-.profil-info {
-    margin-bottom: 0.5rem;
-}
-
-.car-list {
-    list-style: none;
-    padding-left: 0;
     margin-top: 1rem;
 }
 
-.car-item {
-    background-color: var(--bg-color);
-    padding: 0.5rem;
+.profil-buttons button {
+    padding: 0.5rem 1rem;
+    background-color: #0080a0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.profil-buttons button:hover {
+    background-color: #0080a0;
+}
+
+.profil-info {
     margin-bottom: 0.5rem;
-    border: 1px solid var(--text-color);
+    padding-left: 1rem;
+}
+
+.car-list,
+.mes-trajets {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.car-item,
+.mes-trajets li {
+    background-color: white;
+    color: darkgray;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #0080a0;
     border-radius: 4px;
+}
+
+.car-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 0.5rem;
+}
+
+.car-actions button {
+    padding: 0.4rem 0.8rem;
+    background-color: #0080a0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.car-actions button:hover {
+    background-color: #035b70;
 }
