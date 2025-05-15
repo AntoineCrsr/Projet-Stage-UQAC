@@ -102,9 +102,9 @@ exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol, reqH
             
             return CarFactory.modifyCar(car.id, carReq)
                 .then(() => (new Service_Response(undefined)).setLocation('/car/' + car.id))
-                .catch(error => new Service_Response(undefined, 400, true, error))
+                .catch(error => new Service_Response(undefined, 500, true, error))
         })
-        .catch((error) => new Service_Response(undefined, 400, true, error));
+        .catch((error) => new Service_Response(undefined, 500, true, error));
  };
 
 
@@ -130,10 +130,10 @@ exports.modifyOneCar = async (id, userAuthId, reqFile, carReq, reqProtocol, reqH
             else {
                 return CarFactory.deleteCar(id, car.imageUrl)
                     .then(() => new Service_Response(undefined))
-                    .catch(error => new Service_Response(undefined, 400, true, error))
+                    .catch(error => new Service_Response(undefined, 500, true, error))
             }
         })
-        .catch(error => new Service_Response(undefined, 400, true, error))
+        .catch(error => new Service_Response(undefined, 500, true, error))
 }
 
 

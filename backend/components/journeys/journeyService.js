@@ -65,7 +65,7 @@ exports.createJourney = async (reqJourney, userId) => {
  * @returns {Service_Response}
  */
 exports.getLastJourneys = async (query, limit=20) => {
-    return await JourneySeeker.getLastJourneys(limit, query)
+    return await JourneySeeker.getLastJourneys(query, limit)
         .then(elts => {
             JourneyFilter.filterMultipleJourneys(elts)
             return new Service_Response(elts)

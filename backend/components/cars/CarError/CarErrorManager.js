@@ -143,7 +143,7 @@ exports.getCarAlreadyExistError = async (licensePlate, carId=null) => {
 
 
 exports.carInJourneyError = async (carId) => {
-    const existJourney = await JourneySeeker.getLastJourneys(20, {"carId": carId})
+    const existJourney = await JourneySeeker.getLastJourneys({"carId": carId}, 20)
         .then(journeys => journeys.length > 0)
     if (existJourney) return new ErrorReport(true, errorTable["existJourneyWithCar"])
     return new ErrorReport(false)

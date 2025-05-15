@@ -2,13 +2,14 @@ const express = require('express')
 const ReviewController = require('./ReviewController')
 const auth = require('../users/userAuth')
 const router = express.Router()
+const JourneyUpdater = require("../workspace/JourneyStateUpdater")
 
-router.post('/', auth, ReviewController.createReview);
+router.post('/', JourneyUpdater.updateJourneys, auth, ReviewController.createReview);
   
-router.get('/', ReviewController.getReviews);
+router.get('/', JourneyUpdater.updateJourneys, ReviewController.getReviews);
   
-router.put('/:id', auth, ReviewController.modifyReview);
+router.put('/:id', JourneyUpdater.updateJourneys, auth, ReviewController.modifyReview);
   
-router.delete('/:id', auth, ReviewController.deleteReview);
+router.delete('/:id', JourneyUpdater.updateJourneys, auth, ReviewController.deleteReview);
 
 module.exports = router
