@@ -19,6 +19,9 @@ describe("Journey State Updater", () => {
         await UserFactory.validateNoncePhone(user)
         await user.save()
 
+        const initialDate = new Date("2025-05-13T20:42:16.652Z")
+        jest.spyOn(Date, 'now').mockImplementation(() => initialDate.getTime())
+
         // Login 
         const res = await request(app)
             .post('/api/auth/login')
@@ -31,6 +34,8 @@ describe("Journey State Updater", () => {
         // Création d'une voiture pour la renseigner dans les journeys
         car = await CarFactory.createCar(id, "VUS 2016", "Peugeot", "2016", "208", "Rouge", "ABC DEF GHI", true, "Mon char !!")
         await car.save()
+
+        Date.now.mockRestore();
     })
 
     it ("should update journey", async () => {
@@ -63,6 +68,41 @@ describe("Journey State Updater", () => {
 
         // 5. Recharge depuis la base 
         expect(response.body.state).toBe("d");
+        Date.now.mockRestore();
+    });
+
+
+    it ("should not update journey", async () => {
+        // 1. Fixe la "date actuelle" au 13 mai
+        const initialDate = new Date("2025-05-13T20:42:16.652Z")
+        jest.spyOn(Date, 'now').mockImplementation(() => initialDate.getTime())
+
+        // Fais un get quelconque pour faire un update
+        const responseJourneys = await request(app)
+            .get('/api/journey/')
+            .set('Authorization', `Bearer ${token}`);
+
+        // 2. Crée un journey daté du 14 mai (donc futur à ce moment)
+        const journeyDate = (new Date("2025-05-14T20:42:16.652Z")).toISOString()
+
+        const j1 = await JourneyFactory.createJourney(
+            id,
+            { city: "TORRONTO", address: "1 rue Torronto" },
+            { city: "MontReal", address: "10 Rue St-Pierre" },
+            journeyDate,
+            { total: 5, left: 3 },
+            40,
+            car._id
+        );
+        await j1.save()
+
+        // Get qui ne devrait pas modifier le state puisque la journey n'est pas passée
+        const response = await request(app)
+            .get('/api/journey/' + j1._id.toString())
+            .set('Authorization', `Bearer ${token}`);
+
+        // 5. Recharge depuis la base 
+        expect(response.body.state).toBe("w");
         Date.now.mockRestore();
     });
 })
