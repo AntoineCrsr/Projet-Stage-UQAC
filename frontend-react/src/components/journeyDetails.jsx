@@ -83,8 +83,8 @@ useEffect(() => {
         <div className="journey-infos">
             <h2>Détails du trajet</h2>
             <p><strong>Annonce publiée par :</strong> {ownerPublicName}</p>
-            <p><strong>Départ :</strong> {journey.starting.city} - {journey.starting.adress}</p>
-            <p><strong>Arrivée :</strong> {journey.arrival.city} - {journey.arrival.adress}</p>
+            <p><strong>Départ :</strong> {journey.starting.address}</p>
+            <p><strong>Arrivée :</strong> {journey.arrival.address}</p>
             <p><strong>Date :</strong> {format}</p>
             <p><strong>Places restantes :</strong> {journey.seats.total - journey.seats.left} / {journey.seats.total}</p>
             <p><strong>Prix :</strong> {journey.price} $ CAD</p>
