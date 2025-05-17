@@ -77,11 +77,6 @@ describe("Journey State Updater", () => {
         const initialDate = new Date("2025-05-13T20:42:16.652Z")
         jest.spyOn(Date, 'now').mockImplementation(() => initialDate.getTime())
 
-        // Fais un get quelconque pour faire un update
-        const responseJourneys = await request(app)
-            .get('/api/journey/')
-            .set('Authorization', `Bearer ${token}`);
-
         // 2. Crée un journey daté du 14 mai (donc futur à ce moment)
         const journeyDate = (new Date("2025-05-14T20:42:16.652Z")).toISOString()
 

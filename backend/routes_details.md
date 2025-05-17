@@ -251,8 +251,25 @@ Si la voiture renseignée dans la journey n'appartient pas à l'utilisateur, ren
 
 Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
 
+Si la journey n'appartient pas à l'utilisateur, renvoie 401 unauthorized, "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
+
 Si l'API Google de Vérification d'adresse renvoie un inputGranularity ou un validationGranularity qui ne vaut pas au moins PREMISE ou SUB_PREMISE, (ou PREMISE_PROXIMITY en supplément pour inputGranularity), renvoie un 400 code = "bad-request" et name = "L'adresse renseignée est invalide ou est trop imprécise.".
 
 Si la province d'une des deux adresses renseignées n'est pas au Québec, renvoie 400, "Le covoiturage doit avoir lieu au Québec.".
 
 Si tout convient, renvoie 200 sans body, avec header location. La journey doit être définie sur le state "w" (waiting), avec comme addresse le correctif de l'API GMAPS, et la ville correctif de l'API, pour starting et arrival, avec les cities en toLowerCase. 
+
+
+#### DELETE /api/journey/id
+
+En cas de not found, retourner 404, "Le trajet n'a pas été trouvé."
+
+Si l'utilisateur tente de supprimer une journey déjà terminée, renvoie 401 unauthorized "Vous ne pouvez pas supprimer un trajet déjà terminé.". 
+
+Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
+
+Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si la journey n'appartient pas à l'utilisateur, renvoie 401 unauthorized, "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
+
+Si tout est correct, renvoie 200, body vide, et supprime les réservations associées s'il y en a. 

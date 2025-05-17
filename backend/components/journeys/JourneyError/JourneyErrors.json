@@ -114,8 +114,8 @@
     "doneError": {
         "errors": {
             "journey": {
-                "code": "consistency-error",
-                "name": "Le trajet est déjà terminé."
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas supprimer un trajet déjà terminé."
             }
         }
     },
