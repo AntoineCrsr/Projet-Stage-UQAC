@@ -1,25 +1,22 @@
-/* TODO : le title dans le header n'est pas responsive, à fixer */
-
 .header {
-    position: relative;
     display: flex;
-    justify-content: flex-end;
-    /* on aligne les boutons à droite */
+    justify-content: space-between;
     align-items: center;
     padding: 0 20px;
     height: 100px;
-    background-color: linear-gradient(to right, #034123, #047d9b);
+    background: linear-gradient(to right, #034123, #047d9b);
 }
 
 .title {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    flex-grow: 1;
     text-align: center;
+    margin-left: 18%;
     font-size: 5rem;
     font-weight: bold;
     color: white;
-    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     /* pour éviter que le titre bloque les clics sur les boutons */
 }
 
