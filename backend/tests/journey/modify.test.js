@@ -239,6 +239,42 @@ describe('PUT /api/journey/id', () => {
             }
         })
     })
+    
+    
+    it ("should return 401 not authorized", async () => {
+        // Création d'un user et récupération du token de connexion
+        const user = await UserFactory.createUser("john.doe2@gmail.com", "StrongPassword1234")
+        await UserFactory.modifyBirth(user, "2003-02-12T20:52:39.890Z")
+        await UserFactory.modifyName(user, "John", "Doe")
+        await UserFactory.modifyPhone(user, "mobile", "+1", "641369491")
+        await UserFactory.validateNonceEmail(user)
+        await UserFactory.validateNoncePhone(user)
+        await UserFactory.modifyGender(user, "homme")
+        await user.save()
+
+        // Login 
+        const login = await request(app)
+            .post('/api/auth/login')
+            .send({"user": {"email": "john.doe2@gmail.com", "password": "StrongPassword1234"}})
+            .set('Accept', 'application/json')
+
+        other_token = login.body.token
+        other_id = login.body._id.toString()
+
+        const res = await request(app)
+            .put('/api/journey/' + journeyId)
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"], "regionCode": "CA"},"carId": carId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"], "regionCode": "CA"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": -40.0}})
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${other_token}`)
+
+        expect(res.status).toBe(401)
+        expect(res.body.errors).toEqual({
+            "user": {
+                "code": "unauthorized",
+                "name": "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
+            }
+        })
+    })
 
 
     it ("should return 400 bad address", async () => {

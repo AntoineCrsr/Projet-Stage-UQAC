@@ -114,6 +114,9 @@ exports.modifyOneJourney = async (newJourneyId, reqJourney, userId) => {
     const userRegistrationCompleteError = await GeneralErrorManager.isUserVerified(userId)
     if (userRegistrationCompleteError.hasError) return new Service_Response(undefined, 401, true, userRegistrationCompleteError.error)
     
+    const userOwnerOfJourney = GeneralErrorManager.isUserOwnerOfObject(userId, journey.ownerId.toString())
+    if (userOwnerOfJourney.hasError) return new Service_Response(undefined, 401, true, userOwnerOfJourney.error)
+
     const creationError = JourneyErrorManager.getModifyError(reqJourney)
     if (creationError.hasError) return new Service_Response(undefined, 400, true, creationError.error)
 
@@ -153,21 +156,28 @@ exports.modifyOneJourney = async (newJourneyId, reqJourney, userId) => {
  * @returns  {Service_Response}
  */
 exports.deleteOneJourney = async (journeyId, userAuthId) => {
-    const idError = JourneyErrorManager.getIdError(journeyId)
+    const idError = GeneralErrorManager.isValidId(journeyId, "journey")
     if (idError.hasError) return new Service_Response(undefined, 400, true, idError.error)
 
-    return await JourneySeeker.getOneJourney(journeyId)
-        .then(journey => {
-            const authError = JourneyErrorManager.verifyAuthentication(journey.ownerId, userAuthId)
-            if (authError.hasError) return new Service_Response(undefined, 401, true, authError.error)
-            
-            const reservationResponse = ReservationService.deleteJourneyReservation(journeyId)
-            if (reservationResponse.has_error) return reservationResponse
+    const isUserConnected = GeneralErrorManager.getAuthError(userAuthId)
+    if (isUserConnected.hasError) return new Service_Response(undefined, 401, true, isUserConnected.error)
 
-            return JourneyFactory.deleteJourney(journeyId)
-                .then(() => new Service_Response(undefined))
-                .catch(error => new Service_Response(undefined, 500, true, error))
-        })
+    const journey = await JourneySeeker.getOneJourney(journeyId)
+
+    const notFoundError = JourneyErrorManager.getNotFoundError(journey)
+    if (notFoundError.hasError) return new Service_Response(undefined, 404, true, notFoundError.error)
+
+    const authError = GeneralErrorManager.isUserOwnerOfObject(journey.ownerId.toString(), userAuthId)
+    if (authError.hasError) return new Service_Response(undefined, 401, true, authError.error)
+
+    const alreadyTerminated = JourneyErrorManager.getDoneError(journey)
+    if (alreadyTerminated.hasError) return new Service_Response(undefined, 401, true, alreadyTerminated.error)
+    
+    const reservationResponse = ReservationService.deleteJourneyReservation(journeyId)
+    if (reservationResponse.has_error) return reservationResponse
+
+    return JourneyFactory.deleteJourney(journeyId)
+        .then(() => new Service_Response(undefined))
         .catch(error => new Service_Response(undefined, 500, true, error))
 }
 

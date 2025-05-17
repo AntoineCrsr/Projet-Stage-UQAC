@@ -8,7 +8,6 @@ exports.updateJourneys = async (req, res, next) => {
         if (lastUpdate == undefined || lastUpdate + updateFrequency * 1000 < Date.now()) {
             const journeys = await JourneySeeker.getLastJourneys({ state: "w" });
             const nowISO = (new Date(Date.now())).toISOString();
-
             // On attend que tous les .save() soient terminés
             await Promise.all(journeys.map(async journey => {
                 if (journey.date < nowISO) {
