@@ -7,6 +7,8 @@ const JourneyUpdater = require("../workspace/JourneyStateUpdater")
 router.post('/', JourneyUpdater.updateJourneys, auth, reservationController.createReservation);
   
 router.get('/', JourneyUpdater.updateJourneys, reservationController.getReservations);
+
+router.get('/:id', JourneyUpdater.updateJourneys, reservationController.getOneReservation);
     
 router.delete('/:id', JourneyUpdater.updateJourneys, auth, reservationController.deleteReservation);
 

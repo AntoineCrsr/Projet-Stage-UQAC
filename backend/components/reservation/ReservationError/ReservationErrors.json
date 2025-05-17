@@ -57,7 +57,7 @@
     },
     "cantDelete": {
         "errors": {
-            "reservations": {
+            "reservation": {
                 "code": "unauthorized",
                 "name": "Vous ne pouvez pas supprimer une réservation qui n'est pas la votre."
             }
@@ -65,7 +65,7 @@
     },
     "resNotFound": {
         "errors": {
-            "reservations": {
+            "reservation": {
                 "code": "not-found",
                 "name": "La réservation n'a pas été trouvée."
             }

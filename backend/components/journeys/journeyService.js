@@ -176,7 +176,7 @@ exports.deleteOneJourney = async (journeyId, userAuthId) => {
     const reservationResponse = ReservationService.deleteJourneyReservation(journeyId)
     if (reservationResponse.has_error) return reservationResponse
 
-    return JourneyFactory.deleteJourney(journeyId)
+    return await JourneyFactory.deleteJourney(journeyId)
         .then(() => new Service_Response(undefined))
         .catch(error => new Service_Response(undefined, 500, true, error))
 }

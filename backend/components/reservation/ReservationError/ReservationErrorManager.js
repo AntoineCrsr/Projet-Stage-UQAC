@@ -2,6 +2,7 @@ const ErrorReport = require("../../workspace/ErrorReport")
 const errorTable = require("./ReservationErrors.json")
 const JourneyService = require("../../journeys/journeyService")
 const ReservationSeeker = require("../ReservationSeeker")
+const GeneralErrorManager = require("../../workspace/GeneralError/GeneralErrorManager")
 
 async function hasAlreadyReserved(journeyId, userId) {
     let hasAlreadyRes = false
@@ -59,11 +60,20 @@ exports.verifyCreation = async (reqRes, userAuthId) => {
 
 
 exports.getReservationGetError = (constraints) => {
-    if (constraints != undefined
-        && (constraints.userId != undefined && constraints.userId.length !== 24)
-        || (constraints.journeyId != undefined && constraints.journeyId.length !== 24)
-        || (constraints._id != undefined && constraints._id.length !== 24)
-    ) return new ErrorReport(true, errorTable["queryError"])
+    if (constraints.userId !== undefined) {
+        const isUserValid = GeneralErrorManager.isValidId(constraints.userId, "reservation")
+        if (isUserValid.hasError) return isUserValid
+    }
+    if (constraints.journeyId !== undefined) {
+        const isJourneyValid = GeneralErrorManager.isValidId(constraints.journeyId, "reservation")
+        if (isJourneyValid.hasError) return isJourneyValid
+    }
+    return new ErrorReport(false)
+}
+
+
+exports.getNotFound = (reservation) => {
+    if (reservation == null) return new ErrorReport(true, errorTable["resNotFound"])
     return new ErrorReport(false)
 }
 

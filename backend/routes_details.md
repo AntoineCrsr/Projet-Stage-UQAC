@@ -273,3 +273,25 @@ Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur d
 Si la journey n'appartient pas à l'utilisateur, renvoie 401 unauthorized, "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
 
 Si tout est correct, renvoie 200, body vide, et supprime les réservations associées s'il y en a. 
+
+
+### Reservation
+
+#### GET /api/reservation
+
+Renvoie un tableau de toutes les réservations, avec status 200. 
+
+Tableau vide si aucune réservation ne correspond à la requête.
+
+Il doit être possible de spécifier des contraintes à la requetes avec un query string (par exemple GET /api/reservation?userId=xxx)
+
+Si un identifiant dans les contraintes est invalide, renvoyer l'erreur "400", "L'identifiant renseigné n'est pas dans un format acceptable."
+
+
+#### GET /api/reservation/id
+
+Renvoie la réservation dont l'id est celle de la requête, avec status 302. 
+
+Si la réservation demandée n'existe pas, renvoie 404 "not-found", "La réservation n'a pas été trouvée."
+
+Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".

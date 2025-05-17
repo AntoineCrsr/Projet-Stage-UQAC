@@ -11,6 +11,11 @@ exports.getReservations = (req, res, next) => {
         .then(service_response => service_response.buildResponse(res))
 }
 
+exports.getOneReservation = (req, res, next) => {
+    ReservationService.getOneReservation(req.params.id)
+        .then(service_response => service_response.buildResponse(res))
+}
+
 exports.deleteReservation = (req, res, next) => {
     ReservationService.deleteReservation(req.params.id, req.auth.userId)
         .then(service_response => service_response.buildResponse(res))

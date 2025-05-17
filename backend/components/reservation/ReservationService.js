@@ -54,6 +54,20 @@ exports.getReservations = async (constraints) => {
 }
 
 
+exports.getOneReservation = async (id) => {
+    const idError = GeneralErrorManager.isValidId(id, "reservation")
+    if (idError.hasError) return new Service_Response(undefined, 400, true, idError.error)
+
+    const reservation = await ReservationSeeker.getOneReservation(id)
+
+    const notFound = ReservationErrorManager.getNotFound(reservation)
+    if (notFound.hasError) return new Service_Response(undefined, 404, true, notFound.error)
+    
+    ReservationFilter.filterReservation(reservation)
+    return new Service_Response(reservation, 302)
+}
+
+
 exports.deleteReservation = async (reservationId, userAuthId) => {
     // Format de l'id
     const idError = ReservationErrorManager.getIdError(reservationId)
