@@ -1,75 +1,42 @@
 import React, { useState } from "react";
-import villesQuebec from "../data/villesQuebec"; // villes dans un fichier JSON pour tester en attendant l'API
-import "./styles/journeyForm.css"; // Style du composant
+import { useNavigate } from "react-router-dom";
+import "./styles/journeyForm.css";
 
 const JourneyForm = () => {
   const [depart, setDepart] = useState("");
   const [arrivee, setArrivee] = useState("");
-  const [suggestionsDepart, setSuggestionsDepart] = useState([]);
-  const [suggestionsArrivee, setSuggestionsArrivee] = useState([]);
+  const navigate = useNavigate();
 
-  // Fonction pour filtrer une tentative de suggestions en attendant le lien avec le backend 
-  const handleChange = (value, setValue, setSuggestions) => {
-    setValue(value);
-    if (value.length > 1) {
-      setSuggestions(
-        villesQuebec.filter((ville) =>
-          ville.toLowerCase().startsWith(value.toLowerCase())
-        )
-      );
-    } else {
-      setSuggestions([]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!depart || !arrivee) {
+      alert("Veuillez renseigner les deux villes.");
+      return;
     }
+    navigate(`/recherche?starting=${encodeURIComponent(depart)}&arrival=${encodeURIComponent(arrivee)}`);
   };
 
   return (
     <div className="search-container">
-      <h2>Cherchez votre trajet dans tous le Quebec !</h2>
-      <div className="search-form">
-        <div className="input-container">
-          <input
-            type="text"
-            placeholder="Ville de départ"
-            value={depart}
-            onChange={(e) =>
-              handleChange(e.target.value, setDepart, setSuggestionsDepart)
-            }
-          />
-          {suggestionsDepart.length > 0 && (// entative de suggestions en attendant le lien avec le backend 
-            <ul className="suggestions">
-              {suggestionsDepart.map((ville, index) => (
-                <li key={index} onClick={() => setDepart(ville)}>
-                  {ville}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
+      <h2>Cherchez votre trajet dans tout le Québec !</h2>
+      <form onSubmit={handleSubmit} className="search-form">
+        <input
+          type="text"
+          placeholder="Ville de départ"
+          value={depart}
+          onChange={(e) => setDepart(e.target.value)}
+          required
+        />
         <span className="arrow">➤</span>
-
-        <div className="input-container">
-          <input
-            type="text"
-            placeholder="Ville d'arrivée"
-            value={arrivee}
-            onChange={(e) =>
-              handleChange(e.target.value, setArrivee, setSuggestionsArrivee)
-            }
-          />
-          {suggestionsArrivee.length > 0 && (
-            <ul className="suggestions">
-              {suggestionsArrivee.map((ville, index) => (
-                <li key={index} onClick={() => setArrivee(ville)}>
-                  {ville}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <button className="search-button">Valider</button>
-      </div>
+        <input
+          type="text"
+          placeholder="Ville d'arrivée"
+          value={arrivee}
+          onChange={(e) => setArrivee(e.target.value)}
+          required
+        />
+        <button className="search-button" type="submit">Valider</button>
+      </form>
     </div>
   );
 };
