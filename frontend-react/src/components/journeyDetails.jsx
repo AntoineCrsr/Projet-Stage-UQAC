@@ -75,7 +75,7 @@ useEffect(() => {
     return (
     <div className="journey-container">
       {/* bouton retour */}
-        <button className="btn-back" onClick={() => navigate("/")}>
+        <button className="btn-back" onClick={() => navigate(-1)}>
         ← Retour
         </button>
     <div className="journey-content">
