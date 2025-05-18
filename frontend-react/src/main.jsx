@@ -13,6 +13,8 @@ import Profil from "./pages/Profil";
 import AjoutVoiture from "./pages/AjoutVoiture";
 import CreerTrajet from "./pages/creerTrajet";
 import ModifierProfil from "./pages/ModifierProfil";
+import ResultatRechercheTrajet from "./pages/ResultatRechercheTrajet"; 
+
 
 import APropos from "./pages/APropos";
 import NotreEquipe from "./pages/NotreEquipe";
@@ -37,6 +39,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/creer-trajet" element={<CreerTrajet />} />
           <Route path="/modifier-trajet/:journeyId" element={<CreerTrajet />} />
           <Route path="/modifier-profil" element={<ModifierProfil />} />
+          <Route path="/recherche" element={<ResultatRechercheTrajet />} />
+          
           {/* Partie des routes du footer */}
           <Route path="/a-propos" element={<APropos />} />
           <Route path="/notre-equipe" element={<NotreEquipe />} />
