@@ -59,7 +59,7 @@ const CreerTrajet = () => {
                       setForm({
                         carId: j.carId,
                         startingCity: j.starting.city,
-                        startingAddress: j.starting.address[0] || "",
+                        startingAddress: j.starting.address,
                         arrivalCity: j.arrival.city,
                         arrivalAddress: j.arrival.address,
                         date: j.date.slice(0, 16),
@@ -150,9 +150,9 @@ const CreerTrajet = () => {
         </select>
 
         <input type="text" name="startingCity" placeholder="Ville de départ" value={form.startingCity} onChange={handleChange} required />
-        <input type="text" name="startingAddress" placeholder="Adresse de départ" value={form.startingAddress} onChange={handleChange} required />
+        <input type="text" name="startingAddress" placeholder="Addresse de départ" value={form.startingAddress} onChange={handleChange} required />
         <input type="text" name="arrivalCity" placeholder="Ville d’arrivée" value={form.arrivalCity} onChange={handleChange} required />
-        <input type="text" name="arrivalAddress" placeholder="Adresse d’arrivée" value={form.arrivaldAdress} onChange={handleChange} required />
+        <input type="text" name="arrivalAddress" placeholder="Addresse d’arrivée" value={form.arrivalAddress} onChange={handleChange} required />
         <input type="datetime-local" placeholder="Date de départ et horaire" name="date" value={form.date} onChange={handleChange} required />
         <input type="number" name="totalSeats" min="1" placeholder="Places totales du véhicule" value={form.totalSeats} onChange={handleChange} required />
         <input type="number" name="left" min="1" placeholder="Places disponibles pour le trajet" value={form.left} onChange={handleChange} required />
