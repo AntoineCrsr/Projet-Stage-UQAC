@@ -134,13 +134,25 @@ exports.verifyAddReservation = (journey, nbReservation) => {
     return new ErrorReport(false)
 }
 
-exports.getDoneError = (journey) => {
+exports.getDeleteDoneError = (journey) => {
     if (journey.state === "d") return new ErrorReport(true, errorTable["doneError"])
+    return new ErrorReport(false)
+}
+
+exports.getDoneError = (journey) => {
+    if (journey.state === "d") return new ErrorReport(true, errorTable["creationDoneError"])
     return new ErrorReport(false)
 }
 
 exports.getProvinceError = (journey) => {
     if (journey.starting.province !== "QC" || journey.arrival.province !== "QC")
         return new ErrorReport(true, errorTable["invProvince"])
+    return new ErrorReport(false)
+}
+
+
+exports.verifySeatsLeft = (journey) => {
+    if (journey.seats.left <= 0)
+        return new ErrorReport(true, errorTable["noSeatsLeft"])
     return new ErrorReport(false)
 }

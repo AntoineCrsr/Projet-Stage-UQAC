@@ -170,7 +170,7 @@ exports.deleteOneJourney = async (journeyId, userAuthId) => {
     const authError = GeneralErrorManager.isUserOwnerOfObject(journey.ownerId.toString(), userAuthId)
     if (authError.hasError) return new Service_Response(undefined, 401, true, authError.error)
 
-    const alreadyTerminated = JourneyErrorManager.getDoneError(journey)
+    const alreadyTerminated = JourneyErrorManager.getDeleteDoneError(journey)
     if (alreadyTerminated.hasError) return new Service_Response(undefined, 401, true, alreadyTerminated.error)
     
     const reservationResponse = ReservationService.deleteJourneyReservation(journeyId)
@@ -190,7 +190,7 @@ exports.deleteOneJourney = async (journeyId, userAuthId) => {
  * @returns {Promise}
  */
 exports.canAddAReservation = async (journeyId, userId) => {
-    const journeyIdError = JourneyErrorManager.getIdError(journeyId)
+    const journeyIdError = GeneralErrorManager.isValidId(journeyId, "reservation")
     if (journeyIdError.hasError) return new Service_Response(undefined, 400, true, journeyIdError.error)
 
     return await JourneySeeker.getOneJourney(journeyId)
@@ -204,7 +204,10 @@ exports.canAddAReservation = async (journeyId, userId) => {
             const journeyDoneError = JourneyErrorManager.getDoneError(journey)
             if (journeyDoneError.hasError) return new Service_Response(undefined, 400, true, journeyDoneError.error)
 
-            return new Service_Response(journey.seats.left > 0)
+            const journeyNoSeatsLeft = JourneyErrorManager.verifySeatsLeft(journey)
+            if (journeyNoSeatsLeft.hasError) return new Service_Response(undefined, 400, true, journeyNoSeatsLeft.error)
+
+            return new Service_Response()
         })
 }
 

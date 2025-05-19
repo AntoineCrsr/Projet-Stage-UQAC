@@ -30,31 +30,19 @@ exports.verifyAuth = (userAuthId) => {
     return new ErrorReport(false)
 }
 
-exports.verifyCreation = async (reqRes, userAuthId) => {
+exports.verifyCreation = async (reqRes) => {
     // Valeurs nulles
     if (reqRes == null
         || reqRes.journeyId == null
     ) return new ErrorReport(true, errorTable["nullValues"])
 
-    // Format des id (type et longueur)
-    if (
-        typeof(reqRes.journeyId) !== "string" 
-        || typeof(userAuthId) !== "string" 
-        || reqRes.journeyId.length !== 24
-        || userAuthId.length !== 24
-    ) 
-        return new ErrorReport(true, errorTable["typeError"])
+    return new ErrorReport(false)
+}
 
-    // Possibilité d'ajouter une réservation sur la journey (ceci vérifie aussi que l'utilisateur n'est pas le créateur du trajet)
-    const canAddRes = await JourneyService.canAddAReservation(reqRes.journeyId, userAuthId)
-    if (canAddRes.has_error) return new ErrorReport(true, canAddRes.error_object)
-    if (!canAddRes.result) return new ErrorReport(true, errorTable["notEnoughPlace"])
-    
+exports.alreadyReservedError = async (reqRes, userAuthId) => {
     // Vérifier si l'utilisateur n'a pas déjà réservé la journey
     if (await hasAlreadyReserved(reqRes.journeyId, userAuthId))
         return new ErrorReport(true, errorTable["alreadyRes"])
-
-    // Vérifier si l'utilisateur n'est pas le créateur de la journey
     return new ErrorReport(false)
 }
 

@@ -97,7 +97,7 @@
     },
     "reserverIsOwner": {
         "errors": {
-            "journey": {
+            "reservation": {
                 "code": "unauthorized",
                 "name": "Le créateur du trajet ne peut pas le réserver."
             }
@@ -119,6 +119,14 @@
             }
         }
     },
+    "creationDoneError": {
+        "errors": {
+            "reservation": {
+                "code": "bad-request",
+                "name": "Vous ne pouvez pas réserver un trajet déjà terminé."
+            }
+        }
+    },
     "adressInv": {
         "errors": {
             "journey": {
@@ -132,6 +140,14 @@
             "journey": {
                 "code": "bad-request",
                 "name": "Le covoiturage doit avoir lieu au Québec."
+            }
+        }
+    },
+    "noSeatsLeft": {
+        "errors": {
+            "reservation": {
+                "code": "bad-request",
+                "name": "Le trajet est déjà complet."
             }
         }
     }

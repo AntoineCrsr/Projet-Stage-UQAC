@@ -5,6 +5,7 @@ const ReservationFactory = require("./ReservationFactory")
 const ReservationSeeker = require("./ReservationSeeker")
 const ReservationFilter = require("./ReservationFilter")
 const JourneyService = require("../journeys/journeyService")
+const JourneySeeker = require("../journeys/JourneySeeker.js")
 
 /**
  * 
@@ -14,7 +15,7 @@ const JourneyService = require("../journeys/journeyService")
  */
 exports.createReservation = async (reqRes, userAuthId) => {
     // Authentification
-    const authError = ReservationErrorManager.verifyAuth(userAuthId)
+    const authError = GeneralErrorManager.getAuthError(userAuthId)
     if (authError.hasError) return new Service_Response(undefined, 401, true, authError.error)
 
     // Utilisateur avec inscription complète
@@ -24,6 +25,14 @@ exports.createReservation = async (reqRes, userAuthId) => {
     // Validité des données
     const creationError = await ReservationErrorManager.verifyCreation(reqRes, userAuthId) 
     if (creationError.hasError) return new Service_Response(undefined, 400, true, creationError.error)
+
+    // Vérifications sur la disponibilité de la journey
+    const canAddRes = await JourneyService.canAddAReservation(reqRes.journeyId, userAuthId)
+    if (canAddRes.has_error) return canAddRes
+
+    // Multiple réservations
+    const multResVerif = await ReservationErrorManager.alreadyReservedError(reqRes, userAuthId)
+    if (multResVerif.hasError) return new Service_Response(undefined, 401, true, multResVerif.error)
     
     // Création
     const reservation = ReservationFactory.createReservation(userAuthId, reqRes.journeyId)

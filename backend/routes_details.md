@@ -313,11 +313,13 @@ Si l'utilisateur n'a pas complété son inscription, renvoie 401, "L'utilisateur
 
 Si la journey à réserver appartient à l'utilisateur, renvoie 401, "Le créateur du trajet ne peut pas le réserver."
 
-Si l'utilisateur a déjà réservé le trajet, renvoie 400, "Il est impossible de réserver plusieurs fois le même trajet."
+Si l'utilisateur a déjà réservé le trajet, renvoie 401, "Il est impossible de réserver plusieurs fois le même trajet."
 
 S'il n'y a plus de place dans le trajet, renvoie 400, "Le trajet est déjà complet."
 
-Sinon, renvoie 201, body vide. 
+Si la journey est déjà terminée, renvoie 400, "Vous ne pouvez pas réserver un trajet déjà terminé."
+
+Sinon, renvoie 201, body vide mais avec header location. 
 
 
 // TODO: Vérification d'inscription sur tous les autres

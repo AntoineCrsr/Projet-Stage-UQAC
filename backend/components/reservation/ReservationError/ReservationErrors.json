@@ -9,9 +9,9 @@
     },
     "nullValues": {
         "errors": {
-            "reservations": {
-                "code": "bad values",
-                "name": "Une réservation ne peut pas contenir de valeur nulle."
+            "reservation": {
+                "code": "bad-request",
+                "name": "La requête ne contient pas tous les attributs nécessaires à la création de l'objet."
             }
         }
     },
@@ -33,8 +33,8 @@
     },
     "alreadyRes": {
         "errors": {
-            "reservations": {
-                "code": "bad-request",
+            "reservation": {
+                "code": "unauthorized",
                 "name": "Il est impossible de réserver plusieurs fois le même trajet."
             }
         }
