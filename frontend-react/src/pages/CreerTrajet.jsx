@@ -37,17 +37,21 @@ const CreerTrajet = () => {
           setErrorMsg("Votre telephone et email doivent être vérifiés d'abord");
           return;
         }
-        fetch("http://localhost:3000/api/car", {
+        //Modif de la récupération des voitures de l'user
+        fetch(`http://localhost:3000/api/car?userId=${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
           .then((res) => res.json())
           .then((carData) => {
-            const myCars = carData.filter((car) => car.userId === userId); //recuperer les voitures de mon user connecté
-            if (myCars.length === 0) {
+            if (!Array.isArray(carData) || carData.length === 0) {
               setErrorMsg("Vous devez déclarer un véhicule avant de créer un trajet");
             } else {
-              setCars(myCars);
+              setCars(carData);
             }
+          })
+          .catch((err) => {
+            console.error("Erreur chargement véhicules :", err);
+            setErrorMsg("Erreur lors de la récupération des véhicules");
           });
           //si on fourni un id de trajet
         if (journeyId) {
