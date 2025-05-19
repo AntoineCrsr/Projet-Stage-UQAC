@@ -295,3 +295,29 @@ Renvoie la réservation dont l'id est celle de la requête, avec status 302.
 Si la réservation demandée n'existe pas, renvoie 404 "not-found", "La réservation n'a pas été trouvée."
 
 Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
+
+
+#### POST /api/reservation
+
+Doit contenir journeyId.
+
+Si elle ne contient pas ça, renvoie 400 avec code = "bad-request" et name = "La requête ne contient pas tous les attributs nécessaires à la création de l'objet.".
+
+Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
+
+Si la journey renseignée n'existe pas, renvoie 404 "not-found", "Le trajet n'a pas été trouvé."
+
+Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si l'utilisateur n'a pas complété son inscription, renvoie 401, "L'utilisateur doit compléter son inscription pour effectuer cette action."
+
+Si la journey à réserver appartient à l'utilisateur, renvoie 401, "Le créateur du trajet ne peut pas le réserver."
+
+Si l'utilisateur a déjà réservé le trajet, renvoie 400, "Il est impossible de réserver plusieurs fois le même trajet."
+
+S'il n'y a plus de place dans le trajet, renvoie 400, "Le trajet est déjà complet."
+
+Sinon, renvoie 201, body vide. 
+
+
+// TODO: Vérification d'inscription sur tous les autres

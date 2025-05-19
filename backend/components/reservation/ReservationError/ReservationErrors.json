@@ -25,17 +25,17 @@
     },
     "notEnoughPlace": {
         "errors": {
-            "reservations": {
-                "code": "bad request",
-                "name": "La journey est déjà complète."
+            "reservation": {
+                "code": "bad-request",
+                "name": "Le trajet est déjà complet."
             }
         }
     },
     "alreadyRes": {
         "errors": {
             "reservations": {
-                "code": "bad request",
-                "name": "Vous avez déjà réservé la journey."
+                "code": "bad-request",
+                "name": "Il est impossible de réserver plusieurs fois le même trajet."
             }
         }
     },
