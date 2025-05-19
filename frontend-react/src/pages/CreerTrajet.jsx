@@ -125,11 +125,19 @@ const CreerTrajet = () => {
         body: JSON.stringify({ journey }),
       });
 
-      if (!res.ok) throw new Error("Erreur lors de l'envoi du trajet.");
+      if (!res.ok) {
+        const errorData = await res.json();
+        const message =
+          errorData?.errors?.journey?.name ||
+          errorData?.errors?.journey?.message ||
+          "Une erreur inconnue est survenue.";
+        throw new Error(message);
+      }
+    
       alert(journeyId ? "Trajet modifié !" : "Trajet créé !");
       navigate("/");
     } catch (err) {
-      alert(err.message);
+      alert(`Erreur : ${err.message}`);
     }
   };
 
