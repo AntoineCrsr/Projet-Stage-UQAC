@@ -144,7 +144,7 @@ describe('POST /api/car/', () => {
         expect(resCar.body.errors).toEqual({
             "user": {
                 "code": "unauthorized",
-                "name": "L'utilisateur doit compléter son inscription avant de pouvoir créer des objets."
+                "name": "L'utilisateur doit compléter son inscription pour effectuer cette action."
             }
         })
     }) 
