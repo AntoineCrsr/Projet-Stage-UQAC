@@ -137,7 +137,7 @@ Si la licensePlate est déjà renseignée dans la database, renvoie 409 "conflic
 
 Si l'utilisateur n'est pas connecté, renvoie 401 avec "unauthorized" et name = "L'utilisateur doit être connecté pour effectuer cette action.".
 
-Si l'utilisateur connecté n'a pas complété son inscription, renvoie 401 avec "unauthorized" et name = "L'utilisateur doit compléter son inscription avant de pouvoir créer des objets.".
+Si l'utilisateur connecté n'a pas complété son inscription, renvoie 401 avec "unauthorized" et name = "L'utilisateur doit compléter son inscription pour effectuer cette action.".
 
 Sinon renvoie 201, avec un header Location pointant vers l'objet (/api/car/id)
 
