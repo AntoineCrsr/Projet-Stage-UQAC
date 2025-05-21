@@ -89,6 +89,12 @@ useEffect(() => {
             <p><strong>Places restantes :</strong> {journey.seats.total - journey.seats.left} / {journey.seats.total}</p>
             <p><strong>Prix :</strong> {journey.price} $ CAD</p>
         </div>
+        {!isCreator && (
+        <button onClick={() => navigate(`/profilconducteur/${journey.ownerId}`)}>
+            Voir le profil du conducteur
+        </button>
+        )}
+
 
     {/* Map à inserer quand on utilisera l'API de google
         <div id="map-container" style={{ height: "400px", marginTop: "20px" }}>

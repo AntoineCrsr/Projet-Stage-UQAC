@@ -15,6 +15,7 @@ import CreerTrajet from "./pages/creerTrajet";
 import ModifierProfil from "./pages/ModifierProfil";
 import ResultatRechercheTrajet from "./pages/ResultatRechercheTrajet"; 
 import AjouterAvis from "./pages/AjouterAvis";
+import ProfilConducteur from "./pages/ProfilConducteur";
 
 import APropos from "./pages/APropos";
 import NotreEquipe from "./pages/NotreEquipe";
@@ -41,6 +42,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/modifier-profil" element={<ModifierProfil />} />
           <Route path="/recherche" element={<ResultatRechercheTrajet />} />
           <Route path="/ajouter-avis/:id" element={<AjouterAvis />} />
+          <Route path="/profilconducteur/:id" element={<ProfilConducteur />} />
           
           {/* Partie des routes du footer */}
           <Route path="/a-propos" element={<APropos />} />
