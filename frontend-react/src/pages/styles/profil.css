@@ -108,3 +108,18 @@ textarea {
 .car-actions button:hover {
     background-color: #035b70;
 }
+
+.review-scrollable {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--text-color);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+    background-color: var(--bg-color);
+}
+
+.review-card {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ccc; }

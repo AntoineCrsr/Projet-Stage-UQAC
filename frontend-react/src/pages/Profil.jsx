@@ -12,9 +12,22 @@ const Profil = () => {
     const [cars, setCars] = useState([]);
     const navigate = useNavigate();
     const [reservedJourneys, setReservedJourneys] = useState([]);
+    const [reviews, setReviews] = useState([]);
 
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("token");
+
+    useEffect(() => {
+        if (userId) {
+            fetch(`http://localhost:3000/api/review?reviewedId=${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+            })
+            .then(res => res.json())
+            .then(data => setReviews(data))
+            .catch(err => console.error("Erreur lors du chargement des avis :", err));
+            }
+    }, [userId, token]);
+
 
     useEffect(() => { //securité si quelqu'un n'est pas connecté mais appelle la route quand meme
     if (!token || !userId) {
@@ -299,12 +312,29 @@ const Profil = () => {
         <button onClick={() => navigate("/modifier-profil")}>Modifier mon profil</button>
         </div>
 
-        <h3>Évaluations</h3>
+        <h3>Moyenne des évaluations</h3>
         <div className="profil-info"> Ponctualité : {user.rating?.punctualityRating ?? "Pas encore évalué"}/5</div>
         <div className="profil-info"> Sécurité : {user.rating?.securityRating ?? "Pas encore évalué"}/5</div>
         <div className="profil-info"> Confort : {user.rating?.comfortRating ?? "Pas encore évalué"}/5</div>
         <div className="profil-info"> Courtoisie : {user.rating?.courtesyRating ?? "Pas encore évalué"}/5</div>
         <div className="profil-info"> Nombre de votes : {user.rating?.nbRating}</div>
+
+        <h3>Avis reçus</h3>
+        {reviews.length === 0 ? (
+        <p>Aucun avis reçu de la part de ses précédents passagers</p>
+        ) : (
+        <div className="review-scrollable">
+            {reviews.map((r, index) => (
+            <div key={index} className="review-card">
+                <p><strong>Ponctualité :</strong> {r.punctualityRating}/5</p>
+                <p><strong>Sécurité :</strong> {r.securityRating}/5</p>
+                <p><strong>Confort :</strong> {r.comfortRating}/5</p>
+                <p><strong>Courtoisie :</strong> {r.courtesyRating}/5</p>
+                {r.message && <p><em>"{r.message}"</em></p>}
+            </div>
+            ))}
+        </div>
+        )}
 
         <h3>Statistiques</h3>
         <div className="profil-info"> Trajets complétés : {user.statistics?.nbRidesCompleted}</div>
