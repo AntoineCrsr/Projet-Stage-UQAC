@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import "./styles/ajouteravis.css";
 
 const AjouterAvis = () => {
     const { id: reviewedId } = useParams();
