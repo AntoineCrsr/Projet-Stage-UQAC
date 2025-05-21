@@ -1,6 +1,7 @@
 const JourneyFactory = require("../../components/journeys/JourneyFactory")
 const UserFactory = require("../../components/users/userFactory")
 const CarFactory = require("../../components/cars/CarFactory")
+const ReservationFactory = require("../../components/reservation/ReservationFactory")
 const request = require('supertest');
 const app = require('../../app');
 
@@ -15,6 +16,7 @@ describe("Journey State Updater", () => {
         await UserFactory.modifyBirth(user, "2003-02-12T20:52:39.890Z")
         await UserFactory.modifyName(user, "John", "Doe")
         await UserFactory.modifyPhone(user, "mobile", "+1", "641369490")
+        await UserFactory.modifyGender(user, "homme")
         await UserFactory.validateNonceEmail(user)
         await UserFactory.validateNoncePhone(user)
         await user.save()
@@ -51,11 +53,38 @@ describe("Journey State Updater", () => {
             { city: "TORRONTO", address: "1 rue Torronto" },
             { city: "MontReal", address: "10 Rue St-Pierre" },
             journeyDate,
-            { total: 5, left: 3 },
+            { total: 5, left: 5 },
             40,
             car._id
         );
         await j1.save()
+
+        const reserver = await UserFactory.createUser("john.doe2@gmail.com", "StrongPassword1234")
+        await UserFactory.modifyBirth(reserver, "2003-02-12T20:52:39.890Z")
+        await UserFactory.modifyName(reserver, "John", "Doe")
+        await UserFactory.modifyPhone(reserver, "mobile", "+1", "641369490")
+        await UserFactory.modifyGender(reserver, "homme")
+        await UserFactory.validateNonceEmail(reserver)
+        await UserFactory.validateNoncePhone(reserver)
+        await reserver.save()
+
+        // Login du réserveur
+        const res = await request(app)
+            .post('/api/auth/login')
+            .send({"user": {"email": "john.doe2@gmail.com", "password": "StrongPassword1234"}})
+            .set('Accept', 'application/json')
+
+        let reserver_token = res.body.token
+        let reserver_id = res.body._id
+
+        // Faire une réservation
+        const reservation = await request(app)
+            .post('/api/reservation/')
+            .send({"reservation":{"journeyId": j1._id.toString()}})
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${reserver_token}`);
+
+        expect(reservation.status).toBe(201)
 
         // 3. Avance le temps au 15 mai => journey devrait maintenant être considéré comme "passé"
         Date.now.mockRestore(); // Important pour éviter les conflits
@@ -68,6 +97,22 @@ describe("Journey State Updater", () => {
 
         // 5. Recharge depuis la base 
         expect(response.body.state).toBe("d");
+
+        // Vérification des statistiques du driver
+        const journeyOwner = await request(app)
+            .get('/api/auth/' + id + "?private=true")
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(journeyOwner.body.statistics.nbRidesCompleted).toBe(1)
+        expect(journeyOwner.body.statistics.nbPeopleTravelledWith).toBe(1)
+
+        // Statistiques des réserveurs
+        const reserver_updated = await request(app)
+            .get('/api/auth/' + reserver_id + "?private=true")
+            .set('Authorization', `Bearer ${reserver_token}`);
+
+        expect(reserver_updated.body.statistics.nbRidesCompleted).toBe(1)
+        expect(reserver_updated.body.statistics.nbPeopleTravelledWith).toBe(1)
         Date.now.mockRestore();
     });
 

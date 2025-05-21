@@ -51,9 +51,7 @@ const user = mongoose.Schema({
 
     statistics: {
         nbRidesCompleted: {type: Number, required: true, min: 0},
-        nbKmTravelled: {type: Number, required: true, min: 0},
-        nbPeopleTravelledWith: {type: Number, required: true, min: 0},
-        nbTonsOfCO2Saved: {type: Number, required: true, min: 0},
+        nbPeopleTravelledWith: {type: Number, required: true, min: 0}
     },
 
     hasVerifiedEmail: {type: Boolean, required: true},
