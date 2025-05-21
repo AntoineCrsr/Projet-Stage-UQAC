@@ -90,7 +90,8 @@ useEffect(() => {
             <p><strong>Prix :</strong> {journey.price} $ CAD</p>
         </div>
         {!isCreator && (
-        <button onClick={() => navigate(`/profilconducteur/${journey.ownerId}`)}>
+        <button className="btn-conducteur-profile"
+        onClick={() => navigate(`/profilconducteur/${journey.ownerId}`)}>
             Voir le profil du conducteur
         </button>
         )}

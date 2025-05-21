@@ -43,3 +43,19 @@
 .btn-reserver:hover {
     background-color: #035a6d;
 }
+
+.btn-conducteur-profile {
+    background-color: #01713f;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    margin-top: 1rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-conducteur-profile:hover {
+    background-color: #00b97f;
+}
