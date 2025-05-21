@@ -58,7 +58,7 @@ exports.deleteReview = async (reviewId, userAuthId) => {
             const notFound = ReviewErrorManager.getNotFound(review)
             if (notFound.hasError) return new ServiceResponse(undefined, 404, true, notFound.error)
 
-            const permissionError = ReviewErrorManager.getModifyPermissionError(review, userAuthId)
+            const permissionError = GeneralErrorManager.isUserOwnerOfObject(review.reviewerId.toString(), userAuthId)
             if (permissionError.hasError) return new ServiceResponse(undefined, 401, true, permissionError.error)
             
             UserService.undoRating(review.reviewedId, review.punctualityRating, review.securityRating, review.comfortRating, review.courtesyRating)

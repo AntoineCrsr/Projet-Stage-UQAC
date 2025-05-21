@@ -317,9 +317,24 @@ Si l'utilisateur a déjà réservé le trajet, renvoie 401, "Il est impossible d
 
 S'il n'y a plus de place dans le trajet, renvoie 400, "Le trajet est déjà complet."
 
-Si la journey est déjà terminée, renvoie 400, "Vous ne pouvez pas réserver un trajet déjà terminé."
+Si la journey est déjà terminée, renvoie 401, "Vous ne pouvez pas intéragir avec un trajet déjà terminé."
 
 Sinon, renvoie 201, body vide mais avec header location. 
+
+
+#### DELETE /api/reservation/id
+
+En cas de not found, retourner 404, "La réservation n'a pas été trouvée."
+
+Si l'utilisateur tente de supprimer une réservation sur une journey déjà terminée, renvoie 401 unauthorized "Vous ne pouvez pas supprimer une réservation sur un trajet déjà terminé.". 
+
+Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
+
+Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si la réservation n'appartient pas à l'utilisateur, renvoie 401 unauthorized, "Vous ne pouvez pas intéragir avec un trajet déjà terminé."
+
+Si tout est correct, renvoie 200, body vide. 
 
 
 // TODO: Vérification d'inscription sur tous les autres

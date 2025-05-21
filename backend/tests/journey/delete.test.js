@@ -68,7 +68,6 @@ describe('DELETE /api/journey/id', () => {
     it ("should return not found", async () => {
         const res = await request(app)
             .delete('/api/journey/000000000000000000000000') // not found
-            .send({"user": {"email": "john.doe@gmail.com", "password": "StrongPassword1234"}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
@@ -125,7 +124,6 @@ describe('DELETE /api/journey/id', () => {
     it ("should return 401 not authenticated", async () => {
         const res = await request(app)
             .delete('/api/journey/' + journeyId)
-            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"], "regionCode": "CA"},"carId": carId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"], "regionCode": "CA"},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": -40.0}})
             .set('Accept', 'application/json')
 
         expect(res.status).toBe(401)

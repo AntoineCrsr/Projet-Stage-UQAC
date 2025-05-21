@@ -140,7 +140,7 @@ exports.getDeleteDoneError = (journey) => {
 }
 
 exports.getDoneError = (journey) => {
-    if (journey.state === "d") return new ErrorReport(true, errorTable["creationDoneError"])
+    if (journey.state === "d") return new ErrorReport(true, errorTable["interactDoneError"])
     return new ErrorReport(false)
 }
 

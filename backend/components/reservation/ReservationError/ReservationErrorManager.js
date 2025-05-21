@@ -80,6 +80,7 @@ exports.getIdError = (id) => {
 
 
 exports.getDeleteError = async (reservationId, userAuthId) => {
-    if (userAuthId == null) return new ErrorReport(true, errorTable["notLogin"])
+    const authError = GeneralErrorManager.getAuthError(userAuthId)
+    if (authError.hasError) return authError
     return await getHasAReservationError(reservationId, userAuthId)
 }

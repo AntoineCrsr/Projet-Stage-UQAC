@@ -119,11 +119,11 @@
             }
         }
     },
-    "creationDoneError": {
+    "interactDoneError": {
         "errors": {
             "reservation": {
-                "code": "bad-request",
-                "name": "Vous ne pouvez pas réserver un trajet déjà terminé."
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas intéragir avec un trajet déjà terminé."
             }
         }
     },

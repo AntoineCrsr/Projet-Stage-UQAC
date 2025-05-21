@@ -79,8 +79,8 @@ exports.getOneReservation = async (id) => {
 
 exports.deleteReservation = async (reservationId, userAuthId) => {
     // Format de l'id
-    const idError = ReservationErrorManager.getIdError(reservationId)
-    if (idError.hasError) return idError.error
+    const idError = GeneralErrorManager.isValidId(reservationId, "reservation")
+    if (idError.hasError) return new Service_Response(undefined, 400, true, idError.error)
     // Existance de la réservation
     const reservationExists = await ReservationErrorManager.getReservationExistError(reservationId)
     if (reservationExists.hasError) return new Service_Response(undefined, 404, true, reservationExists.error)
@@ -90,6 +90,7 @@ exports.deleteReservation = async (reservationId, userAuthId) => {
     
     // Anti-suppression si le trajet a été fait
     const journeyId = (await ReservationSeeker.getReservations({"_id": reservationId}))[0].journeyId.toString()
+    
     const isDone = await JourneyService.isDoneJourney(journeyId)
     if (isDone.has_error) return isDone
 
@@ -108,7 +109,7 @@ exports.deleteReservation = async (reservationId, userAuthId) => {
  * @returns {Promise}
  */
 exports.deleteJourneyReservation = async (journeyId) => {
-    const internalError = ReservationErrorManager.getIdError(journeyId)
+    const internalError = GeneralErrorManager.isValidId(journeyId, "journey")
     if (internalError.hasError) return new Service_Response(undefined, 400, true, internalError.error)
 
     return await ReservationFactory.deleteJourneyReservations(journeyId)

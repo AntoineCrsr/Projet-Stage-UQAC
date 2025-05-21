@@ -50,7 +50,7 @@
     "idError": {
         "errors": {
             "reservations": {
-                "code": "bad values",
+                "code": "bad-request",
                 "name": "L'identifiant est au mauvais format (24 chars)."
             }
         }
@@ -59,7 +59,7 @@
         "errors": {
             "reservation": {
                 "code": "unauthorized",
-                "name": "Vous ne pouvez pas supprimer une réservation qui n'est pas la votre."
+                "name": "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
             }
         }
     },

@@ -236,11 +236,11 @@ describe('POST /api/reservation/', () => {
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
-        expect(res.status).toBe(400)
+        expect(res.status).toBe(401)
         expect(res.body.errors).toEqual({
             "reservation": {
-                "code": "bad-request",
-                "name": "Vous ne pouvez pas réserver un trajet déjà terminé."
+                "code": "unauthorized",
+                "name": "Vous ne pouvez pas intéragir avec un trajet déjà terminé."
             }
         })
     })
