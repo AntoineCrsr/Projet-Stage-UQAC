@@ -63,14 +63,19 @@ const JourneyList = () => {
                 minute: "2-digit"
               }).replace(",", ""); // enlève la virgule
               //attention j'ai une inversion de logique sur le calcul des places libres, à revoir.
-              const isPast = new Date(journey.date) < new Date();
-              const isFull = journey.seats.left === 0;
               const isCreator = journey.ownerId === userId;
               const isReserved = reservedJourneyIds.includes(journey._id);
+              const isDone = journey.state === "d"; // priorité à l'état
+              const isFull = journey.seats.left === 0;
 
-              const disabled = isPast || isFull;
-              const rowClass = disabled ? "disabled-row" : isCreator ? "creator-row" : "";
-              
+              const rowClass = isDone
+                ? "disabled-row"
+                : isCreator
+                ? "creator-row"
+                : isFull
+                ? "disabled-row"
+                : "";
+
               return (
                 <tr key={journey._id} className={rowClass}>
                   <td>{journey.starting.city}</td>
@@ -79,18 +84,16 @@ const JourneyList = () => {
                   <td>{journey.seats.total - journey.seats.left}/{journey.seats.total}</td> 
                   <td>{journey.price} $ CAD</td>
                   <td>
-                    {isCreator ? (
-                    <Link to={`/journey/${journey._id}`} className="btn-details-liste">
+                  {isDone ? (
+                      <span className="badge-reserved">Trajet terminé</span>
+                    ) : isCreator ? (
+                      <Link to={`/journey/${journey._id}`} className="btn-details-liste">
                         Détails de votre trajet
                       </Link>
                     ) : isReserved ? (
                       <span className="badge-reserved">Déjà réservé</span>
                     ) : isFull ? (
                       <span className="badge-reserved">Trajet complet</span>
-                    ) : isPast ? (
-                      <span className="badge-reserved">Trajet déjà terminé</span>
-                    ) : disabled ? (
-                      <span className="btn-disabled">Indisponible</span>
                     ) : (
                       <Link to={`/journey/${journey._id}`} className="btn-details-liste">
                         détails/réserver
