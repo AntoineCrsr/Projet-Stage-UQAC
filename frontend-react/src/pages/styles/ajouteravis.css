@@ -1,0 +1,47 @@
+.form-avis {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: var(--text-color);
+}
+
+.form-avis h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.form-avis label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+.form-avis input,
+.form-avis textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--text-color);
+    border-radius: 5px;
+    margin-top: 0.25rem;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.form-avis button {
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 0.7rem;
+    background-color: #034123;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.form-avis button:hover {
+    background-color: #047d9b;
+}
