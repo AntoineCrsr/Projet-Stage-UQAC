@@ -69,6 +69,7 @@ const Profil = () => {
                 return {
                 ...journey,
                 reservationId: res._id, 
+                state: journey.state,
                 };
             })
             );
@@ -369,6 +370,13 @@ const Profil = () => {
                 <br />
                 <div className="car-actions">
                 <button onClick={() => handleCancelReservation(j.reservationId)}>Annuler la reservation</button>
+                
+                {j.state === "d" && (
+                <button onClick={() => navigate(`/ajouter-avis/${j.ownerId}`)}>
+                    Laisser un avis au conducteur
+                </button>
+                )}
+
             </div>
             </li>
             ))}
