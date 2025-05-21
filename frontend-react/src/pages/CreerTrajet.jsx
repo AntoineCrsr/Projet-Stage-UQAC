@@ -105,7 +105,7 @@ const CreerTrajet = () => {
         city: form.arrivalCity,
         address: [form.arrivalAddress],
       },
-      date: form.date,
+      date: new Date(form.date).toISOString(),
       seats: {
         total: parseInt(form.totalSeats),
         left: parseInt(form.left),
