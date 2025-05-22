@@ -11,7 +11,7 @@ const Profil = () => {
     const [myJourneys, setMyJourneys] = useState([]);
     const [cars, setCars] = useState([]);
     const navigate = useNavigate();
-    const [reservedJourneys, setReservedJourneys] = useState([]);
+    const [reservedJourneys, setReservedJourneys] = useState({ enCours: [], termines: [] });
     const [reviews, setReviews] = useState([]);
 
     const userId = localStorage.getItem("userId");
@@ -86,7 +86,10 @@ const Profil = () => {
                 };
             })
             );
-            setReservedJourneys(journeys.filter(j => j)); // On enlève les null si erreur
+            setReservedJourneys({
+                enCours: journeys.filter(j => j.state !== "d"),
+                termines: journeys.filter(j => j.state === "d")
+            });
         })
         .catch(err => console.error("Erreur chargement des réservations :", err));
 
@@ -338,10 +341,7 @@ const Profil = () => {
 
         <h3>Statistiques</h3>
         <div className="profil-info"> Trajets complétés : {user.statistics?.nbRidesCompleted}</div>
-        <div className="profil-info"> Km parcourus : {user.statistics?.nbKmTravelled}</div>
         <div className="profil-info"> Personnes rencontrées : {user.statistics?.nbPeopleTravelledWith}</div>
-        <div className="profil-info"> Tonnes de CO₂ économisées : {user.statistics?.nbTonsOfCO2Saved}</div>
-
 
         <div className="profil-buttons">
         {/* <button onClick={handleSave}>Enregistrer</button> */}
@@ -389,7 +389,7 @@ const Profil = () => {
         <p>Aucune réservation effectuée</p>
         ) : (
         <ul className="mes-trajets">
-            {reservedJourneys.map(j => (
+            {reservedJourneys.enCours.map(j => (
             <li key={j._id}>
                 {j.starting.city} → {j.arrival.city} <br />
                 Adresse de départ : {j.starting.address}<br />
@@ -400,14 +400,27 @@ const Profil = () => {
                 <br />
                 <div className="car-actions">
                 <button onClick={() => handleCancelReservation(j.reservationId)}>Annuler la reservation</button>
-                
-                {j.state === "d" && (
-                <button onClick={() => navigate(`/ajouter-avis/${j.ownerId}`)}>
-                    Laisser un avis au conducteur
-                </button>
-                )}
-
             </div>
+            </li>
+            ))}
+        </ul>
+        )}
+        <h3>Mes trajets en tant que passager terminés</h3>
+        {reservedJourneys.termines.length === 0 ? (
+        <p>Aucun trajet terminé pour l’instant</p>
+        ) : (
+        <ul className="mes-trajets">
+            {reservedJourneys.termines.map(j => (
+            <li key={j._id}>
+                {j.starting.city} → {j.arrival.city}<br />
+                Adresse de départ : {j.starting.address}<br />
+                Adresse d'arrivée : {j.arrival.address}<br />
+                le {new Date(j.date).toLocaleDateString()} à{" "}
+                {new Date(j.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                <br />
+                <div className="car-actions">
+                <button onClick={() => navigate(`/ajouter-avis/${j.ownerId}`)}>Laisser un avis au conducteur</button>
+                </div>
             </li>
             ))}
         </ul>
