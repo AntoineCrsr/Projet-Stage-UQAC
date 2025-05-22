@@ -9,6 +9,7 @@ const Profil = () => {
     const [imagePreview, setImagePreview] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [myJourneys, setMyJourneys] = useState([]);
+    const [myFinishedJourneys, setMyFinishedJourneys] = useState([]);
     const [cars, setCars] = useState([]);
     const navigate = useNavigate();
     const [reservedJourneys, setReservedJourneys] = useState({ enCours: [], termines: [] });
@@ -99,7 +100,10 @@ const Profil = () => {
         .then((res) => res.json())
         .then((data) => {
             const mine = data.filter(j => j.ownerId === userId);
-            setMyJourneys(mine);
+            const actifs = mine.filter(j => j.state !== "d");
+            const termines = mine.filter(j => j.state === "d");
+            setMyJourneys(actifs);
+            setMyFinishedJourneys(termines);
         })
         .catch(err => console.error("Erreur lors du chargement des trajets :", err));
 
@@ -380,6 +384,21 @@ const Profil = () => {
                 <button onClick={() => navigate(`/modifier-trajet/${j._id}`)}>Modifier</button>
                 <button onClick={() => handleDeleteJourney(j._id)}>Supprimer</button>
                 </div>
+            </li>
+            ))}
+        </ul>
+        )}
+        <h3>Mes trajets terminés en tant que conducteur</h3>
+        {myFinishedJourneys.length === 0 ? (
+        <p>Aucun trajet terminé</p>
+        ) : (
+        <ul className="mes-trajets">
+            {myFinishedJourneys.map(j => (
+            <li key={j._id}>
+                {j.starting.city} vers {j.arrival.city} le{" "}
+                {new Date(j.date).toLocaleDateString()} à{" "}
+                {new Date(j.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}<br />
+                {j.seats.total - j.seats.left} passagers 
             </li>
             ))}
         </ul>
