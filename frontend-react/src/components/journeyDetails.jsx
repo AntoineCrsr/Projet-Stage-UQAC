@@ -86,7 +86,7 @@ useEffect(() => {
             <p><strong>Départ :</strong> {journey.starting.address}</p>
             <p><strong>Arrivée :</strong> {journey.arrival.address}</p>
             <p><strong>Date :</strong> {format}</p>
-            <p><strong>Places restantes :</strong> {journey.seats.total - journey.seats.left} / {journey.seats.total}</p>
+            <p><strong>Place(s) déjà occupée(s) :</strong> {journey.seats.total - journey.seats.left} / {journey.seats.total}</p>
             <p><strong>Prix :</strong> {journey.price} $ CAD</p>
         </div>
         {!isCreator && (

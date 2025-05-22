@@ -48,7 +48,7 @@ const JourneyList = () => {
               <th>Départ</th>
               <th>Arrivée</th>
               <th>Date</th>
-              <th>Places</th>
+              <th>Place(s) restante(s)</th>
               <th>Prix</th>
               <th>details/reservation</th>
             </tr>
@@ -81,7 +81,7 @@ const JourneyList = () => {
                   <td>{journey.starting.city}</td>
                   <td>{journey.arrival.city}</td>
                   <td>{formatDate}</td>
-                  <td>{journey.seats.total - journey.seats.left}/{journey.seats.total}</td> 
+                  <td>{journey.seats.left}</td> 
                   <td>{journey.price} $ CAD</td>
                   <td>
                   {isDone ? (
