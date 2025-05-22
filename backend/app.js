@@ -8,6 +8,7 @@ const journeyRouter = require('./components/journeys/journeyRouter')
 const carRouter = require('./components/cars/carRouter')
 const reservationRouter = require('./components/reservation/ReservationRouter')
 const reviewRouter = require('./components/reviews/ReviewRouter')
+const citiesRouter = require('./components/cities/citiesRouter')
 
 if (process.env.NODE_ENV !== 'test') {
   const connectDB = require('./db');
@@ -34,6 +35,7 @@ app.use('/api/journey', journeyRouter)
 app.use('/api/car', carRouter)
 app.use('/api/reservation', reservationRouter)
 app.use('/api/review', reviewRouter)
+app.use('/api/cities', citiesRouter)
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
 module.exports = app
