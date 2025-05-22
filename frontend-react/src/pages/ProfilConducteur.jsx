@@ -28,10 +28,8 @@ const ProfilConducteur = () => {
         <p><strong>Nom :</strong> {driver.name.lastName}</p>
         <p><strong>Prénom :</strong> {driver.name.firstName}</p>
 
-        <h3>Statistiques</h3>
+        <h3>Nombre de trajets déjà effectués :</h3>
         <p>Trajets : {driver.statistics.nbRidesCompleted}</p>
-        <p>Km parcourus : {driver.statistics.nbKmTravelled}</p>
-        <p>CO₂ économisé : {driver.statistics.nbTonsOfCO2Saved}</p>
 
         <h3>Moyenne des évaluations</h3>
         <p>Ponctualité : {driver.rating.punctualityRating ?? "Pas encore évalué"}/5</p>

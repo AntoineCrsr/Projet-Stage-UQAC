@@ -338,10 +338,7 @@ const Profil = () => {
 
         <h3>Statistiques</h3>
         <div className="profil-info"> Trajets complétés : {user.statistics?.nbRidesCompleted}</div>
-        <div className="profil-info"> Km parcourus : {user.statistics?.nbKmTravelled}</div>
         <div className="profil-info"> Personnes rencontrées : {user.statistics?.nbPeopleTravelledWith}</div>
-        <div className="profil-info"> Tonnes de CO₂ économisées : {user.statistics?.nbTonsOfCO2Saved}</div>
-
 
         <div className="profil-buttons">
         {/* <button onClick={handleSave}>Enregistrer</button> */}
