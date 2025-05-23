@@ -54,7 +54,7 @@ const ResultatRechercheTrajet = () => {
                 <th>Départ</th>
                 <th>Arrivée</th>
                 <th>Date</th>
-                <th>Places</th>
+                <th>Place(s) restante(s)</th>
                 <th>Prix</th>
                 <th>details/reservation</th>
                 </tr>
@@ -69,22 +69,30 @@ const ResultatRechercheTrajet = () => {
                     minute: "2-digit"
                 }).replace(",", "");
 
-                const isPast = new Date(journey.date) < new Date();
-                const isFull = journey.seats.left === 0;
                 const isCreator = journey.ownerId === userId;
                 const isReserved = reservedJourneyIds.includes(journey._id);
-                const disabled = isPast || isFull;
-                const rowClass = disabled ? "disabled-row" : isCreator ? "creator-row" : "";
+                const isDone = journey.state === "d";
+                const isFull = journey.seats.left === 0;
+
+                const rowClass = isDone
+                ? "disabled-row"
+                : isCreator
+                ? "creator-row"
+                : isFull
+                ? "disabled-row"
+                : "";
 
                 return (
-                    <tr key={journey._id} className={rowClass}>
+                <tr key={journey._id} className={rowClass}>
                     <td>{journey.starting.city}</td>
                     <td>{journey.arrival.city}</td>
                     <td>{formatDate}</td>
-                    <td>{journey.seats.total - journey.seats.left}/{journey.seats.total}</td>
+                    <td>{journey.seats.left}</td> 
                     <td>{journey.price} $ CAD</td>
                     <td>
-                        {isCreator ? (
+                    {isDone ? (
+                        <span className="badge-reserved">Trajet terminé</span>
+                        ) : isCreator ? (
                         <Link to={`/journey/${journey._id}`} className="btn-details-liste">
                             Détails de votre trajet
                         </Link>
@@ -92,8 +100,6 @@ const ResultatRechercheTrajet = () => {
                         <span className="badge-reserved">Déjà réservé</span>
                         ) : isFull ? (
                         <span className="badge-reserved">Trajet complet</span>
-                        ) : isPast ? (
-                        <span className="badge-reserved">Trajet déjà terminé</span>
                         ) : (
                         <Link to={`/journey/${journey._id}`} className="btn-details-liste">
                             détails/réserver
@@ -102,7 +108,7 @@ const ResultatRechercheTrajet = () => {
                     </td>
                     </tr>
                 );
-                })}
+            })}
             </tbody>
             </table>
         )}
