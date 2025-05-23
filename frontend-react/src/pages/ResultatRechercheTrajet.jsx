@@ -42,6 +42,7 @@ const ResultatRechercheTrajet = () => {
     // à la base je voulais faire une update sur le composant principal pour afficher seulement les trajets recherchés, je n'ai pas réussi,
     //puis j'ai essayé de récuperer les trajets sur une autre page et j'ai décidé de garder le même style que sur le composant principal et ça fonctionne.
     // et j'ai aussi réutilisé les même className etc pour réutiliser le même CSS que le composant principal de trajets
+    //et enfin la même logique pour que ça soit cohérent
     return (
         <div className="journey-list-wrapper">
         <h2>Résultats pour {starting} → {arrival}</h2>
