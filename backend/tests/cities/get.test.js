@@ -4,7 +4,7 @@ const UserFactory = require("../../components/users/userFactory")
 const CarFactory = require("../../components/cars/CarFactory")
 const JourneyFactory = require("../../components/journeys/JourneyFactory")
 
-describe('GET /api/cities/', () => {
+describe('GET /api/cities', () => {
     let token = undefined
     let id = undefined
     let j1 = undefined

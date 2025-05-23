@@ -337,4 +337,26 @@ Si la réservation n'appartient pas à l'utilisateur, renvoie 401 unauthorized, 
 Si tout est correct, renvoie 200, body vide. 
 
 
+### Review
+
+#### POST /api/review
+
+Doit contenir les attributs "reviewedId", "punctualityRating", "securityRating", "comfortRating", "courtesyRating", "message". Dont message est facultatif.
+
+Si elle ne contient pas ça, renvoie 400 avec code = "bad-request" et name = "La requête ne contient pas tous les attributs nécessaires à la création de l'objet.".
+
+Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
+
+Si un des ratings n'est pas entre 0 et 5, renvoie 400 "bad-request", "Les notes d'un avis ne peuvent être compris qu'entre 0 et 5.". 
+
+Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si l'utilisateur n'a effectué de trajet terminé avec l'utilisateur noté, renvoie 401 "Vous ne disposez pas de trajet complété avec le conducteur renseigné."
+
+Si l'utilisateur tente de se noter lui-même, renvoie 401 "Vous ne pouvez pas vous donner d'avis à vous-même."
+
+Si l'utilisateur a déjà donné un avis sur la personne, renvoie 401 "Vous ne pouvez pas donner plus d'un avis sur la même personne.". 
+
+Sinon, renvoie 201 avec header location.
+
 // TODO: Vérification d'inscription sur tous les autres

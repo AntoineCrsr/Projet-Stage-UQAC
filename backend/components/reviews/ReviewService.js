@@ -33,9 +33,12 @@ exports.createReview = async (reqRev, userAuthId) => {
     const authError = GeneralErrorManager.getAuthError(userAuthId)
     if (authError.hasError) return new ServiceResponse(undefined, 401, true, authError.error)
     
-    const verifError = await ReviewErrorManager.getCreationError(reqRev, userAuthId)
+    const verifError = await ReviewErrorManager.getCreationError(reqRev)
     if (verifError.hasError) return new ServiceResponse(undefined, 400, true, verifError.error)
 
+    const authorizationError = await ReviewErrorManager.getAuthorizedError(reqRev, userAuthId)
+    if (authorizationError.hasError) return new ServiceResponse(undefined, 401, true, authorizationError.error)
+        
     const review = ReviewFactory.createReview(userAuthId, reqRev.reviewedId, reqRev.punctualityRating, reqRev.securityRating, reqRev.comfortRating, reqRev.courtesyRating, reqRev.message)
 
     UserService.updateRating(reqRev.reviewedId, reqRev.punctualityRating, reqRev.securityRating, reqRev.comfortRating, reqRev.courtesyRating)

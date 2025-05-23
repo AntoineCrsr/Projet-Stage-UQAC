@@ -3,17 +3,18 @@ const app = require('../../app');
 const UserFactory = require("../../components/users/userFactory")
 const CarFactory = require("../../components/cars/CarFactory")
 const JourneyFactory = require("../../components/journeys/JourneyFactory")
+const ReservationFactory = require("../../components/reservation/ReservationFactory")
 
-describe('POST /api/reservation/', () => {
+describe('POST /api/review/', () => {
     let token = undefined
     let id = undefined
     let journey = undefined
+    let reservation = undefined
     let driver = undefined
-    let user = undefined
     let car = undefined
 
     beforeEach(async () => {
-        // Création d'un user et récupération du token de connexion
+        // Création d'un driver
         driver = await UserFactory.createUser("john.doe@gmail.com", "StrongPassword1234")
         await UserFactory.modifyBirth(driver, "2003-02-12T20:52:39.890Z")
         await UserFactory.modifyName(driver, "John", "Doe")
@@ -29,12 +30,13 @@ describe('POST /api/reservation/', () => {
 
         // Création de la journey
         journey = await JourneyFactory.createJourney(driver._id.toString(), {"city": "TORRONTO","address": "1 rue Torronto"}, {"city": "MontReal","address": "10 Rue St-Pierre"}, "2025-06-12T20:52:39.890Z", {"total": 5,"left": 3}, 40, car._id)
+        journey.state = "d"
         await journey.save()
 
         // Le user chargé de tester la réservation
-        user = await UserFactory.createUser("jane.doe@gmail.com", "StrongPassword1234")
+        const user = await UserFactory.createUser("jane.doe@gmail.com", "StrongPassword1234")
         await UserFactory.modifyBirth(user, "2003-02-12T20:52:39.890Z")
-        await UserFactory.modifyName(user, "John", "Doe")
+        await UserFactory.modifyName(user, "Jane", "Doe")
         await UserFactory.modifyPhone(user, "mobile", "+1", "641369490")
         await UserFactory.modifyGender(user, "femme")
         await UserFactory.validateNonceEmail(user)
@@ -49,19 +51,24 @@ describe('POST /api/reservation/', () => {
 
         token = res.body.token
         id = res.body._id
+
+        // La réservation
+        reservation = ReservationFactory.createReservation(id, journey._id.toString())
+        await reservation.save()
     });
 
 
     it ("should return 400 missing fields", async () => {
         const res = await request(app)
-            .post('/api/reservation')
-            .send({"reservation": {}})
+            .post('/api/review')
+            // Missing courtesyRating
+            .send({"review": {"reviewedId": driver._id.toString(),"punctualityRating": 3,"securityRating": 3,"comfortRating": 3,}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
         expect(res.status).toBe(400)
         expect(res.body.errors).toEqual({
-            "reservation": {
+            "review": {
                 "code": "bad-request",
                 "name": "La requête ne contient pas tous les attributs nécessaires à la création de l'objet."
             }
@@ -71,14 +78,14 @@ describe('POST /api/reservation/', () => {
 
     it ("should return 400 bad id", async () => {
         const res = await request(app)
-            .post('/api/reservation')
-            .send({"reservation": {"journeyId": "a bad id"}})
+            .post('/api/review')
+            .send({"review": {"reviewedId": "a bad ID !!","punctualityRating": 3,"securityRating": 3,"comfortRating": 3,"courtesyRating": 3,"message": "Bof"}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
         expect(res.status).toBe(400)
         expect(res.body.errors).toEqual({
-            "reservation": {
+            "review": {
                 "code": "bad-request",
                 "name": "L'identifiant renseigné n'est pas dans un format acceptable."
             }
@@ -86,18 +93,18 @@ describe('POST /api/reservation/', () => {
     })
 
 
-    it ("should return 404 not found", async () => {
+    it ("should return 400 bad rating", async () => {
         const res = await request(app)
-            .post('/api/reservation')
-            .send({"reservation": {"journeyId": "000000000000000000000000"}})
+            .post('/api/review')
+            .send({"review": {"reviewedId": driver._id.toString(),"punctualityRating": -1,"securityRating": 6,"comfortRating": 3,"courtesyRating": 3,"message": "Bof"}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
-        expect(res.status).toBe(404)
+        expect(res.status).toBe(400)
         expect(res.body.errors).toEqual({
-            "journey": {
-                "code": "not-found",
-                "name": "Le trajet n'a pas été trouvé."
+            "review": {
+                "code": "bad-request",
+                "name": "Les notes d'un avis ne peuvent être compris qu'entre 0 et 5."
             }
         })
     })
@@ -105,8 +112,8 @@ describe('POST /api/reservation/', () => {
 
     it ("should return 401 not connected", async () => {
         const res = await request(app)
-            .post('/api/reservation')
-            .send({"reservation": {"journeyId": journey._id.toString()}})
+            .post('/api/review')
+            .send({"review": {"reviewedId": driver._id.toString(),"punctualityRating": 0,"securityRating": 3,"comfortRating": 3,"courtesyRating": 3,"message": "Bof"}})
             .set('Accept', 'application/json')
 
         expect(res.status).toBe(401)
@@ -119,146 +126,105 @@ describe('POST /api/reservation/', () => {
     })
 
 
-    it ("should return 401 profile not complete", async () => {
-        // missing phone & email validation
-        const fellow = await UserFactory.createUser("john3.doe@gmail.com", "StrongPassword1234")
-        await UserFactory.modifyBirth(fellow, "2003-02-12T20:52:39.890Z")
-        await UserFactory.modifyName(fellow, "John", "Doe")
-        await UserFactory.modifyPhone(fellow, "mobile", "+1", "641369490")
-        await fellow.save()
+    it ("should return 401 havent done journey yet", async () => {
+        // Le user chargé de tester la réservation
+        const hacker = await UserFactory.createUser("jane.doe2@gmail.com", "StrongPassword1234")
+        await UserFactory.modifyBirth(hacker, "2003-02-12T20:52:39.890Z")
+        await UserFactory.modifyName(hacker, "Jane", "Doe")
+        await UserFactory.modifyPhone(hacker, "mobile", "+1", "641369490")
+        await UserFactory.modifyGender(hacker, "femme")
+        await UserFactory.validateNonceEmail(hacker)
+        await UserFactory.validateNoncePhone(hacker)
+        await hacker.save()
 
         // Login 
-        const fellowLogin = await request(app)
+        const login = await request(app)
             .post('/api/auth/login')
-            .send({"user": {"email": "john3.doe@gmail.com", "password": "StrongPassword1234"}})
+            .send({"user": {"email": "jane.doe2@gmail.com", "password": "StrongPassword1234"}})
             .set('Accept', 'application/json')
 
-        fellow_token = fellowLogin.body.token
-        fellow_id = fellowLogin.body._id
+        let hacker_token = login.body.token
 
         const res = await request(app)
-            .post('/api/reservation')
-            .send({"reservation": {"journeyId": journey._id.toString()}})
+            .post('/api/review')
+            .send({"review": {"reviewedId": driver._id.toString(),"punctualityRating": 0,"securityRating": 3,"comfortRating": 3,"courtesyRating": 3,"message": "Bof"}})
             .set('Accept', 'application/json')
-            .set('Authorization', `Bearer ${fellow_token}`)
+            .set('Authorization', `Bearer ${hacker_token}`)
 
         expect(res.status).toBe(401)
         expect(res.body.errors).toEqual({
-            "user": {
+            "review": {
                 "code": "unauthorized",
-                "name": "L'utilisateur doit compléter son inscription pour effectuer cette action."
+                "name": "Vous ne disposez pas de trajet complété avec le conducteur renseigné."
             }
         })
     })
 
 
-    it ("should return 401 own journey", async () => {
-        // Login as the driver
-        const driverLogin = await request(app)
+    it ("should return 401 review himself", async () => {
+        // Login driver
+        const login = await request(app)
             .post('/api/auth/login')
             .send({"user": {"email": "john.doe@gmail.com", "password": "StrongPassword1234"}})
             .set('Accept', 'application/json')
 
-        driver_token = driverLogin.body.token
-        driver_id = driverLogin.body._id
+        let driver_token = login.body.token
 
         const res = await request(app)
-            .post('/api/reservation')
-            .send({"reservation": {"journeyId": journey._id.toString()}})
+            .post('/api/review')
+            .send({"review": {"reviewedId": driver._id.toString(),"punctualityRating": 0,"securityRating": 3,"comfortRating": 3,"courtesyRating": 3,"message": "Bof"}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${driver_token}`)
 
         expect(res.status).toBe(401)
         expect(res.body.errors).toEqual({
-            "reservation": {
+            "review": {
                 "code": "unauthorized",
-                "name": "Le créateur du trajet ne peut pas le réserver."
+                "name": "Vous ne pouvez pas vous donner d'avis à vous-même."
             }
         })
     })
 
 
-    it ("should return 401 multiple reservations", async () => {
-        // Première réservation:
-        const res = await request(app)
-            .post('/api/reservation')
-            .send({"reservation": {"journeyId": journey._id.toString()}})
+    it ("should return 401 Double review", async () => {
+        const res1 = await request(app)
+            .post('/api/review')
+            .send({"review": {"reviewedId": driver._id.toString(),"punctualityRating": 0,"securityRating": 5,"comfortRating": 3,"courtesyRating": 3,"message": "Bof"}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
-        expect(res.status).toBe(201)
-
-        // Seconde réservation
-        const res2 = await request(app)
-            .post('/api/reservation')
-            .send({"reservation": {"journeyId": journey._id.toString()}})
-            .set('Accept', 'application/json')
-            .set('Authorization', `Bearer ${token}`)
-
-        expect(res2.status).toBe(401)
-        expect(res2.body.errors).toEqual({
-            "reservation": {
-                "code": "unauthorized",
-                "name": "Il est impossible de réserver plusieurs fois le même trajet."
-            }
-        })
-    })
-
-
-    it ("should return 400 journey not enough places", async () => {
-        const completeJourney = await JourneyFactory.createJourney(driver._id.toString(), {"city": "Montreal","address": "1 rue Torronto"}, {"city": "TorronTo","address": "10 Rue St-Pierre"}, "2025-04-12T20:52:39.890Z", {"total": 5,"left": 0}, 40, car._id)
-        await completeJourney.save()
+        expect(res1.status).toBe(201)
 
         const res = await request(app)
-            .post('/api/reservation')
-            .send({"reservation": {"journeyId": completeJourney._id.toString()}})
-            .set('Accept', 'application/json')
-            .set('Authorization', `Bearer ${token}`)
-
-        expect(res.status).toBe(400)
-        expect(res.body.errors).toEqual({
-            "reservation": {
-                "code": "bad-request",
-                "name": "Le trajet est déjà complet."
-            }
-        })
-    })
-
-
-    it ("should return 400 journey already done", async () => {
-        const completeJourney = await JourneyFactory.createJourney(driver._id.toString(), {"city": "Montreal","address": "1 rue Torronto"}, {"city": "TorronTo","address": "10 Rue St-Pierre"}, "2020-04-12T20:52:39.890Z", {"total": 5,"left": 4}, 40, car._id)
-        completeJourney.state = "d"
-        await completeJourney.save()
-
-        const res = await request(app)
-            .post('/api/reservation')
-            .send({"reservation": {"journeyId": completeJourney._id.toString()}})
+            .post('/api/review')
+            .send({"review": {"reviewedId": driver._id.toString(),"punctualityRating": 0,"securityRating": 5,"comfortRating": 3,"courtesyRating": 3,"message": "Bof"}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
         expect(res.status).toBe(401)
         expect(res.body.errors).toEqual({
-            "reservation": {
+            "review": {
                 "code": "unauthorized",
-                "name": "Vous ne pouvez pas intéragir avec un trajet déjà terminé."
+                "name": "Vous ne pouvez pas donner plus d'un avis sur la même personne."
             }
         })
     })
 
 
-    it ("should return 400 journey already done", async () => {
+    it ("should return 201", async () => {
         const res = await request(app)
-            .post('/api/reservation')
-            .send({"reservation": {"journeyId": journey._id.toString()}})
+            .post('/api/review')
+            .send({"review": {"reviewedId": driver._id.toString(),"punctualityRating": 0,"securityRating": 5,"comfortRating": 3,"courtesyRating": 3,"message": "Bof"}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
         expect(res.status).toBe(201)
+
         // Testing if the header location is giving an id
         expect(typeof(res.get("Location"))).toBe("string")
-        const locationElts = res.get("Location").split("/") // should be [ '', 'api', 'reservation', '<id>' ]
+        const locationElts = res.get("Location").split("/") // should be [ '', 'api', 'review', '<id>' ]
         expect(locationElts[1]).toBe("api")
-        expect(locationElts[2]).toBe("reservation")
+        expect(locationElts[2]).toBe("review")
         expect(typeof(locationElts[3])).toBe("string")
         expect(locationElts[3].length).toBe(24) 
         expect(res.body).toBe("") // No body

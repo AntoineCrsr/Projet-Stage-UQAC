@@ -2,8 +2,8 @@
     "missingArg": {
         "errors": {
             "review": {
-                "code": "missing-fields",
-                "name": "La requete ne dispose pas des attributs nécessaires (reviewedId, punctualityRating, securityRating, comfortRating, courtesyRating, ?message)"
+                "code": "bad-request",
+                "name": "La requête ne contient pas tous les attributs nécessaires à la création de l'objet."
             }
         }
     },
@@ -26,7 +26,7 @@
     "avisIncorrects": {
         "errors": {
             "review": {
-                "code": "bad values",
+                "code": "bad-request",
                 "name": "Les notes d'un avis ne peuvent être compris qu'entre 0 et 5."
             }
         }

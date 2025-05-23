@@ -16,8 +16,6 @@ Without docker, just do "nodemon" or "node server.js"
 En cours:
 
 TODO:
-> Fin automatique des journeys (lors d'un GET = update ?)
-> Mise à jour des statistiques utilisateur quand le trajet a été fini
 > Vérification de l'âge de l'utilisateur
 > Vérifier la cohérence des attributs de car (couleur, model etc.) // model --> API voiture ?
 > Tester la sécurité

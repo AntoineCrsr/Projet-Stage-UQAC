@@ -3,6 +3,7 @@ const JourneySeeker = require("../../journeys/JourneySeeker")
 const ReservationSeeker = require("../../reservation/ReservationSeeker")
 const ErrorReport = require("../../workspace/ErrorReport")
 const errorTable = require("./ReviewErrors")
+const GeneralErrorManager = require("../../workspace/GeneralError/GeneralErrorManager")
 
 async function hasAlreadyGivenReview(userId, reviewedId) {
     return await ReviewSeeker.getReviews({"reviewerId": userId, "reviewedId": reviewedId})
@@ -30,7 +31,7 @@ async function hasCompletedAJourneyWith(userAuth, reviewedId) {
  * puis que cette dernière ne l'a pas déjà évalué
  * @param {object} reqRev 
  */
-exports.getCreationError = async (reqRev, userAuthId) => {
+exports.getCreationError = async (reqRev) => {
     // Présence des attributs:
     if (reqRev == undefined
         || reqRev.reviewedId == undefined
@@ -42,14 +43,15 @@ exports.getCreationError = async (reqRev, userAuthId) => {
 
     // Format:
     if (
-        typeof(reqRev.reviewedId) !== "string" 
-        || reqRev.reviewedId.length !== 24
-        || typeof(reqRev.punctualityRating) !== "number"
+        typeof(reqRev.punctualityRating) !== "number"
         || typeof(reqRev.securityRating) !== "number"
         || typeof(reqRev.comfortRating) !== "number"
         || typeof(reqRev.courtesyRating) !== "number"
         || (reqRev.message != undefined && typeof(reqRev.message) !== "string")
     ) return new ErrorReport(true, errorTable["typeError"])
+
+    const idError = GeneralErrorManager.isValidId(reqRev.reviewedId, "review")
+    if (idError.hasError) return idError
 
     // Logique:
     if (
@@ -59,6 +61,11 @@ exports.getCreationError = async (reqRev, userAuthId) => {
         || reqRev.courtesyRating < 0 || reqRev.courtesyRating > 5
     ) return new ErrorReport(true, errorTable["avisIncorrects"])
 
+    return new ErrorReport(false)
+} 
+
+
+exports.getAuthorizedError = async (reqRev, userAuthId) => {
     // Empêche de se donner soi même un avis
     if (userAuthId === reqRev.reviewedId)
         return new ErrorReport(true, errorTable["reviewHimselfError"])
@@ -73,7 +80,7 @@ exports.getCreationError = async (reqRev, userAuthId) => {
         return new ErrorReport(true, errorTable["haveNotDoneJourney"])
 
     return new ErrorReport(false)
-} 
+}
 
 
 exports.getConstraintsError = (constraints) => {
