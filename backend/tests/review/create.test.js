@@ -214,7 +214,7 @@ describe('POST /api/review/', () => {
     it ("should return 201", async () => {
         const res = await request(app)
             .post('/api/review')
-            .send({"review": {"reviewedId": driver._id.toString(),"punctualityRating": 0,"securityRating": 5,"comfortRating": 3,"courtesyRating": 3,"message": "Bof"}})
+            .send({"review": {"reviewedId": driver._id.toString(),"punctualityRating": 5,"securityRating": 5,"comfortRating": 5,"courtesyRating": 5,"message": "Formidable."}})
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${token}`)
 
@@ -228,5 +228,17 @@ describe('POST /api/review/', () => {
         expect(typeof(locationElts[3])).toBe("string")
         expect(locationElts[3].length).toBe(24) 
         expect(res.body).toBe("") // No body
+
+        const user = await request(app)
+            .get('/api/auth/' + driver._id.toString())
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${token}`)
+
+        expect(user.status).toBe(302)
+        expect(user.body.rating.nbRating).toBe(1)
+        expect(user.body.rating.punctualityRating).toBe(5)
+        expect(user.body.rating.securityRating).toBe(5)
+        expect(user.body.rating.comfortRating).toBe(5)
+        expect(user.body.rating.courtesyRating).toBe(5)
     })
 })

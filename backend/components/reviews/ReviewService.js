@@ -23,6 +23,21 @@ exports.getReviews = async (constraints) => {
         .catch(error => new ServiceResponse(undefined, 500, true, error))
 }
 
+exports.getOneReview = async (id) => {
+    const idError = GeneralErrorManager.isValidId(id, "review")
+    if (idError.hasError) return new ServiceResponse(undefined, 400, true, idError.error)
+    
+    return await ReviewSeeker.getOneReview(id)
+        .then(review => { 
+            const notFound = ReviewErrorManager.getNotFound(review)
+            if (notFound.hasError) return new ServiceResponse(undefined, 404, true, notFound.error)
+
+            ReviewFilter.filterReview(review)
+            return new ServiceResponse(review, 302)
+        })
+        .catch(error => new ServiceResponse(undefined, 500, true, error))
+}
+
 /**
  * 
  * @param {object} reqRev 
@@ -41,7 +56,7 @@ exports.createReview = async (reqRev, userAuthId) => {
         
     const review = ReviewFactory.createReview(userAuthId, reqRev.reviewedId, reqRev.punctualityRating, reqRev.securityRating, reqRev.comfortRating, reqRev.courtesyRating, reqRev.message)
 
-    UserService.updateRating(reqRev.reviewedId, reqRev.punctualityRating, reqRev.securityRating, reqRev.comfortRating, reqRev.courtesyRating)
+    await UserService.updateRating(reqRev.reviewedId, reqRev.punctualityRating, reqRev.securityRating, reqRev.comfortRating, reqRev.courtesyRating)
 
     return await review.save()
         .then(() => (new ServiceResponse(undefined, 201)).setLocation("/review/" + review.id))

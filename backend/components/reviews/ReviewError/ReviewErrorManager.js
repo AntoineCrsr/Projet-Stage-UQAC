@@ -86,11 +86,19 @@ exports.getAuthorizedError = async (reqRev, userAuthId) => {
 exports.getConstraintsError = (constraints) => {
     if (constraints == undefined)
         return new ErrorReport(false)
-    if ((constraints.reviewerId != undefined && constraints.reviewerId.length !== 24)
-        || (constraints.reviewedId != undefined && constraints.reviewedId.length !== 24)
-        || (constraints._id != undefined && constraints._id.length !== 24))
-        return new ErrorReport(true, errorTable["idErrors"])
-    
+
+    let idError = new ErrorReport(false)
+
+    if (constraints.reviewerId != undefined)
+        idError = GeneralErrorManager.isValidId(constraints.reviewerId.toString(), "review")
+
+    if (constraints.reviewedId != undefined && !idError.hasError) 
+        idError = GeneralErrorManager.isValidId(constraints.reviewedId.toString(), "review")
+
+    if (constraints._id != undefined && !idError.hasError)
+        idError = GeneralErrorManager.isValidId(constraints._id.toString(), "review")
+
+    if (idError.hasError) return idError
     return new ErrorReport(false)
 }
 

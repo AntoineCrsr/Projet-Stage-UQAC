@@ -10,6 +10,11 @@ exports.getReviews = (req, res, next) => {
         .then(service_response => service_response.buildResponse(res))
 }
 
+exports.getOneReview = (req, res, next) => {
+    ReviewService.getOneReview(req.params.id)
+        .then(service_response => service_response.buildResponse(res))
+}
+
 exports.deleteReview = (req, res, next) => {
     ReviewService.deleteReview(req.params.id, req.auth.userId)
         .then(service_response => service_response.buildResponse(res))

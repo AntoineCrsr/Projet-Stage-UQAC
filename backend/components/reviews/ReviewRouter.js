@@ -7,6 +7,8 @@ const JourneyUpdater = require("../workspace/JourneyStateUpdater")
 router.post('/', JourneyUpdater.updateJourneys, auth, ReviewController.createReview);
   
 router.get('/', JourneyUpdater.updateJourneys, ReviewController.getReviews);
+
+router.get('/:id', JourneyUpdater.updateJourneys, ReviewController.getOneReview);
   
 router.put('/:id', JourneyUpdater.updateJourneys, auth, ReviewController.modifyReview);
   

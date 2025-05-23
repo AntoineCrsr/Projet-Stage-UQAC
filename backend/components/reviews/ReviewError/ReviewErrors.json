@@ -74,7 +74,7 @@
     "notFound": {
         "errors": {
             "review": {
-                "code": "not found",
+                "code": "not-found",
                 "name": "L'avis n'a pas été trouvé."
             }
         }

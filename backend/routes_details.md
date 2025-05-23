@@ -339,6 +339,27 @@ Si tout est correct, renvoie 200, body vide.
 
 ### Review
 
+#### GET /api/review
+
+Renvoie un tableau de toutes les reviews, avec status 200. 
+
+Tableau vide si aucune review ne correspond à la requête.
+
+Il doit être possible de spécifier des contraintes à la requetes avec un query string (par exemple GET /api/review?reviewedId=xxx)
+
+Si un identifiant dans les contraintes est invalide, renvoyer l'erreur "400", "L'identifiant renseigné n'est pas dans un format acceptable."
+
+
+#### GET /api/review/id
+
+Renvoie la review dont l'id est celle de la requête, avec status 302. 
+
+Si la review demandée n'existe pas, renvoie 404 "not-found", "L'avis n'a pas été trouvé."
+
+Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
+
+
+
 #### POST /api/review
 
 Doit contenir les attributs "reviewedId", "punctualityRating", "securityRating", "comfortRating", "courtesyRating", "message". Dont message est facultatif.
@@ -357,6 +378,6 @@ Si l'utilisateur tente de se noter lui-même, renvoie 401 "Vous ne pouvez pas vo
 
 Si l'utilisateur a déjà donné un avis sur la personne, renvoie 401 "Vous ne pouvez pas donner plus d'un avis sur la même personne.". 
 
-Sinon, renvoie 201 avec header location.
+Sinon, renvoie 201 avec header location, et met à jour le rating du user. 
 
 // TODO: Vérification d'inscription sur tous les autres
