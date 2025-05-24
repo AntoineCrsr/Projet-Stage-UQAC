@@ -68,7 +68,7 @@ exports.deleteReview = async (reviewId, userAuthId) => {
     const authError = GeneralErrorManager.getAuthError(userAuthId)
     if (authError.hasError) return new ServiceResponse(undefined, 401, true, authError.error)
     
-    const idError = ReviewErrorManager.getIdError(reviewId)
+    const idError = GeneralErrorManager.isValidId(reviewId, "review")
     if (idError.hasError) return new ServiceResponse(undefined, 400, true, idError.error)
 
     return await ReviewSeeker.getOneReview(reviewId)
@@ -79,7 +79,7 @@ exports.deleteReview = async (reviewId, userAuthId) => {
             const permissionError = GeneralErrorManager.isUserOwnerOfObject(review.reviewerId.toString(), userAuthId)
             if (permissionError.hasError) return new ServiceResponse(undefined, 401, true, permissionError.error)
             
-            UserService.undoRating(review.reviewedId, review.punctualityRating, review.securityRating, review.comfortRating, review.courtesyRating)
+            await UserService.undoRating(review.reviewedId, review.punctualityRating, review.securityRating, review.comfortRating, review.courtesyRating)
 
             return await ReviewFactory.deleteReview(reviewId)
                 .then(() => new ServiceResponse(undefined))

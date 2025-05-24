@@ -380,4 +380,17 @@ Si l'utilisateur a déjà donné un avis sur la personne, renvoie 401 "Vous ne p
 
 Sinon, renvoie 201 avec header location, et met à jour le rating du user. 
 
+
+#### DELETE /api/review/id
+
+En cas de not found, retourner 404, "L'avis n'a pas été trouvé."
+
+Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z, A-Z, 0-9), renvoie un status 400 avec un objet d'erreur. Le nom de l'erreur doit être "bad-request", et le message "L'identifiant renseigné n'est pas dans un format acceptable.".
+
+Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si l'avis n'appartient pas à l'utilisateur, renvoie 401 unauthorized, "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
+
+Si tout est correct, renvoie 200, body vide, et annule l'impact de la review sur la notation de l'utilisateur. 
+
 // TODO: Vérification d'inscription sur tous les autres
