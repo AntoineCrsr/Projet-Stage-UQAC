@@ -43,7 +43,11 @@ exports.login = (req, res, next) => {
  * @param {Function} next 
  */
 exports.modify = (req, res, next) => {
-    userService.modifyUser(req.body.user, req.params.id, req.auth ? req.auth.userId : null, req.file, req.protocol, req.get('host'))
+    let user = req.body.user
+    if (typeof user === 'string') {
+            user = JSON.parse(user);
+    }
+    userService.modifyUser(user, req.params.id, req.auth ? req.auth.userId : null, req.file, req.protocol, req.get('host'))
         .then(service_response => service_response.buildResponse(res))
 }
 
