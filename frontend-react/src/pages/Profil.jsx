@@ -7,7 +7,6 @@ const Profil = () => {
     const [isStudent, setIsStudent] = useState(false);
     const [aboutMe, setAboutMe] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
-    const [selectedFile, setSelectedFile] = useState(null);
     const [myJourneys, setMyJourneys] = useState([]);
     const [myFinishedJourneys, setMyFinishedJourneys] = useState([]);
     const [cars, setCars] = useState([]);
@@ -45,30 +44,6 @@ const Profil = () => {
         setIsStudent(data.isStudent || false);
         setAboutMe(data.aboutMe || "");
         if (data.imageUrl) setImagePreview(data.imageUrl);
-        
-        // Validation automatique de l'email
-        // if (!data.hasVerifiedEmail) {
-        //     await fetch(`http://localhost:3000/api/auth/${userId}/emailValidation`, {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         Authorization: `Bearer ${token}`,
-        //     },
-        //     body: JSON.stringify({ user: { nonce: "000" } }),
-        //     });
-        // }
-
-        // // Validation automatique du téléphone 
-        // if (!data.hasVerifiedPhone) {
-        //     await fetch(`http://localhost:3000/api/auth/${userId}/phoneValidation`, {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         Authorization: `Bearer ${token}`,
-        //     },
-        //     body: JSON.stringify({ user: { nonce: "000" } }),
-        //     });
-        // }
 
         fetch(`http://localhost:3000/api/reservation?userId=${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -116,15 +91,6 @@ const Profil = () => {
     })
     .catch((err) => console.error("Erreur chargement profil :", err));
     }, [userId, token, navigate]);
-
-    const handleImageUpload = (e) => {    // Envoie au backend à rajouter pour enregister l'image 
-    const file = e.target.files[0];
-    if (file) setImagePreview(URL.createObjectURL(file));
-    /*if (file) {
-        setSelectedFile(file);
-        setImagePreview(URL.createObjectURL(file));
-        }*/
-    };
 
     const handleDeleteCar = async (carId) => {
     if (!window.confirm("Confirmer la suppression de ce véhicule ?")) return;
@@ -197,39 +163,6 @@ const Profil = () => {
         }
     };
 
-    // const handleSave = () => { //tests aussi avec formdata pour l'ajout d'images mais pas encore réussi donc on garde à l'ancienne pour le moment
-    //     /*const formData = new FormData();
-    //     formData.append(
-    //         "user",
-    //         JSON.stringify({
-    //             isStudent,
-    //             aboutMe,
-    //         })
-    //     );
-    //     if (selectedFile) {
-    //     formData.append("image", selectedFile);
-    //     }*/
-    //     fetch(`http://localhost:3000/api/auth/${userId}`, {
-    //         method: "PUT",
-    //         headers: {
-    //         "Content-Type": "application/json",
-    //         Authorization: `Bearer ${token}`,
-    //         },
-    //     //body: formData,
-    //     body: JSON.stringify({
-    //     user: {
-    //         isStudent,
-    //         aboutMe,
-    //     },
-    //     }),
-    //     })
-    //     .then((res) => {
-    //     if (res.ok) alert("Votre profil a été mis à jour !");
-    //     else throw new Error();
-    //     })
-    //     .catch(() => alert("Erreur lors de la mise à jour."));
-    // };
-
     const handleCancelReservation = async (reservationId) => {
     if (!window.confirm("Voulez-vous vraiment annuler cette réservation ?")) return;
 
@@ -255,8 +188,6 @@ const Profil = () => {
 
         <div className="profil-section">
         <label>Photo de profil :</label>
-        <input type="file" onChange={handleImageUpload} />
-        {/* <input type="file" accept="image/*" onChange={handleImageUpload} /> */}
         {imagePreview && (
             <img src={imagePreview} alt="profil" className="profil-image" />
         )}

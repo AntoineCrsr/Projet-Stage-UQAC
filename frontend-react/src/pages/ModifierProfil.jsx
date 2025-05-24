@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "./styles/modifierprofil.css";
 
 const ModifierProfil = () => {
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
     const [form, setForm] = useState({
         email: "",
         gender: "",
@@ -75,6 +77,9 @@ const ModifierProfil = () => {
             },
             },
         }),
+        if (selectedFile) {
+            formData.append("image", selectedFile); //pas encore fait mais il faut que je change le body envoyé en formData pour envoyer l'image avec
+          }
         })
         .then((res) => {
             if (!res.ok) throw new Error("Erreur de mise à jour");
