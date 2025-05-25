@@ -3,6 +3,9 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./theme.css";
 
+import './i18n';
+
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import LoginCompletion from "./pages/LoginCompletion";
