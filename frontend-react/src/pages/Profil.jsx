@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles/profil.css";
+import { useTranslation } from 'react-i18next';
+
+
 
 const Profil = () => {
+    const { t } = useTranslation('profil');
+
     const [user, setUser] = useState(null);
     const [isStudent, setIsStudent] = useState(false);
     const [aboutMe, setAboutMe] = useState("");
@@ -185,46 +190,46 @@ const Profil = () => {
     //Le "?" dans les recuperation des valeurs d'attributs servent à eviter des erreurs de valeurs undefined si on arrive pas à les récuperer
     return (
     <div className="profil-container">
-        <h2>Mon Profil</h2>
+        <h2>{t('title')}</h2>
 
         <div className="profil-section">
-        <label>Photo de profil :</label>
+        <label>{t('profilePicture')}</label>
         {imagePreview && (
             <img src={imagePreview} alt="profil" className="profil-image" />
         )}
         </div>
 
         <div className="profil-section">
-        <strong>Nom :</strong>{user.name?.lastName}</div> 
+        <strong>{t('lastName')} :</strong>{user.name?.lastName}</div> 
 
         <div className="profil-section">
-        <strong>Prenom :</strong>{user.name?.firstName}</div>
+        <strong>{t('firstName')}:</strong>{user.name?.firstName}</div>
         
         <div className="profil-section">
-        <strong>Nom public :</strong>{user.name?.publicName}</div>
+        <strong>{t('publicName')} :</strong>{user.name?.publicName}</div>
         
         <div className="profil-section">
         <strong>Email :</strong> {user.email}{" "}
         {user.hasVerifiedEmail ? (
-            <span title="Email vérifié">✅</span>
+            <span title={t('verified')}>✅</span>
         ) : (
-            <button onClick={handleValidateEmail}>Vérifier</button>)}
+            <button onClick={handleValidateEmail}>{t('verify')}</button>)}
         </div>
 
         <div className="profil-section">
-        <strong>Téléphone :</strong> Type {user.phone.type} : {user.phone.prefix}{user.phone.number}{" "}
+        <strong>{t('phone')}</strong> Type {user.phone.type} : {user.phone.prefix}{user.phone.number}{" "}
         {user.hasVerifiedPhone ? (
-            <span title="Téléphone vérifié">✅</span>
+            <span title={t('verified')}>✅</span>
         ) : (
-            <button onClick={handleValidatePhone}>Vérifier</button>)}
+            <button onClick={handleValidatePhone}>{t('verify')}</button>)}
         </div>
 
 
         <div className="profil-section">
-        <strong>Genre :</strong> {user.gender}</div>
+        <strong>{t('gender')} :</strong> {user.gender}</div>
         
         <div className="profil-section">
-        <strong>Date de naissance :</strong>{" "}
+        <strong>{t('birthDate')} :</strong>{" "}
         {new Date(user.dateBirthday).toLocaleDateString()}</div>
         
 
@@ -235,55 +240,55 @@ const Profil = () => {
             checked={isStudent}
             readOnly // empeche l'user de le modifier s'il n'est pas sur la page dédiée
             />
-            Je suis étudiant(e)
+            {t('student')}
         </label>
         </div>
 
         <div className="profil-section">
-        <label>À propos de moi :</label>
+        <label>{t('about')} :</label>
         <textarea
             value={aboutMe}
-            placeholder="Décrivez-vous en quelques mots"
+            placeholder={t('describe')}
             readOnly // empeche l'user de le modifier s'il n'est pas sur la page dédiée
         />
-        <button onClick={() => navigate("/modifier-profil")}>Modifier mon profil</button>
+        <button onClick={() => navigate("/modifier-profil")}>{t('editProfile')}</button>
         </div>
 
-        <h3>Moyenne des évaluations</h3>
-        <div className="profil-info"> Ponctualité : {user.rating?.punctualityRating ?? "Pas encore évalué"}/5</div>
-        <div className="profil-info"> Sécurité : {user.rating?.securityRating ?? "Pas encore évalué"}/5</div>
-        <div className="profil-info"> Confort : {user.rating?.comfortRating ?? "Pas encore évalué"}/5</div>
-        <div className="profil-info"> Courtoisie : {user.rating?.courtesyRating ?? "Pas encore évalué"}/5</div>
-        <div className="profil-info"> Nombre de votes : {user.rating?.nbRating}</div>
+        <h3>{t('ratingsTitle')}</h3>
+        <div className="profil-info"> {t('punctuality')} : {user.rating?.punctualityRating ?? "Pas encore évalué"}/5</div>
+        <div className="profil-info"> {t('security')} : {user.rating?.securityRating ?? "Pas encore évalué"}/5</div>
+        <div className="profil-info"> {t('comfort')} : {user.rating?.comfortRating ?? "Pas encore évalué"}/5</div>
+        <div className="profil-info"> {t('courtesy')} : {user.rating?.courtesyRating ?? "Pas encore évalué"}/5</div>
+        <div className="profil-info"> {t('votes')} : {user.rating?.nbRating}</div>
 
-        <h3>Avis reçus</h3>
+        <h3>{t('reviewsTitle')}</h3>
         {reviews.length === 0 ? (
-        <p>Aucun avis reçu de la part de ses précédents passagers</p>
+        <p>{t('noReviews')}</p>
         ) : (
         <div className="review-scrollable">
             {reviews.map((r, index) => (
             <div key={index} className="review-card">
-                <p><strong>Ponctualité :</strong> {r.punctualityRating}/5</p>
-                <p><strong>Sécurité :</strong> {r.securityRating}/5</p>
-                <p><strong>Confort :</strong> {r.comfortRating}/5</p>
-                <p><strong>Courtoisie :</strong> {r.courtesyRating}/5</p>
+                <p><strong>{t('punctuality')} :</strong> {r.punctualityRating}/5</p>
+                <p><strong>{t('security')} :</strong> {r.securityRating}/5</p>
+                <p><strong>{t('comfort')} :</strong> {r.comfortRating}/5</p>
+                <p><strong>{t('courtesy')} :</strong> {r.courtesyRating}/5</p>
                 {r.message && <p><em>"{r.message}"</em></p>}
             </div>
             ))}
         </div>
         )}
 
-        <h3>Statistiques</h3>
-        <div className="profil-info"> Trajets complétés : {user.statistics?.nbRidesCompleted}</div>
-        <div className="profil-info"> Personnes rencontrées : {user.statistics?.nbPeopleTravelledWith}</div>
+        <h3>{t('stats')}</h3>
+        <div className="profil-info"> {t('ridesDone')} : {user.statistics?.nbRidesCompleted}</div>
+        <div className="profil-info"> {t('peopleMet')} : {user.statistics?.nbPeopleTravelledWith}</div>
 
         <div className="profil-buttons">
-        <button onClick={() => navigate("/ajout-voiture")}>Ajouter un véhicule</button>
-        <button onClick={() => navigate("/")}>Retour à l'accueil</button>
+        <button onClick={() => navigate("/ajout-voiture")}>{t('addCar')}</button>
+        <button onClick={() => navigate("/")}>{t('backHome')}</button>
         </div>
-        <h3>Mes véhicules</h3>
+        <h3>{t('myCars')}</h3>
         {cars.length === 0 ? (
-        <p>Aucun véhicule</p>
+        <p>{t('noCars')}</p>
         ) : (
         <ul className="car-list">
         {cars.map((car) => (
@@ -292,17 +297,17 @@ const Profil = () => {
             <br />
             Type : {car.carType} | Climatisation : {car.airConditioner ? "Oui" : "Non"}
             <div className="car-actions">
-                <button onClick={() => handleEditCar(car._id)}>Modifier</button>
-                <button onClick={() => handleDeleteCar(car._id)}>Supprimer</button>
+                <button onClick={() => handleEditCar(car._id)}>{t('edit')}</button>
+                <button onClick={() => handleDeleteCar(car._id)}>{t('delete')}</button>
             </div>
             </li>
         ))}
         </ul>
         )}
 
-        <h3>Mes trajets créés</h3>
+        <h3>{t('myJourneys')}</h3>
         {myJourneys.length === 0 ? (
-        <p>Vous n'avez pas encore créé de trajet</p>
+        <p>{t('noJourney')}</p>
         ) : (
         <ul className="mes-trajets">
             {myJourneys.map(j => ( //je recupere en dictionnaire tous les trajets créés par mon user et je vais pour chaque id de trajet afficher les infos
@@ -310,16 +315,16 @@ const Profil = () => {
                 {j.starting.city} vers {j.arrival.city} le {new Date(j.date).toLocaleDateString()} à {new Date(j.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} <br />
                 {j.seats.left} places restantes sur les {j.seats.total} <br />
                 <div className="car-actions">
-                <button onClick={() => navigate(`/modifier-trajet/${j._id}`)}>Modifier</button>
-                <button onClick={() => handleDeleteJourney(j._id)}>Supprimer</button>
+                <button onClick={() => navigate(`/modifier-trajet/${j._id}`)}>{t('edit')}</button>
+                <button onClick={() => handleDeleteJourney(j._id)}>{t('delete')}</button>
                 </div>
             </li>
             ))}
         </ul>
         )}
-        <h3>Mes trajets terminés en tant que conducteur</h3>
+        <h3>{t('finishedJourneys')}</h3>
         {myFinishedJourneys.length === 0 ? (
-        <p>Aucun trajet terminé</p>
+        <p>{t('noFinished')}</p>
         ) : (
         <ul className="mes-trajets">
             {myFinishedJourneys.map(j => (
@@ -332,9 +337,9 @@ const Profil = () => {
             ))}
         </ul>
         )}
-        <h3>Mes trajets réservés</h3>
+        <h3>{t('reservedJourneys')}</h3>
         {reservedJourneys.length === 0 ? (
-        <p>Aucune réservation effectuée</p>
+        <p>{t('noReservation')}</p>
         ) : (
         <ul className="mes-trajets">
             {reservedJourneys.enCours.map(j => (
@@ -347,15 +352,15 @@ const Profil = () => {
                 {new Date(j.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 <br />
                 <div className="car-actions">
-                <button onClick={() => handleCancelReservation(j.reservationId)}>Annuler la reservation</button>
+                <button onClick={() => handleCancelReservation(j.reservationId)}>{t('cancelReservation')}</button>
             </div>
             </li>
             ))}
         </ul>
         )}
-        <h3>Mes trajets en tant que passager terminés</h3>
+        <h3>{t('finishedAsPassenger')}</h3>
         {reservedJourneys.termines.length === 0 ? (
-        <p>Aucun trajet terminé pour l’instant</p>
+        <p>{t('noFinishedPassenger')}</p>
         ) : (
         <ul className="mes-trajets">
             {reservedJourneys.termines.map(j => (
@@ -367,7 +372,7 @@ const Profil = () => {
                 {new Date(j.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 <br />
                 <div className="car-actions">
-                <button onClick={() => navigate(`/ajouter-avis/${j.ownerId}`)}>Laisser un avis au conducteur</button>
+                <button onClick={() => navigate(`/ajouter-avis/${j.ownerId}`)}>{t('leaveReview')}</button>
                 </div>
             </li>
             ))}
