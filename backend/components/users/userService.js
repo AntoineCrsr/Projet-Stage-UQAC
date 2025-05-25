@@ -123,6 +123,12 @@ exports.modifyUser = async (newUser, userId, userAuthId, reqFile, reqProtocol, r
     const report = await UserErrorManager.getConflictError(user, newUser)
     if (report.hasError) return new Service_Response(undefined, 409, true, report.error)
 
+    // Âge utilisateur
+    if (newUser != undefined && newUser.dateBirthday != undefined) {
+        const yearsOldVerif = UserErrorManager.getYearsOldVerif(newUser.dateBirthday)
+        if (yearsOldVerif.hasError) return new Service_Response(undefined, 401, true, yearsOldVerif.error)
+    }
+
     // Direction du traitement des infos
     if (reqFile !== undefined) UserFactory.modifyProfilePicture(user, reqFile, reqProtocol, reqHost)
     if (newUser != undefined) {

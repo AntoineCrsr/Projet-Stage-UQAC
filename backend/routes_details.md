@@ -88,6 +88,8 @@ Si le user n'est pas le propriétaire du compte, renvoie 401 avec code = "unauth
 
 Si l'utilisateur tente de modifier un téléphone vers un qui existe déjà, renvoie un 409 avec "Un utilisateur utilise déjà ce numéro de téléphone." et code = "conflict"
 
+Si l'utilisateur modifie la date, et que celle-ci lui donne un âge inférieur à 16 ans, renvoie 401 "Vous devez avoir au moins 16 ans pour faire un covoiturage."
+
 Si l'utilisateur tente de modifier un email vers un qui existe déjà, renvoie un 409 avec "Un utilisateur utilise déjà cette email."
 
 Quand la modification a réussi, renvoie un 200 avec un header location pointant vers l'utilisateur modifié. 
@@ -214,6 +216,8 @@ Si le prix est inférieur à zero, renvoie 400, "Le prix d'un trajet ne peut pas
 Si la voiture renseignée dans la journey n'appartient pas à l'utilisateur, renvoie 401 "unauthorized" avec "La voiture renseignée n'est pas possédée par l'utilisateur.".
 
 Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
+
+Si l'utilisateur n'a pas complété son inscription, renvoie 401, "L'utilisateur doit compléter son inscription pour effectuer cette action."
 
 Si l'API Google de Vérification d'adresse renvoie un inputGranularity ou un validationGranularity qui ne vaut pas au moins PREMISE ou SUB_PREMISE, (ou PREMISE_PROXIMITY en supplément pour inputGranularity), renvoie un 400 code = "bad-request" et name = "L'adresse renseignée est invalide ou est trop imprécise.".
 

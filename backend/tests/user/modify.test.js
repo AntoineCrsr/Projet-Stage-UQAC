@@ -163,6 +163,7 @@ describe('PUT /api/auth/id', () => {
           })
     })
 
+
     it('should return 400 bad gender', async () => {
         // Modification complète pour tester tout en même temps (sauf image)
         await request(app)
@@ -172,6 +173,18 @@ describe('PUT /api/auth/id', () => {
           .expect(400)
           .then(response => {
              expect(response.body.errors).toEqual({"user": {"code": "bad-request", "name": "Le genre fourni est invalide."}})
+          })
+    })
+
+
+    it('should return 401 too young', async () => {
+        await request(app)
+          .put('/api/auth/' + id)
+          .set('Authorization', `Bearer ${token}`)
+          .send({"user": { "dateBirthday": Date.now() }}) 
+          .expect(401)
+          .then(response => {
+             expect(response.body.errors).toEqual({"user": {"code": "unauthorized", "name": "Vous devez avoir au moins 16 ans pour faire un covoiturage."}})
           })
     })
 

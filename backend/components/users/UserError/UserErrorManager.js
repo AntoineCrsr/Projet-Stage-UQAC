@@ -251,6 +251,24 @@ exports.getUserNotFoundError = (user) => {
     return new ErrorReport(false)
 }
 
+exports.getYearsOldVerif = (dateBirth) => {
+    const birthDate = new Date(dateBirth);
+    
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() - birthDate.getDate();
+
+    // Ajuster si l'anniversaire n'est pas encore passé cette année
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+    }
+
+    if(age < 16) return new ErrorReport(true, errorTable["tooYoung"]);
+    return new ErrorReport(false)
+}
+
 exports.getConflictError = async (user, newUser) => {
     // Modification d'une image
     if (newUser == undefined) return new ErrorReport(false)
