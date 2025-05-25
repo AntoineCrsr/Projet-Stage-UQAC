@@ -304,6 +304,40 @@ describe('POST /api/journey/', () => {
     })
 
 
+    it ("should return account not verified", async () => {
+        let newbie = await UserFactory.createUser("hacker@gmail.com", "StrongPassword1234")
+        await UserFactory.modifyBirth(newbie, "2003-02-12T20:52:39.890Z")
+        await UserFactory.modifyName(newbie, "John", "Doe")
+        await UserFactory.modifyPhone(newbie, "mobile", "+1", "641369490")
+        await UserFactory.modifyGender(newbie, "femme")
+        // await UserFactory.validateNonceEmail(newbie)
+        // await UserFactory.validateNoncePhone(newbie) // Not valid email and phone
+        await newbie.save()
+
+        // Login 
+        const login = await request(app)
+            .post('/api/auth/login')
+            .send({"user": {"email": "hacker@gmail.com", "password": "StrongPassword1234"}})
+            .set('Accept', 'application/json')
+
+        let hacker_token = login.body.token
+
+        const res = await request(app)
+            .post('/api/journey')
+            .send({"journey": {"starting": {"city": "TORRONTO","address": ["1 rue Torronto"]},"carId": carId,"arrival": {"city": "MontReal","address": ["10 Rue St-Pierre"]},"date": (new Date(Date.now()+3600000)).toISOString(),"seats": {"total": 5,"left": 3},"price": 40.0}})
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${hacker_token}`)
+
+        expect(res.status).toBe(401)
+        expect(res.body.errors).toEqual({
+            "user": {
+                "code": "unauthorized",
+                "name": "L'utilisateur doit compléter son inscription pour effectuer cette action."
+            }
+        })
+    })
+
+
     it ("should return 201", async () => {
         const res = await request(app)
             .post('/api/journey')

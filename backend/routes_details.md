@@ -215,6 +215,8 @@ Si la voiture renseignée dans la journey n'appartient pas à l'utilisateur, ren
 
 Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur doit être connecté pour effectuer cette action.".
 
+Si l'utilisateur n'a pas complété son inscription, renvoie 401, "L'utilisateur doit compléter son inscription pour effectuer cette action."
+
 Si l'API Google de Vérification d'adresse renvoie un inputGranularity ou un validationGranularity qui ne vaut pas au moins PREMISE ou SUB_PREMISE, (ou PREMISE_PROXIMITY en supplément pour inputGranularity), renvoie un 400 code = "bad-request" et name = "L'adresse renseignée est invalide ou est trop imprécise.".
 
 Si la province d'une des deux adresses renseignées n'est pas au Québec, renvoie 400, "Le covoiturage doit avoir lieu au Québec.".
