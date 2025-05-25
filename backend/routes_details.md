@@ -88,6 +88,8 @@ Si le user n'est pas le propriétaire du compte, renvoie 401 avec code = "unauth
 
 Si l'utilisateur tente de modifier un téléphone vers un qui existe déjà, renvoie un 409 avec "Un utilisateur utilise déjà ce numéro de téléphone." et code = "conflict"
 
+Si l'utilisateur modifie la date, et que celle-ci lui donne un âge inférieur à 16 ans, renvoie 401 "Vous devez avoir au moins 16 ans pour faire un covoiturage."
+
 Si l'utilisateur tente de modifier un email vers un qui existe déjà, renvoie un 409 avec "Un utilisateur utilise déjà cette email."
 
 Quand la modification a réussi, renvoie un 200 avec un header location pointant vers l'utilisateur modifié. 

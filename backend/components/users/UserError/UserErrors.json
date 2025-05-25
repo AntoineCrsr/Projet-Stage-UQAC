@@ -15,6 +15,14 @@
             }
         }
     },
+    "tooYoung": {
+        "errors": {
+            "user": {
+                "code": "unauthorized",
+                "name": "Vous devez avoir au moins 16 ans pour faire un covoiturage."
+            }
+        }
+    },
     "badId": {
         "errors": {
             "user": {
