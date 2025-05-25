@@ -3,7 +3,13 @@ import "./styles/header.css";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/logo_2.png"; 
 
+import frFlag from "../../src/assets/flags/fr.png";
+import enFlag from "../../src/assets/flags/en.png";
+import { useTranslation } from "react-i18next";
+
 const Header = () => {
+  const { t, i18n } = useTranslation("header");
+
   const [theme, setTheme] = useState("light");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
@@ -58,6 +64,12 @@ const Header = () => {
     navigate("/profil");
   };
 
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+  };
+
+  const currentLang = i18n.language;
+
   return (
     <header className="header">
       <Link to="/">
@@ -88,16 +100,26 @@ const Header = () => {
             {user?.name?.publicName || "Profil"}
           </span>
           <button className="profil-button" onClick={handleProfile}>
-            Profil
+          {t('profile')}
           </button>
           <button className="login-header" onClick={handleLogout}>
-            Se déconnecter
+          {t('logout')}
           </button>
         </>
       ) : (
         <button className="login-header" onClick={handleLoginClick}>
-          Se connecter
+          {t('login')}
         </button>
+      )}
+
+        {currentLang === "fr" ? (
+          <button onClick={() => changeLanguage("en")} className="lang-btn">
+              <img src={enFlag} alt="English" style={{ width: "30px" }} />
+          </button>
+          ) : (
+          <button onClick={() => changeLanguage("fr")} className="lang-btn">
+              <img src={frFlag} alt="Français" style={{ width: "30px" }} />
+          </button>
       )}
     </header>
   );
