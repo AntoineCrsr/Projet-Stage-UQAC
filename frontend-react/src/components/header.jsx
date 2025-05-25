@@ -8,9 +8,6 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
-  const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("userId");
-
   const navigate = useNavigate();
 
   useEffect(() => {
