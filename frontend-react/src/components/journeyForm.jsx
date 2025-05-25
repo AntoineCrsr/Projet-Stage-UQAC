@@ -32,6 +32,12 @@ const JourneyForm = () => {
     fetchSuggestions(value, setSuggestionsArrivee);
   };
 
+  const handleSwap = () => {
+    const tmp = depart;
+    setDepart(arrivee);
+    setArrivee(tmp);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!depart || !arrivee) {
@@ -67,7 +73,9 @@ const JourneyForm = () => {
           )}
         </div>
 
-        <span className="arrow">➤</span>
+        <button type="button" className="swap-button" onClick={handleSwap} title="Inverser les villes">
+          ⇄
+        </button>
 
         <div className="input-container">
           <input
