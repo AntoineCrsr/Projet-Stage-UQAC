@@ -182,6 +182,7 @@ const Profil = () => {
 
     if (!user) return <p>Chargement</p>;
 
+    //Le "?" dans les recuperation des valeurs d'attributs servent à eviter des erreurs de valeurs undefined si on arrive pas à les récuperer
     return (
     <div className="profil-container">
         <h2>Mon Profil</h2>
@@ -194,7 +195,7 @@ const Profil = () => {
         </div>
 
         <div className="profil-section">
-        <strong>Nom :</strong>{user.name?.lastName}</div>
+        <strong>Nom :</strong>{user.name?.lastName}</div> 
 
         <div className="profil-section">
         <strong>Prenom :</strong>{user.name?.firstName}</div>
@@ -232,8 +233,7 @@ const Profil = () => {
             <input
             type="checkbox"
             checked={isStudent}
-            readOnly
-            // onChange={(e) => setIsStudent(e.target.checked)}
+            readOnly // empeche l'user de le modifier s'il n'est pas sur la page dédiée
             />
             Je suis étudiant(e)
         </label>
@@ -243,9 +243,8 @@ const Profil = () => {
         <label>À propos de moi :</label>
         <textarea
             value={aboutMe}
-            // onChange={(e) => setAboutMe(e.target.value)}
             placeholder="Décrivez-vous en quelques mots"
-            readOnly
+            readOnly // empeche l'user de le modifier s'il n'est pas sur la page dédiée
         />
         <button onClick={() => navigate("/modifier-profil")}>Modifier mon profil</button>
         </div>
@@ -279,7 +278,6 @@ const Profil = () => {
         <div className="profil-info"> Personnes rencontrées : {user.statistics?.nbPeopleTravelledWith}</div>
 
         <div className="profil-buttons">
-        {/* <button onClick={handleSave}>Enregistrer</button> */}
         <button onClick={() => navigate("/ajout-voiture")}>Ajouter un véhicule</button>
         <button onClick={() => navigate("/")}>Retour à l'accueil</button>
         </div>

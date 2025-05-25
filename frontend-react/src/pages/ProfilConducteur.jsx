@@ -31,7 +31,6 @@ const ProfilConducteur = () => {
             style={{ width: "100px", height: "100px", borderRadius: "50%" }}
         />
 
-        {/*driver.imageUrl && <img src={driver.imageUrl} alt="profil" className="profil-image" />*/}
         <p><strong>Nom :</strong> {driver.name.lastName}</p>
         <p><strong>Prénom :</strong> {driver.name.firstName}</p>
 
