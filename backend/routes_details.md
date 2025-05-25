@@ -396,5 +396,3 @@ Si l'utilisateur n'est pas connecté, renvoie 401 unauthorized, "L'utilisateur d
 Si l'avis n'appartient pas à l'utilisateur, renvoie 401 unauthorized, "Vous n'êtes pas autorisé à éditer un objet dont vous n'êtes pas le propriétaire."
 
 Si tout est correct, renvoie 200, body vide, et annule l'impact de la review sur la notation de l'utilisateur. 
-
-// TODO: Vérification d'inscription sur tous les autres
