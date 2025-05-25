@@ -24,6 +24,13 @@ const ProfilConducteur = () => {
         <div className="profil-container">
         
         <h2>Profil du conducteur</h2>
+        <img
+            src={driver.imageUrl}
+            alt="Photo du conducteur"
+            className="driver-profile-image"
+            style={{ width: "100px", height: "100px", borderRadius: "50%" }}
+        />
+
         {/*driver.imageUrl && <img src={driver.imageUrl} alt="profil" className="profil-image" />*/}
         <p><strong>Nom :</strong> {driver.name.lastName}</p>
         <p><strong>Prénom :</strong> {driver.name.firstName}</p>
