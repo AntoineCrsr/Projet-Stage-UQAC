@@ -53,14 +53,8 @@ const ModifierProfil = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch(`http://localhost:3000/api/auth/${userId}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-            user: {
+        const formData = new FormData();
+        const userData = {
             email: form.email,
             gender: form.gender,
             isStudent: form.isStudent,
@@ -75,23 +69,44 @@ const ModifierProfil = () => {
                 prefix: form.phonePrefix,
                 number: form.phoneNumber,
             },
+            };
+        
+            formData.append("user", JSON.stringify(userData));
+            if (selectedFile) {
+            formData.append("image", selectedFile);
+            }
+        
+            fetch(`http://localhost:3000/api/auth/${userId}`, {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${token}`,
             },
-        }),
-        if (selectedFile) {
-            formData.append("image", selectedFile); //pas encore fait mais il faut que je change le body envoyé en formData pour envoyer l'image avec
-          }
-        })
-        .then((res) => {
-            if (!res.ok) throw new Error("Erreur de mise à jour");
-            alert("Profil mis à jour !");
-            navigate("/profil");
-        })
-        .catch(() => alert("Erreur lors de la mise à jour"));
-    };
+            body: formData,
+            })
+            .then((res) => {
+                if (!res.ok) throw new Error("Erreur de mise à jour");
+                alert("Profil mis à jour !");
+                navigate("/profil");
+            })
+            .catch(() => alert("Erreur lors de la mise à jour"));
+        };
 
     return (
     <div className="modifier-profil-container">
         <h2>Modifier mes informations</h2>
+
+        <label>Photo de profil :</label>
+        <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+            const file = e.target.files[0];
+            setSelectedFile(file);
+            setImagePreview(URL.createObjectURL(file));
+            }}
+        />
+        {imagePreview && <img src={imagePreview} alt="Prévisualisation" style={{ width: "120px", margin: "10px 0" }} />}
+
         <form onSubmit={handleSubmit} className="modifier-profil-form">
         Type de téléphone :
         <select name="phoneType" value={form.phoneType} onChange={handleChange} required>
