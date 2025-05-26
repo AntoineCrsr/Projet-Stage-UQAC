@@ -1,0 +1,10 @@
+{
+    "title": "Leave a review",
+    "punctuality": "Punctuality:",
+    "security": "Safety:",
+    "comfort": "Comfort:",
+    "courtesy": "Courtesy:",
+    "message": "Comment:",
+    "placeholder": "Your message (optional)",
+    "submit": "Submit review"
+}
