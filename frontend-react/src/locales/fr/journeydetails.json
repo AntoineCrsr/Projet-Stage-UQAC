@@ -1,0 +1,12 @@
+{
+    "back": "← Retour",
+    "title": "Détails du trajet",
+    "publishedBy": "Annonce publiée par :",
+    "departure": "Départ :",
+    "arrival": "Arrivée :",
+    "date": "Date :",
+    "seats": "Place(s) déjà occupée(s) :",
+    "price": "Prix :",
+    "viewDriver": "Voir le profil du conducteur",
+    "book": "Réserver ce trajet"
+}

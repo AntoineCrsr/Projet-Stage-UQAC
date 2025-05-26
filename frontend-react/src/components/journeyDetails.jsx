@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./styles/journeyDetails.css";
 
+import { useTranslation } from "react-i18next";
+
 const JourneyDetails = () => {
+    const { t } = useTranslation("journeydetails");
+
     const { id } = useParams();
     const navigate = useNavigate();
     const [journey, setJourney] = useState(null);
@@ -76,23 +80,23 @@ useEffect(() => {
     <div className="journey-container">
       {/* bouton retour */}
         <button className="btn-back" onClick={() => navigate(-1)}>
-        ← Retour
+        {t("back")}
         </button>
     <div className="journey-content">
         {/* colonne gauche : infos */}
         <div className="journey-infos">
-            <h2>Détails du trajet</h2>
-            <p><strong>Annonce publiée par :</strong> {ownerPublicName}</p>
-            <p><strong>Départ :</strong> {journey.starting.address}</p>
-            <p><strong>Arrivée :</strong> {journey.arrival.address}</p>
-            <p><strong>Date :</strong> {format}</p>
-            <p><strong>Place(s) déjà occupée(s) :</strong> {journey.seats.total - journey.seats.left} / {journey.seats.total}</p>
-            <p><strong>Prix :</strong> {journey.price} $ CAD</p>
+            <h2>{t("title")}</h2>
+            <p><strong>{t("publishedBy")}</strong> {ownerPublicName}</p>
+            <p><strong>{t("departure")}</strong> {journey.starting.address}</p>
+            <p><strong>{t("arrival")}</strong> {journey.arrival.address}</p>
+            <p><strong>{t("date")}</strong> {format}</p>
+            <p><strong>{t("seats")}</strong> {journey.seats.total - journey.seats.left} / {journey.seats.total}</p>
+            <p><strong>{t("price")}</strong> {journey.price} $ CAD</p>
         </div>
         {!isCreator && (
         <button className="btn-conducteur-profile"
         onClick={() => navigate(`/profilconducteur/${journey.ownerId}`)}>
-            Voir le profil du conducteur
+            {t("viewDriver")}
         </button>
         )}
 
@@ -105,7 +109,7 @@ useEffect(() => {
     {/* bouton pour reserver */}
     {!isCreator && (
     <button className="btn-reserver" onClick={handleReservation}>
-        Réserver ce trajet
+        {t("book")}
     </button>
     )}
     </div>

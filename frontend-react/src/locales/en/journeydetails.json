@@ -1,0 +1,12 @@
+{
+    "back": "← Back",
+    "title": "Trip Details",
+    "publishedBy": "Posted by:",
+    "departure": "Departure:",
+    "arrival": "Arrival:",
+    "date": "Date:",
+    "seats": "Seat(s) already taken:",
+    "price": "Price:",
+    "viewDriver": "View driver's profile",
+    "book": "Book this trip"
+}
