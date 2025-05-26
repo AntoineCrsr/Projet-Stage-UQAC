@@ -3,7 +3,7 @@
     "noJourney": "Aucun trajet disponible.",
     "departure": "Départ",
     "arrival": "Arrivée",
-    "date": "Date",
+    "date": "Date JJ/MM/AAAA",
     "seats": "Place(s) restante(s)",
     "price": "Prix",
     "details": "Détails/Réservation",

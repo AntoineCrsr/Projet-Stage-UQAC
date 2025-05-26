@@ -3,7 +3,7 @@
     "noJourney": "No trips available.",
     "departure": "Departure",
     "arrival": "Arrival",
-    "date": "Date",
+    "date": "Date DD/MM/YYYY",
     "seats": "Remaining seat(s)",
     "price": "Price",
     "details": "Details/Booking",
