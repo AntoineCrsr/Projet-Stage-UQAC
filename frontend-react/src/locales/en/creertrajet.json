@@ -1,0 +1,16 @@
+{
+    "title": "Create a journey",
+    "modify": "Edit a journey",
+    "vehicle": "Vehicle",
+    "vehiclePlaceholder": "Select your vehicle",
+    "startingCity": "Departure city",
+    "startingAddress": "Departure address",
+    "arrivalCity": "Arrival city",
+    "arrivalAddress": "Arrival address",
+    "departureDateTime": "Departure date and time",
+    "totalSeats": "Total seats in vehicle",
+    "availableSeats": "Available seats for the journey",
+    "price": "Price (in $ CAD)",
+    "create": "Create journey",
+    "edit": "Edit journey"
+}

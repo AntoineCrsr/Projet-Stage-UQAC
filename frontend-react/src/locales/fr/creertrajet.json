@@ -1,0 +1,16 @@
+{
+    "title": "Créer un trajet",
+    "modify": "Modifier un trajet",
+    "vehicle": "Véhicule",
+    "vehiclePlaceholder": "Choisir votre véhicule",
+    "startingCity": "Ville de départ",
+    "startingAddress": "Adresse de départ",
+    "arrivalCity": "Ville d’arrivée",
+    "arrivalAddress": "Adresse d’arrivée",
+    "departureDateTime": "Date de départ et horaire",
+    "totalSeats": "Places totales du véhicule",
+    "availableSeats": "Places disponibles pour le trajet",
+    "price": "Prix (en $ CAD)",
+    "create": "Créer le trajet",
+    "edit": "Modifier le trajet"
+}
