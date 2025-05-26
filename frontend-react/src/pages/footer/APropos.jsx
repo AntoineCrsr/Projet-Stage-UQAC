@@ -1,5 +1,5 @@
 import React from "react";
-import "./styles/pages-info.css";
+import "../styles/pages-info.css";
 
 const APropos = () => {
     return (

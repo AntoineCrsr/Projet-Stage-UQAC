@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./styles/pages-info.css";
+import "../styles/pages-info.css";
 
 const NousContacter = () => {
     return (
