@@ -11,5 +11,7 @@
     "creator": "Your trip details",
     "reserved": "Already booked",
     "full": "Trip full",
-    "book": "details/book"
+    "book": "details/book",
+    "results": "Results for",
+    "noResults": "No journey found..."
 }
