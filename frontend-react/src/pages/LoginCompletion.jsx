@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles/login.css";
 
+import { useTranslation } from "react-i18next";
+
 const LoginCompletion = () => {
+  const { t } = useTranslation("login");
+
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [gender, setGender] = useState("");
@@ -63,7 +67,7 @@ const LoginCompletion = () => {
       }
 
       if (res.status === 401) {
-        setError("Non autorisé. Veuillez vous reconnecter");
+        setError("Non autorisé, vous devez avoir au moins 16 ans");
         return;
       }
 
@@ -88,36 +92,36 @@ const LoginCompletion = () => {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2>Complétez votre profil</h2>
+        <h2>{t("completeProfile")}</h2>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label>Prénom</label>
+            <label>{t("firstName")}</label>
             <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
           </div>
 
           <div className="input-group">
-            <label>Nom</label>
+            <label>{t("lastName")}</label>
             <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
           </div>
 
           <div className="input-group">
-            <label>Genre</label>
+            <label>{t("gender")}</label>
             <select value={gender} onChange={(e) => setGender(e.target.value)}>
-              <option value="">-- Choisir --</option>
-              <option value="homme">Homme</option>
-              <option value="femme">Femme</option>
-              <option value="autre">Autre</option>
+              <option value="">{t("selectGender")}</option>
+              <option value="homme">{t("male")}</option>
+              <option value="femme">{t("female")}</option>
+              <option value="autre">{t("other")}</option>
             </select>
           </div>
 
           <div className="input-group">
-            <label>Date de naissance</label>
+            <label>{t("birthDate")}</label>
             <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
           </div>
 
           <div className="input-group">
 
-            <label>Numéro de téléphone</label>
+            <label>{t("firstName")}</label>
             <div style={{ display: "flex", gap: "10px" }}>
               <select
                 value={phonePrefix}
@@ -129,7 +133,7 @@ const LoginCompletion = () => {
 
               <input
                 type="tel"
-                placeholder="Numéro"
+                placeholder={t("phoneNumber")}
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
               />
@@ -139,12 +143,12 @@ const LoginCompletion = () => {
                 onChange={(e) => setPhoneType(e.target.value)}
               >
                 <option value="mobile">Mobile</option>
-                <option value="fixe">Fixe</option>
-                <option value="pro">Pro</option>
+                <option value="fixe">{t("landline")}</option>
+                <option value="pro">{t("work")}</option>
               </select>
             </div>
           </div>
-          <button className="form" type="submit">Valider</button>
+          <button className="form" type="submit">{t("submitCompletion")}</button>
         </form>
 
         {error && <p className="error">{error}</p>}
