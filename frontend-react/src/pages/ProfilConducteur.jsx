@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { useTranslation } from 'react-i18next';
+
 const ProfilConducteur = () => {
+    const { t } = useTranslation('profil');
+    
     const { id } = useParams();
     const [driver, setDriver] = useState(null);
     const [reviews, setReviews] = useState([]);
@@ -23,7 +27,7 @@ const ProfilConducteur = () => {
     return (
         <div className="profil-container">
         
-        <h2>Profil du conducteur</h2>
+        <h2>{t('driverProfile')}</h2>
         <img
             src={driver.imageUrl}
             alt="Photo du conducteur"
@@ -31,22 +35,22 @@ const ProfilConducteur = () => {
             style={{ width: "100px", height: "100px", borderRadius: "50%" }}
         />
 
-        <p><strong>Nom :</strong> {driver.name.lastName}</p>
-        <p><strong>Prénom :</strong> {driver.name.firstName}</p>
+        <p><strong>{t('lastName')}</strong> {driver.name.lastName}</p>
+        <p><strong>{t('firstName')}</strong> {driver.name.firstName}</p>
 
-        <h3>Nombre de trajets déjà effectués :</h3>
-        <p>Trajets : {driver.statistics.nbRidesCompleted}</p>
+        <h3>{t('ridesDone')}</h3>
+        <p>{driver.statistics.nbRidesCompleted}</p>
 
-        <h3>Moyenne des évaluations</h3>
-        <p>Ponctualité : {driver.rating.punctualityRating ?? "Pas encore évalué"}/5</p>
-        <p>Sécurité : {driver.rating.securityRating ?? "Pas encore évalué"}/5</p>
-        <p>Confort : {driver.rating.comfortRating ?? "Pas encore évalué"}/5</p>
-        <p>Courtoisie : {driver.rating.courtesyRating ?? "Pas encore évalué"}/5</p>
+        <h3>{t('ratingsTitle')}</h3>
+        <p>{t('punctuality')} : {driver.rating.punctualityRating ?? t('noValues')}/5</p>
+        <p>{t('security')} : {driver.rating.securityRating ?? t('noValues')}/5</p>
+        <p>{t('comfort')} : {driver.rating.comfortRating ?? t('noValues')}/5</p>
+        <p>{t('courtesy')} : {driver.rating.courtesyRating ?? t('noValues')}/5</p>
 
-        <h3>Avis des passagers</h3>
+        <h3>{t('reviewsTitle')}</h3>
         <div style={{ maxHeight: "200px", overflowY: "scroll", border: "1px solid #ccc", padding: "1rem" }}>
             {reviews.length === 0 ? (
-            <p>Aucun avis disponible</p>
+            <p>{t('noReviews')}</p>
             ) : (
             reviews.map((rev, index) => (
                 <div key={index} className="review-item">
