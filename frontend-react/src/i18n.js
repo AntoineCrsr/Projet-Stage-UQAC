@@ -14,6 +14,8 @@ import creertrajet_fr from './locales/fr/creertrajet.json';
 import login_fr from './locales/fr/login.json';
 import apropos_fr from './locales/fr/apropos.json';
 import faq_fr from './locales/fr/faq.json';
+import equipe_fr from './locales/fr/equipe.json';
+
 
 import profil_en from './locales/en/profil.json';
 import header_en from './locales/en/header.json';
@@ -27,6 +29,7 @@ import creertrajet_en from './locales/en/creertrajet.json';
 import login_en from './locales/en/login.json';
 import apropos_en from './locales/en/apropos.json';
 import faq_en from './locales/en/faq.json';
+import equipe_en from './locales/en/equipe.json';
 
 const resources = {
     fr: {
@@ -42,6 +45,7 @@ const resources = {
         login : login_fr,
         apropos : apropos_fr,
         faq : faq_fr,
+        equipe: equipe_fr,
         },
     en: {
         profil: profil_en,
@@ -56,6 +60,7 @@ const resources = {
         login : login_en,
         apropos : apropos_en,
         faq : faq_en,
+        equipe: equipe_en,
     }
     };
 

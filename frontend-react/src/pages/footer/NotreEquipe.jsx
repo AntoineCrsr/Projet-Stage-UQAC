@@ -1,18 +1,19 @@
 import React from "react";
 import "../styles/pages-info.css";
 
+import { useTranslation } from 'react-i18next';
 
 const NotreEquipe = () => {
+    const { t } = useTranslation('equipe');
     return (
         <div className="notre-equipe">
-        <h1>Notre Equipe pour ce projet</h1>
+        <h1>{t('title')}</h1>
         <p>
-            Sur ce projet, nous sommes seulement 2 étudiants à travailler et découvrons au fûr et à mesure du projet les technologies 
-            qu'on utilise.
+        {t('paragraph1')}
         </p>
 
         <p>
-            Vous pourrez trouver dans le footer des logos qui vous permettrons de nous retrouver sur LinkedIn et sur Github.
+        {t('paragraph2')}
         </p>
         </div>
     );
