@@ -114,11 +114,11 @@ const Header = () => {
 
         {currentLang === "fr" ? (
           <button onClick={() => changeLanguage("en")} className="lang-btn">
-              <img src={enFlag} alt="English" style={{ width: "30px" }} />
+              <img src={enFlag} alt="English"/>
           </button>
           ) : (
           <button onClick={() => changeLanguage("fr")} className="lang-btn">
-              <img src={frFlag} alt="Français" style={{ width: "30px" }} />
+              <img src={frFlag} alt="Français" />
           </button>
       )}
     </header>
