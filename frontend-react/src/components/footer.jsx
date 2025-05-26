@@ -2,50 +2,46 @@ import "./styles/footer.css";
 import { FaGithub, FaLinkedin} from "react-icons/fa";
 import { Link } from "react-router-dom";
 
+import { useTranslation } from "react-i18next";
+
 const Footer = () => {
+  const { t } = useTranslation("footer");
+
   return (
     <footer className="footer-container">
       <div className="footer-divider"></div>
 
       <div className="footer-wrapper">
-        {/* Trois colonnes pour les futurs liens */}
         <div className="footer-columns">
           <div className="footer-column">
             <ul>
-              <li><b>Notre projet : </b></li>
-              <li><Link to="/a-propos">À propos du projet</Link></li>
-              <li><Link to="notre-equipe">Notre équipe </Link></li>
-              <li><Link to="/nous-contacter">Nous contacter</Link></li>
+              <li><b><u>{t("project.title")}</u></b></li>
+              <li><Link to="/a-propos">{t("project.about")}</Link></li>
+              <li><Link to="notre-equipe">{t("project.team")}</Link></li>
+              <li><Link to="/nous-contacter">{t("project.contact")}</Link></li>
             </ul>
           </div>
           <div className="footer-column">
             <ul>
-              <li><b>Accès rapides : </b></li>
-              <li><Link to="/creer-trajet">Créer un trajet</Link></li>
-              <li><Link to="/">Rechercher un trajet</Link></li>
-              <li><Link to="/profil">Mes réservations</Link></li>
-              <li><Link to="/profil">Mes véhicules</Link></li>
-              <li><Link to="/faq">Foire aux questions (FAQ)</Link></li>
+              <li><b><u>{t("shortcuts.title")}</u></b></li>
+              <li><Link to="/creer-trajet">{t("shortcuts.create")}</Link></li>
+              <li><Link to="/">{t("shortcuts.search")}</Link></li>
+              <li><Link to="/profil">{t("shortcuts.reservations")}</Link></li>
+              <li><Link to="/profil">{t("shortcuts.cars")}</Link></li>
+              <li><Link to="/faq">{t("shortcuts.faq")}</Link></li>
             </ul>
           </div>
           <div className="footer-column">
             <ul>
-              <li><b>Informations importantes : </b></li>
-              <li><a href="#">Conditions générales d’utilisation</a></li>
-              <li><a href="#">Politique de confidentialité</a></li>
-              <li><a href="#">Mentions légales</a></li>
-              <li><a href="#">Signaler un problème</a></li>
+              <li><b><u>{t("legal.title")}</u></b></li>
+              <li><a href="#">{t("legal.terms")}</a></li>
+              <li><a href="#">{t("legal.privacy")}</a></li>
+              <li><a href="#">{t("legal.legalNotice")}</a></li>
+              <li><a href="#">{t("legal.report")}</a></li>
             </ul>
           </div>
         </div>
 
-        {/* Logos de réseaux sociaux à rajouter encore (est ce qu'on créé les reseaux aussi ?)*/}
-        {/* <div className="footer-logos">
-          <div className="footer-logo">Logo1</div>
-          <div className="footer-logo">Logo2</div>
-          <div className="footer-logo">Logo3</div>
-          <div className="footer-logo">Logo4</div>
-        </div> */}
         <div className="footer-logos">
         <a href="https://github.com/AntoineCrsr" target="_blank" rel="noopener noreferrer">
           <FaGithub size={40} />
@@ -62,9 +58,8 @@ const Footer = () => {
       </div>
       </div>
 
-      {/*ligne de base pour les droits d'auteur (je sais pas si c'est vraiment utile mais c'est good :) */}
       <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} Travel Express - Tous droits réservés à Crauser Antoine et Jost Victor</p>
+        <p>&copy; {new Date().getFullYear()} Travel Express - {t("copyright")}</p>
       </div>
     </footer>
   );

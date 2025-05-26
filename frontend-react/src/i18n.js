@@ -7,12 +7,14 @@ import header_fr from './locales/fr/header.json';
 import journeyform_fr from './locales/fr/journeyform.json';
 import journeylist_fr from './locales/fr/journeylist.json';
 import journeydetails_fr from './locales/fr/journeydetails.json';
+import footer_fr from './locales/fr/footer.json';
 
 import profil_en from './locales/en/profil.json';
 import header_en from './locales/en/header.json';
 import journeyform_en from './locales/en/journeyform.json';
 import journeylist_en from './locales/en/journeylist.json';
 import journeydetails_en from './locales/en/journeydetails.json';
+import footer_en from './locales/en/footer.json';
 
 const resources = {
     fr: {
@@ -20,14 +22,16 @@ const resources = {
         header: header_fr,
         journeyform : journeyform_fr,
         journeylist : journeylist_fr,
-        journeydetails : journeydetails_fr
+        journeydetails : journeydetails_fr,
+        footer : footer_fr
         },
     en: {
         profil: profil_en,
         header: header_en,
         journeyform : journeyform_en,
         journeylist : journeylist_en,
-        journeydetails : journeydetails_en
+        journeydetails : journeydetails_en,
+        footer : footer_en
     }
     };
 
