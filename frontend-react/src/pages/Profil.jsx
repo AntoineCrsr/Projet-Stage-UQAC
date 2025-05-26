@@ -293,9 +293,9 @@ const Profil = () => {
         <ul className="car-list">
         {cars.map((car) => (
             <li key={car._id} className="car-item">
-            Marque : {car.manufacturer} | Modele : {car.model} | Année : ({car.year}) | Couleur : {car.color}
+            {t('brand')} : {car.manufacturer} | {t('model')} : {car.model} | {t('year')} : ({car.year}) | {t('color')} : {car.color}
             <br />
-            Type : {car.carType} | Climatisation : {car.airConditioner ? "Oui" : "Non"}
+            Type : {car.carType} | {t('air')} : {car.airConditioner ? t('yes') : t('no')}
             <div className="car-actions">
                 <button onClick={() => handleEditCar(car._id)}>{t('edit')}</button>
                 <button onClick={() => handleDeleteCar(car._id)}>{t('delete')}</button>
@@ -312,8 +312,8 @@ const Profil = () => {
         <ul className="mes-trajets">
             {myJourneys.map(j => ( //je recupere en dictionnaire tous les trajets créés par mon user et je vais pour chaque id de trajet afficher les infos
             <li key={j._id}> 
-                {j.starting.city} vers {j.arrival.city} le {new Date(j.date).toLocaleDateString()} à {new Date(j.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} <br />
-                {j.seats.left} places restantes sur les {j.seats.total} <br />
+                {j.starting.city} {t('towards')} {j.arrival.city} {t('the')} {new Date(j.date).toLocaleDateString()} à {new Date(j.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} <br />
+                {j.seats.left} {t('remaining')} {j.seats.total} <br />
                 <div className="car-actions">
                 <button onClick={() => navigate(`/modifier-trajet/${j._id}`)}>{t('edit')}</button>
                 <button onClick={() => handleDeleteJourney(j._id)}>{t('delete')}</button>
@@ -329,10 +329,10 @@ const Profil = () => {
         <ul className="mes-trajets">
             {myFinishedJourneys.map(j => (
             <li key={j._id}>
-                {j.starting.city} vers {j.arrival.city} le{" "}
+                {j.starting.city} {t('towards')} {j.arrival.city} {t('the')}{" "}
                 {new Date(j.date).toLocaleDateString()} à{" "}
                 {new Date(j.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}<br />
-                {j.seats.total - j.seats.left} passagers 
+                {j.seats.total - j.seats.left} {t('passengers')} 
             </li>
             ))}
         </ul>
@@ -345,9 +345,9 @@ const Profil = () => {
             {reservedJourneys.enCours.map(j => (
             <li key={j._id}>
                 {j.starting.city} → {j.arrival.city} <br />
-                Adresse de départ : {j.starting.address}<br />
-                Adresse d'arrivée : {j.arrival.address}<br />
-                le{" "}
+                {t('departure')} : {j.starting.address}<br />
+                {t('arrival')} : {j.arrival.address}<br />
+                date : {" "}
                 {new Date(j.date).toLocaleDateString()} à{" "}
                 {new Date(j.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 <br />
@@ -366,9 +366,9 @@ const Profil = () => {
             {reservedJourneys.termines.map(j => (
             <li key={j._id}>
                 {j.starting.city} → {j.arrival.city}<br />
-                Adresse de départ : {j.starting.address}<br />
-                Adresse d'arrivée : {j.arrival.address}<br />
-                le {new Date(j.date).toLocaleDateString()} à{" "}
+                {t('departure')} : {j.starting.address}<br />
+                {t('arrival')} : {j.arrival.address}<br />
+                date : {new Date(j.date).toLocaleDateString()} à{" "}
                 {new Date(j.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 <br />
                 <div className="car-actions">

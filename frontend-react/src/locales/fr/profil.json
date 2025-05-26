@@ -20,7 +20,7 @@
     "courtesy": "Courtoisie",
     "votes": "Nombre de votes",
     "reviewsTitle": "Avis reçus",
-    "noReviews": "Aucun avis reçu de la part de ses précédents passagers",
+    "noReviews": "Aucun avis reçu de la part des précédents passagers",
     "stats": "Statistiques",
     "ridesDone": "Trajets complétés",
     "peopleMet": "Personnes rencontrées",
@@ -39,5 +39,24 @@
     "cancelReservation": "Annuler la réservation",
     "finishedAsPassenger": "Mes trajets en tant que passager terminés",
     "noFinishedPassenger": "Aucun trajet terminé pour l’instant",
-    "leaveReview": "Laisser un avis au conducteur"
+    "leaveReview": "Laisser un avis au conducteur",
+
+    "driverProfile" : "Profil du conducteur",
+    "noValues" : "Pas encore évalué",
+
+    "passengers": "passengers",
+    "departure": "Adresse de départ",
+    "arrival": "Adresse d'arrivée",
+    "to": "vers",
+    "the" : "le",
+    "remaining": "places restantes sur les",
+
+    "brand": "Marque",
+    "model": "Modele",
+    "year": "Année",
+    "color": "Couleur",
+    "air": "Climatisation",
+
+    "yes": "Oui",
+    "no": "Non"
 }

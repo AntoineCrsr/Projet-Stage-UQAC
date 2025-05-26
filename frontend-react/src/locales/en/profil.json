@@ -39,5 +39,24 @@
     "cancelReservation": "Cancel reservation",
     "finishedAsPassenger": "My completed journeys as passenger",
     "noFinishedPassenger": "No completed journey yet",
-    "leaveReview": "Leave a review for the driver"
+    "leaveReview": "Leave a review for the driver",
+
+    "driverProfile": "Driver's profile",
+    "noValues": "No ratings yet",
+
+    "passengers": "passengers",
+    "departure": "Starting Address",
+    "arrival": "Arrival Address",
+    "to": "to",
+    "the" : "on the",
+    "remaining": "seats remaining over the",
+
+    "brand": "Brand",
+    "model": "Model",
+    "year": "Year",
+    "color": "color",
+    "air": "Air Conditioning",
+
+    "yes": "Yes",
+    "no": "No"
 }
