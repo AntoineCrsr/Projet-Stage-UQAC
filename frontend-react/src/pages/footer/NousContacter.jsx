@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import "../styles/pages-info.css";
 
+import { useTranslation } from 'react-i18next';
+
 const NousContacter = () => {
+    const { t } = useTranslation('contacter');
     return (
         <div className="nous-contacter">
-            <h2>Nous contacter</h2>
+            <h2>{t('title')}</h2>
             <p>
-                Une question, une suggestion, ou besoin d’aide ? Vous pouvez nous
-                contacter directement sur nos profils LinkedIn :
+            {t('intro')}
             </p>
         
             <ul>
@@ -18,7 +20,7 @@ const NousContacter = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    Voir le profil LinkedIn
+                    {t('linkedIn')}
                 </a>
                 </li>
                 <li>
@@ -29,14 +31,13 @@ const NousContacter = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    Voir le profil LinkedIn
+                    {t('linkedIn')}
                 </a>
                 </li>
             </ul>
         
             <p>
-                Vous pouvez également signaler un bug ou un problème via les liens en
-                bas de page.
+            {t('bug')}
             </p>
         </div>
     );

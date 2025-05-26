@@ -15,6 +15,7 @@ import login_fr from './locales/fr/login.json';
 import apropos_fr from './locales/fr/apropos.json';
 import faq_fr from './locales/fr/faq.json';
 import equipe_fr from './locales/fr/equipe.json';
+import contacter_fr from './locales/fr/contacter.json';
 
 
 import profil_en from './locales/en/profil.json';
@@ -30,6 +31,7 @@ import login_en from './locales/en/login.json';
 import apropos_en from './locales/en/apropos.json';
 import faq_en from './locales/en/faq.json';
 import equipe_en from './locales/en/equipe.json';
+import contacter_en from './locales/en/contacter.json';
 
 const resources = {
     fr: {
@@ -46,6 +48,7 @@ const resources = {
         apropos : apropos_fr,
         faq : faq_fr,
         equipe: equipe_fr,
+        contacter : contacter_fr
         },
     en: {
         profil: profil_en,
@@ -61,6 +64,7 @@ const resources = {
         apropos : apropos_en,
         faq : faq_en,
         equipe: equipe_en,
+        contacter : contacter_en
     }
     };
 
