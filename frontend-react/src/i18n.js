@@ -5,21 +5,25 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import profil_fr from './locales/fr/profil.json';
 import header_fr from './locales/fr/header.json';
 import journeyform_fr from './locales/fr/journeyform.json';
+import journeylist_fr from './locales/fr/journeylist.json';
 
 import profil_en from './locales/en/profil.json';
 import header_en from './locales/en/header.json';
 import journeyform_en from './locales/en/journeyform.json';
+import journeylist_en from './locales/en/journeylist.json';
 
 const resources = {
     fr: {
         profil: profil_fr,
         header: header_fr,
-        journeyform : journeyform_fr
+        journeyform : journeyform_fr,
+        journeylist : journeylist_fr
         },
     en: {
         profil: profil_en,
         header: header_en,
-        journeyform : journeyform_en
+        journeyform : journeyform_en,
+        journeylist : journeylist_en
     }
     };
 
