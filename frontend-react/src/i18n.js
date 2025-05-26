@@ -9,6 +9,7 @@ import journeylist_fr from './locales/fr/journeylist.json';
 import journeydetails_fr from './locales/fr/journeydetails.json';
 import footer_fr from './locales/fr/footer.json';
 import ajouteravis_fr from './locales/fr/ajouteravis.json';
+import ajoutvoiture_fr from './locales/fr/ajoutvoiture.json';
 
 import profil_en from './locales/en/profil.json';
 import header_en from './locales/en/header.json';
@@ -17,6 +18,7 @@ import journeylist_en from './locales/en/journeylist.json';
 import journeydetails_en from './locales/en/journeydetails.json';
 import footer_en from './locales/en/footer.json';
 import ajouteravis_en from './locales/en/ajouteravis.json';
+import ajoutvoiture_en from './locales/en/ajoutvoiture.json';
 
 const resources = {
     fr: {
@@ -26,7 +28,8 @@ const resources = {
         journeylist : journeylist_fr,
         journeydetails : journeydetails_fr,
         footer : footer_fr,
-        ajouteravis: ajouteravis_fr
+        ajouteravis: ajouteravis_fr,
+        ajoutvoiture : ajoutvoiture_fr
         },
     en: {
         profil: profil_en,
@@ -35,7 +38,8 @@ const resources = {
         journeylist : journeylist_en,
         journeydetails : journeydetails_en,
         footer : footer_en,
-        ajouteravis: ajouteravis_en
+        ajouteravis: ajouteravis_en,
+        ajoutvoiture : ajoutvoiture_en
     }
     };
 

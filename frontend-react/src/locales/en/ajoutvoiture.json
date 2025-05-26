@@ -1,0 +1,14 @@
+{
+    "title": "Add a vehicle",
+    "modify": "Modify a vehicle",
+    "name": "Vehicle name",
+    "brand": "Brand",
+    "model": "Model",
+    "year": "Year",
+    "color": "Color",
+    "license": "License plate",
+    "airConditioning": "Air conditioning",
+    "add": "Add",
+    "edit": "Edit",
+    "back": "Back"
+}
