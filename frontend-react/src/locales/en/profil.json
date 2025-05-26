@@ -58,5 +58,20 @@
     "air": "Air Conditioning",
 
     "yes": "Yes",
-    "no": "No"
+    "no": "Non",
+
+    "modifyInformations": "Modify my informations",
+    "select": "Select one below ;",
+
+    "prefix": "Prefix (ex: +1)",
+    "landline": "landline",
+    "pro": "Work",
+
+    "number": "Phone Number",
+    "selectGender": "-- Choose --",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+
+    "update": "Update"
 }

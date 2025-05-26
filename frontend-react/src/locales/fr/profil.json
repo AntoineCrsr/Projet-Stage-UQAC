@@ -58,5 +58,21 @@
     "air": "Climatisation",
 
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+
+    "modifyInformations": "Modifier mes informations",
+    "select": "Sélectionner en dessous ;",
+
+    "prefix": "Indicatif (ex: +1)",
+    "landline": "Fixe",
+    "pro": "Pro",
+
+    "number": "Numéro",
+    "selectGender": "-- Choisir --",
+    "male": "Homme",
+    "female": "Femme",
+    "other": "Autre",
+
+    "update": "Mettre à jour"
+
 }
