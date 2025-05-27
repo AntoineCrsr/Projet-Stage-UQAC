@@ -11,7 +11,7 @@
         "errors": {
             "car": {
                 "code": "bad-request",
-                "name": "Au moins un des attributs ne respecte pas le format attendu."
+                "name": "Le type des données ne correspond pas aux attendus."
             }
         }
     },
@@ -28,22 +28,6 @@
             "car": {
                 "code": "not-found",
                 "name": "La voiture n'a pas été trouvée."
-            }
-        }
-    },
-    "idError": {
-        "errors": {
-            "car": {
-                "code": "bad values",
-                "name": "L'identifiant de la voiture n'est pas correct (doit faire exactement 24 char)."
-            }
-        }
-    },
-    "userIdError": {
-        "errors": {
-            "car": {
-                "code": "bad values",
-                "name": "L'identifiant de l'utilisateur n'est pas correct (doit faire exactement 24 char)."
             }
         }
     },

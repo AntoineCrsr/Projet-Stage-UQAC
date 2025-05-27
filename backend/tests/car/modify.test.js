@@ -139,7 +139,7 @@ describe('PUT /api/car/id', () => {
                 expect(res.body.errors).toEqual({
                     "car": {
                         "code": "bad-request",
-                        "name": "Au moins un des attributs ne respecte pas le format attendu."
+                        "name": "Le type des données ne correspond pas aux attendus."
                     }
                 })
             })
@@ -179,7 +179,7 @@ describe('PUT /api/car/id', () => {
                 expect(res.body.errors).toEqual({
                     "car": {
                         "code": "bad-request",
-                        "name": "Au moins un des attributs ne respecte pas le format attendu."
+                        "name": "Le type des données ne correspond pas aux attendus."
                     }
                 })
             })
@@ -219,7 +219,7 @@ describe('PUT /api/car/id', () => {
                 expect(res.body.errors).toEqual({
                     "car": {
                         "code": "bad-request",
-                        "name": "Au moins un des attributs ne respecte pas le format attendu."
+                        "name": "Le type des données ne correspond pas aux attendus."
                     }
                 })
             })
@@ -293,6 +293,18 @@ describe('PUT /api/car/id', () => {
             .set('Accept', 'application/json')
             .expect(404)
     }) 
+
+
+    it('should return 400 bad type', async () => {
+        await request(app)
+            .put('/api/car/' + carId)
+            .set('Authorization', `Bearer ${token}`) // Manufacturer should be string
+            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":true,"model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}})
+            .expect(400)
+            .then(response => {
+                expect(response.body.errors).toEqual({"car": {"code": "bad-request", "name": "Le type des données ne correspond pas aux attendus."}})
+            })
+        })
 
 
     it ("should return 200 - 9 chars LicensePlate", async () => {

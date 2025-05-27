@@ -58,23 +58,9 @@ exports.isUserOwnerOfObject = (userAuthId, ownerId) => {
  * @returns {Boolean}
  */
 exports.isValidId = (id, type) => {
-    const maj = [65, 90]
-    const min = [97, 122]
-    const num = [48, 57]
-    let isValid = true
-    if (id == undefined || typeof(id) !== "string" || id.length !== 24) {
-        isValid = false
-    }
-
-    for (let i = 0; i<id.length; i++) {
-        let asciiCode = id.charCodeAt(i)
-        if (
-            !((asciiCode >= maj[0] && asciiCode <= maj[1]) // is Maj
-            || (asciiCode >= min[0] && asciiCode <= min[1]) // is Min
-            || (asciiCode >= num[0] && asciiCode <= num[1])) // is Num
-        )
-            isValid = false
-    }
+    const isValid = typeof id === "string" && 
+           id.length === 24 && 
+           /^[A-Za-z0-9]+$/.test(id);
 
     return isValid ? new ErrorReport(false) : new ErrorReport(true, formatError(generalErrors["invalidIdError"], type))
 }

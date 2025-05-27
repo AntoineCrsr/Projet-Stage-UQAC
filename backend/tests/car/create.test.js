@@ -58,7 +58,7 @@ describe('POST /api/car/', () => {
         expect(res.body.errors).toEqual({
             "car": {
                 "code": "bad-request",
-                "name": "Au moins un des attributs ne respecte pas le format attendu."
+                "name": "Le type des données ne correspond pas aux attendus."
             }
         })
 
@@ -73,7 +73,7 @@ describe('POST /api/car/', () => {
         expect(res.body.errors).toEqual({
             "car": {
                 "code": "bad-request",
-                "name": "Au moins un des attributs ne respecte pas le format attendu."
+                "name": "Le type des données ne correspond pas aux attendus."
             }
         })
     })
@@ -147,7 +147,19 @@ describe('POST /api/car/', () => {
                 "name": "L'utilisateur doit compléter son inscription pour effectuer cette action."
             }
         })
-    }) 
+    })
+
+
+    it('should return 400 bad type', async () => {
+        await request(app)
+            .post('/api/car/')
+            .set('Authorization', `Bearer ${token}`) // Manufacturer should be string
+            .send({"car": {"carType":"VUS 2016","year":"2016","manufacturer":true,"model":"208","color":"Rouge","licensePlate":"ABCDEFGHI","airConditioner":true,"name":"Mon char !!"}})
+            .expect(400)
+            .then(response => {
+                expect(response.body.errors).toEqual({"car": {"code": "bad-request", "name": "Le type des données ne correspond pas aux attendus."}})
+            })
+        })
 
 
     it ("should return 201 licensePlate 9 chars", async () => {

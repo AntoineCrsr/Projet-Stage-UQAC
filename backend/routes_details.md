@@ -145,6 +145,8 @@ Si l'utilisateur n'est pas connecté, renvoie 401 avec "unauthorized" et name = 
 
 Si l'utilisateur connecté n'a pas complété son inscription, renvoie 401 avec "unauthorized" et name = "L'utilisateur doit compléter son inscription pour effectuer cette action.".
 
+Si le type des données n'est pas valide (string, number etc.), renvoie une erreur 400 "bad-request" avec comme message "Le type des données ne correspond pas aux attendus."
+
 Sinon renvoie 201, avec un header Location pointant vers l'objet (/api/car/id)
 
 
@@ -159,6 +161,8 @@ Si l'utilisateur est connecté mais n'est pas propriétaire du char, renvoie 401
 Si un des éléments à modifier n'est pas dans un format valide (notamment licensePlate qui doit être composé soit de 6 chars A-Z0-9, soit de 9 A-Z0-9) renvoie 400 "bad-request", "Au moins un des attributs ne respecte pas le format attendu.".
 
 Si l'utilisateur modifie une licensePlate, mais que celle ci est déjà renseignée dans la database, renvoie 409 "conflict", "Une voiture possède déjà cette plaque d'immatriculation.".
+
+Si le type des données n'est pas valide (string, number etc.), renvoie une erreur 400 "bad-request" avec comme message "Le type des données ne correspond pas aux attendus."
 
 Sinon renvoie 200 avec header location. 
 
