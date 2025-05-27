@@ -34,8 +34,8 @@
     "typeError": {
         "errors": {
             "user": {
-                "code": "type-error",
-                "name": "Les types des variables ne correspondent pas aux attendus."
+                "code": "bad-request",
+                "name": "Le type des données ne correspond pas aux attendus."
             }
         }
     },

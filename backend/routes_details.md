@@ -50,6 +50,8 @@ Si l'email n'est pas dans un format cohérent (@, .fr, .com etc.) retourne un st
 
 S'il existe déjà un compte utilisateur enregistré dans la base avec l'email valide renseigné, alors retourne un status 409 avec une erreur de nom "conflict" et un message "Un utilisateur utilise déjà cette email.". Ne doit pas contenir de header location. 
 
+Si le type des données n'est pas valide (string, number etc.), renvoie une erreur 400 "bad-request" avec comme message "Le type des données ne correspond pas aux attendus."
+
 Si tout est valide, crée un utilisateur dans la base de données, et renvoie une réponse contenant un header avec une location appropriée (de forme /api/auth/<id>)
 
 
@@ -91,6 +93,8 @@ Si l'utilisateur tente de modifier un téléphone vers un qui existe déjà, ren
 Si l'utilisateur modifie la date, et que celle-ci lui donne un âge inférieur à 16 ans, renvoie 401 "Vous devez avoir au moins 16 ans pour faire un covoiturage."
 
 Si l'utilisateur tente de modifier un email vers un qui existe déjà, renvoie un 409 avec "Un utilisateur utilise déjà cette email."
+
+Si le type des données n'est pas valide (string, number etc.), renvoie une erreur 400 "bad-request" avec comme message "Le type des données ne correspond pas aux attendus."
 
 Quand la modification a réussi, renvoie un 200 avec un header location pointant vers l'utilisateur modifié. 
 

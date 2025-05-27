@@ -181,7 +181,7 @@ describe('PUT /api/auth/id', () => {
         await request(app)
           .put('/api/auth/' + id)
           .set('Authorization', `Bearer ${token}`)
-          .send({"user": { "dateBirthday": Date.now() }}) 
+          .send({"user": { "dateBirthday": new Date(Date.now()).toISOString() }}) 
           .expect(401)
           .then(response => {
              expect(response.body.errors).toEqual({"user": {"code": "unauthorized", "name": "Vous devez avoir au moins 16 ans pour faire un covoiturage."}})
@@ -198,6 +198,18 @@ describe('PUT /api/auth/id', () => {
           .expect(404)
           .then(response => {
              expect(response.body.errors).toEqual({"user": {"code": "not-found", "name": "L'utilisateur n'a pas été trouvé."}})
+          })
+    })
+
+
+    it('should return 400 bad type', async () => {
+        await request(app)
+          .put('/api/auth/' + id)
+          .set('Authorization', `Bearer ${token}`)
+          .send({"user": { "gender": 8 }}) 
+          .expect(400)
+          .then(response => {
+             expect(response.body.errors).toEqual({"user": {"code": "bad-request", "name": "Le type des données ne correspond pas aux attendus."}})
           })
     })
 

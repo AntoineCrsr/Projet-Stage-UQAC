@@ -23,7 +23,20 @@ describe('POST /api/auth/signup', () => {
   });
 
 
-  it('should return 400', async () => {
+  it('should return 400 bad type', async () => {
+    await request(app)
+      .post('/api/auth/signup')
+      .send({"user": {"email": "john.doe@gmail.com","password": 0}}) // Password should be string
+      .set('Accept', 'application/json')
+      .expect(400)
+      .then(response => {
+        expect(response.body.errors).toEqual({"user": {"code": "bad-request", "name": "Le type des données ne correspond pas aux attendus."}});
+        expect(response.get("Location")).toBeUndefined()
+      })
+  });
+
+
+  it('should return 400 bad email', async () => {
     await request(app)
       .post('/api/auth/signup')
       .send({"user": {"email": "notAnEmail","password": "StrongPassword1234"}})

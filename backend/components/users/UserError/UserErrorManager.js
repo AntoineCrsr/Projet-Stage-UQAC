@@ -135,17 +135,17 @@ exports.getModificationError = (newUser, reqFile, reqProtocol, reqHost) => {
     
     // Type des paramètres
     if ((newUser != undefined && typeof(newUser) !== "object")
-        && (newUser.email == undefined && typeof(newUser.email) !== "string")
-        && (newUser.password == undefined && typeof(newUser.password) !== "string")
-        && (newUser.gender == undefined && typeof(newUser.gender) !== "string")
-        && (newUser.name == undefined && typeof(newUser.name) !== "object")
-        && (newUser.phone == undefined && typeof(newUser.phone) !== "object")
-        && (newUser.isStudent == undefined && typeof(newUser.isStudent) !== "boolean")
-        && (newUser.parameters == undefined && typeof(newUser.parameters) !== "object")
-        && (newUser.dateBirthday == undefined && typeof(newUser.dateBirthday) !== "string")
-        && (newUser.aboutMe == undefined && typeof(newUser.aboutMe) !== "string")
-        && (newUser.alternateEmail == undefined && typeof(newUser.alternateEmail) !== "string")
-        && (newUser.testimonial == undefined && typeof(newUser.testimonial) !== "string")
+        || (newUser.email != undefined && typeof(newUser.email) !== "string")
+        || (newUser.password != undefined && typeof(newUser.password) !== "string")
+        || (newUser.gender != undefined && typeof(newUser.gender) !== "string")
+        || (newUser.name != undefined && typeof(newUser.name) !== "object")
+        || (newUser.phone != undefined && typeof(newUser.phone) !== "object")
+        || (newUser.isStudent != undefined && typeof(newUser.isStudent) !== "boolean")
+        || (newUser.parameters != undefined && typeof(newUser.parameters) !== "object")
+        || (newUser.dateBirthday != undefined && typeof(newUser.dateBirthday) !== "string")
+        || (newUser.aboutMe != undefined && typeof(newUser.aboutMe) !== "string")
+        || (newUser.alternateEmail != undefined && typeof(newUser.alternateEmail) !== "string")
+        || (newUser.testimonial != undefined && typeof(newUser.testimonial) !== "string")
     ) return new ErrorReport(true, errorTable["typeError"])
     
     // Vérification de l'email
