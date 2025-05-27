@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles/modifierprofil.css";
 
+import { useTranslation } from 'react-i18next';
+
 const ModifierProfil = () => {
+    const { t } = useTranslation('profil');
+
     const [selectedFile, setSelectedFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [form, setForm] = useState({
@@ -93,9 +97,9 @@ const ModifierProfil = () => {
 
     return (
     <div className="modifier-profil-container">
-        <h2>Modifier mes informations</h2>
+        <h2>{t('modifyInformations')}</h2>
 
-        <label>Photo de profil :</label>
+        <label>{t('profilePicture')} : </label>
         <input
             type="file"
             accept="image/*"
@@ -108,34 +112,35 @@ const ModifierProfil = () => {
         {imagePreview && <img src={imagePreview} alt="Prévisualisation" style={{ width: "120px", margin: "10px 0" }} />}
 
         <form onSubmit={handleSubmit} className="modifier-profil-form">
-        Type de téléphone :
+        {t('phone')}
         <select name="phoneType" value={form.phoneType} onChange={handleChange} required>
-        <option value="">Sélectionner</option>
+        <option value="">{t('select')}</option>
         <option value="mobile">Mobile</option>
-        <option value="fixe">Fixe</option>
+        <option value="fixe">{t('landline')}</option>
+        <option value="pro">{t('pro')}</option>
         </select>
 
-        Indicatif (ex: +1) :
+        {t('prefix')} :
         <input type="text" name="phonePrefix" value={form.phonePrefix} onChange={handleChange} required />
 
-        Numéro :
+        {t('number')} :
         <input type="text" name="phoneNumber" value={form.phoneNumber} onChange={handleChange} required />    
-        Addresse mail :<input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        Pseudo publique : <input type="text" name="publicName" placeholder="Nom public" value={form.publicName} onChange={handleChange} required />
-        Prenom(s) :<input type="text" name="firstName" placeholder="Prénom" value={form.firstName} onChange={handleChange} required />
-        Nom de famille :<input type="text" name="lastName" placeholder="Nom de famille" value={form.lastName} onChange={handleChange} required />
-        Genre : <select name="gender" value={form.gender} onChange={handleChange} required>
-            <option value="">Choisir un genre</option>
-            <option value="homme">Homme</option>
-            <option value="femme">Femme</option>
-            <option value="autre">Autre</option>
+        Email : <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+        {t('publicName')} : <input type="text" name="publicName" placeholder={t('publicName')} value={form.publicName} onChange={handleChange} required />
+        {t('firstName')} :<input type="text" name="firstName" placeholder={t('firstName')} value={form.firstName} onChange={handleChange} required />
+        {t('lastName')} :<input type="text" name="lastName" placeholder={t('lastName')} value={form.lastName} onChange={handleChange} required />
+        {t('gender')} : <select name="gender" value={form.gender} onChange={handleChange} required>
+            <option value="">{t('selectGender')}</option>
+            <option value="homme">{t('male')}</option>
+            <option value="femme">{t('female')}</option>
+            <option value="autre">{t('other')}</option>
         </select>
         <label>
             <input type="checkbox" name="isStudent" checked={form.isStudent} onChange={handleChange} />
-            Je suis étudiant(e)
+            {t('student')}
         </label>
-        <textarea name="aboutMe" value={form.aboutMe} onChange={handleChange} placeholder="À propos de moi" />
-        <button type="submit">Mettre à jour</button>
+        <textarea name="aboutMe" value={form.aboutMe} onChange={handleChange} placeholder={t('about')} />
+        <button type="submit">{t('update')}</button>
         </form>
     </div>
     );

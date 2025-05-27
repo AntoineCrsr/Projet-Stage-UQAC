@@ -1,0 +1,7 @@
+{
+    "title": "About Travel Express",
+    "intro": "Travel Express is a student internship project that introduces us to full-stack web development including both Backend and Frontend.",
+    "context": "This project was created in the context of an internship and the rising pollution and lack of ecological transportation options. Developing a carpooling web application appears to be an essential solution.",
+    "eco": "With increasing concerns about environmental impact, initiatives encouraging ride-sharing have become a priority. Beyond ecology and saving money, trust is also a central issue.",
+    "goal": "This project aims to connect users in real-time, simplify trip organization, and promote an economic and ecological alternative to traditional modes of transportation in Quebec, while ensuring safety."
+}

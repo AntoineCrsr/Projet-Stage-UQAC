@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles/journeyForm.css";
 
+import { useTranslation } from "react-i18next";
+
 const JourneyForm = () => {
+
+  const { t } = useTranslation("journeyform");
+
+
   const [depart, setDepart] = useState("");
   const [arrivee, setArrivee] = useState("");
   const [suggestionsDepart, setSuggestionsDepart] = useState([]);
@@ -49,12 +55,12 @@ const JourneyForm = () => {
 
   return (
     <div className="search-container">
-      <h2>Cherchez votre trajet dans tout le Québec !</h2>
+      <h2>{t('title')}</h2>
       <form onSubmit={handleSubmit} className="search-form">
         <div className="input-container">
           <input
             type="text"
-            placeholder="Ville de départ"
+            placeholder={t('departure')}
             value={depart}
             onChange={handleDepartChange}
             required
@@ -73,14 +79,14 @@ const JourneyForm = () => {
           )}
         </div>
 
-        <button type="button" className="swap-button" onClick={handleSwap} title="Inverser les villes">
+        <button type="button" className="swap-button" onClick={handleSwap} title={t('swap')}>
           ⇄
         </button>
 
         <div className="input-container">
           <input
             type="text"
-            placeholder="Ville d'arrivée"
+            placeholder={t('arrival')}
             value={arrivee}
             onChange={handleArriveeChange}
             required
@@ -99,7 +105,7 @@ const JourneyForm = () => {
           )}
         </div>
 
-        <button className="search-button" type="submit">Valider</button>
+        <button className="search-button" type="submit">{t('validate')}</button>
       </form>
     </div>
   );

@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./styles/ajouteravis.css";
 
+import { useTranslation } from "react-i18next";
+
 const AjouterAvis = () => {
+    const { t } = useTranslation("ajouteravis");
+
     const { id: reviewedId } = useParams();
     const [form, setForm] = useState({
         punctualityRating: 0,
@@ -62,23 +66,23 @@ const AjouterAvis = () => {
 
     return (
         <form onSubmit={handleSubmit} className="form-avis">
-        <h3>Laisser un avis</h3>
-        <label>Ponctualité :</label>
+        <h3>{t("title")}</h3>
+        <label>{t("punctuality")}</label>
         <input type="number" name="punctualityRating" min="0" max="5" value={form.punctualityRating} onChange={handleChange} required />
 
-        <label>Sécurité :</label>
+        <label>{t("security")}</label>
         <input type="number" name="securityRating" min="0" max="5" value={form.securityRating} onChange={handleChange} required />
 
-        <label>Confort :</label>
+        <label>{t("comfort")}</label>
         <input type="number" name="comfortRating" min="0" max="5" value={form.comfortRating} onChange={handleChange} required />
 
-        <label>Courtoisie :</label>
+        <label>{t("courtesy")}</label>
         <input type="number" name="courtesyRating" min="0" max="5" value={form.courtesyRating} onChange={handleChange} required />
 
-        <label>Commentaire :</label>
+        <label>{t("message")}</label>
         <textarea name="message" value={form.message} onChange={handleChange} placeholder="Votre message (optionnel)" />
 
-        <button type="submit">Envoyer l'avis</button>
+        <button type="submit">{t("submit")}</button>
         </form>
     );
 };

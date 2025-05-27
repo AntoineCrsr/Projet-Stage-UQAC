@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import "../components/styles/journeyList.css";
 
+import { useTranslation } from "react-i18next";
+
 const ResultatRechercheTrajet = () => {
+    const { t } = useTranslation("journeylist");
+
     const [results, setResults] = useState([]);
     const [reservedJourneyIds, setReservedJourneyIds] = useState([]); //recuperer les trajets reservés par l'user pour les mêmes logiques que le composant principal
     const location = useLocation(); // Permet de récupérer l'objet contenant la localisation actuelle y compris la query string (?starting=...&arrival=...)
@@ -45,19 +49,19 @@ const ResultatRechercheTrajet = () => {
     //et enfin la même logique pour que ça soit cohérent
     return (
         <div className="journey-list-wrapper">
-        <h2>Résultats pour {starting} → {arrival}</h2>
+        <h2>{t("results")} {starting} → {arrival}</h2>
         {results.length === 0 ? (
-            <p>Aucun trajet trouvé.</p>
+            <p>{t("noResults")}</p>
         ) : (
             <table className="journey-table">
             <thead>
                 <tr>
-                <th>Départ</th>
-                <th>Arrivée</th>
-                <th>Date</th>
-                <th>Place(s) restante(s)</th>
-                <th>Prix</th>
-                <th>details/reservation</th>
+                <th>{t("departure")}</th>
+                <th>{t("arrival")}</th>
+                <th>{t("date")}</th>
+                <th>{t("seats")}</th>
+                <th>{t("price")}</th>
+                <th>{t("details")}</th>
                 </tr>
             </thead>
             <tbody>
@@ -92,18 +96,18 @@ const ResultatRechercheTrajet = () => {
                     <td>{journey.price} $ CAD</td>
                     <td>
                     {isDone ? (
-                        <span className="badge-reserved">Trajet terminé</span>
+                        <span className="badge-reserved">{t("ended")}</span>
                         ) : isCreator ? (
                         <Link to={`/journey/${journey._id}`} className="btn-details-liste">
-                            Détails de votre trajet
+                            {t("creator")}
                         </Link>
                         ) : isReserved ? (
-                        <span className="badge-reserved">Déjà réservé</span>
+                        <span className="badge-reserved">{t("reserved")}</span>
                         ) : isFull ? (
-                        <span className="badge-reserved">Trajet complet</span>
+                        <span className="badge-reserved">{t("full")}</span>
                         ) : (
                         <Link to={`/journey/${journey._id}`} className="btn-details-liste">
-                            détails/réserver
+                            {t("book")}
                         </Link>
                         )}
                     </td>

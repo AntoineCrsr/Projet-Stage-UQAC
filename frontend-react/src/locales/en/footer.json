@@ -1,0 +1,24 @@
+{
+    "project": {
+        "title": "Our project:",
+        "about": "About the project",
+        "team": "Our team",
+        "contact": "Contact us"
+    },
+    "shortcuts": {
+        "title": "Quick access:",
+        "create": "Create a journey",
+        "search": "Search for a journey",
+        "reservations": "My bookings",
+        "cars": "My vehicles",
+        "faq": "Frequently Asked Questions (FAQ)"
+    },
+    "legal": {
+        "title": "Important informations:",
+        "terms": "Terms of use",
+        "privacy": "Privacy policy",
+        "legalNotice": "Legal notice",
+        "report": "Report a problem"
+    },
+    "copyright": "All rights reserved to Crauser Antoine and Jost Victor"
+}

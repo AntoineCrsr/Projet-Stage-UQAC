@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./styles/header.css";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/logo_2.png"; 
@@ -114,11 +114,11 @@ const Header = () => {
 
         {currentLang === "fr" ? (
           <button onClick={() => changeLanguage("en")} className="lang-btn">
-              <img src={enFlag} alt="English" style={{ width: "30px" }} />
+              <img src={enFlag} alt="English"/>
           </button>
           ) : (
           <button onClick={() => changeLanguage("fr")} className="lang-btn">
-              <img src={frFlag} alt="Français" style={{ width: "30px" }} />
+              <img src={frFlag} alt="Français" />
           </button>
       )}
     </header>

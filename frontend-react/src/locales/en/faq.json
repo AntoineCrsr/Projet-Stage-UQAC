@@ -1,0 +1,21 @@
+{
+    "title": "Frequently Asked Questions (FAQ)",
+    "question1": "1. How do I book a ride?",
+    "answer1": "To book a ride, you must be logged into your account, have your personal information verified, and view the list of available rides on the homepage. Click the \"Book this ride\" button in the ride details. A confirmation will be requested.",
+    "question2": "2. Can I modify or delete a ride I've created?",
+    "answer2": "Yes, from your profile page, you can see all the rides you've created. Each ride has a \"Modify\" and \"Delete\" button.",
+    "question3": "3. How do I register a vehicle to offer rides?",
+    "answer3": "From your profile, click on \"Add a vehicle\". Fill in the required information, and you will be able to use it to create rides.",
+    "question4": "4. Can I cancel a reservation?",
+    "answer4": "Yes. Go to your profile, under \"My booked rides\", and click \"Cancel\" next to the relevant ride.",
+    "question5": "5. How do I report a problem or inappropriate behavior?",
+    "answer5": "You can use the \"Report a problem\" link at the bottom of the page in the footer. Be sure to describe the situation clearly and provide as much detail as possible.",
+    "question6": "6. What if a user doesn’t show up for the ride?",
+    "answer6": "If a driver or passenger does not show up, we do not yet have a formal solution. You can report the issue using the “Report a problem” button at the bottom of the page. We will take appropriate action to prevent abuse.",
+    "question7": "7. How can I rate a driver or passenger?",
+    "answer7": "After each completed ride, you’ll be able to leave a review based on several criteria (punctuality, comfort, safety, etc.) directly from your profile (feature not yet added).",
+    "question8": "8. Can I use the app without creating an account?",
+    "answer8": "You can browse available rides without an account, but booking or offering rides requires registration and verification of your email and phone number (and a registered car to create rides).",
+    "question9": "9. What are the requirements to create a ride?",
+    "answer9": "To offer a ride, you must be logged into your account, have a registered vehicle, and have verified your email and phone. Then you can use the button that appears above the ride search form."
+}

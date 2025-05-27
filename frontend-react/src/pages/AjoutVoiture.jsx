@@ -1,8 +1,12 @@
-import React, { useState, useEffect  } from "react";
+import { useState, useEffect  } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./styles/ajoutvoiture.css";
 
+import { useTranslation } from "react-i18next";
+
 const AjoutVoiture = () => {
+    const { t } = useTranslation("ajoutvoiture");
+
     const { carId } = useParams();
     const [car, setCar] = useState({
     carType: "",
@@ -88,22 +92,29 @@ const handleSubmit = async (e) => {
 
     return (
         <div className="ajout-voiture-container">
-        <h2>{carId ? "Modifier un véhicule" : "Ajouter un véhicule"}</h2>
+        <h2>{carId ? t("modify") : t("title")}</h2>
         <form onSubmit={handleSubmit} className="ajout-voiture-form">
-            <input type="text" name="name" placeholder="Nom du véhicule" value={car.name} onChange={handleChange} required />
-            <input type="text" name="carType" placeholder="Type (SUV, Berline...)" value={car.carType} onChange={handleChange} required />
-            <input type="text" name="manufacturer" placeholder="Marque" value={car.manufacturer} onChange={handleChange} required />
-            <input type="text" name="model" placeholder="Modèle" value={car.model} onChange={handleChange} required />
-            <input type="text" name="year" placeholder="Année" value={car.year} onChange={handleChange} required />
-            <input type="text" name="color" placeholder="Couleur" value={car.color} onChange={handleChange} required />
-            <input type="text" name="licensePlate" placeholder="Plaque d'immatriculation" value={car.licensePlate} onChange={handleChange} required />
+            {t("name")}
+            <input type="text" name="name" placeholder={t("name")} value={car.name} onChange={handleChange} required />
+            Type
+            <input type="text" name="carType" placeholder="Type (SUV...)" value={car.carType} onChange={handleChange} required />
+            {t("brand")}
+            <input type="text" name="manufacturer" placeholder={t("brand")} value={car.manufacturer} onChange={handleChange} required />
+            {t("model")}
+            <input type="text" name="model" placeholder={t("model")} value={car.model} onChange={handleChange} required />
+            {t("year")}
+            <input type="text" name="year" placeholder={t("year")} value={car.year} onChange={handleChange} required />
+            {t("color")}
+            <input type="text" name="color" placeholder={t("color")} value={car.color} onChange={handleChange} required />
+            {t("license")}
+            <input type="text" name="licensePlate" placeholder={t("license")} value={car.licensePlate} onChange={handleChange} required />
             <label>
             <input type="checkbox" name="airConditioner" checked={car.airConditioner} onChange={handleChange} />
-            Climatisation
+            {t("airConditioning")}
             </label>
-            <button type="submit">{carId ? "Modifier" : "Ajouter"}</button>
+            <button type="submit">{carId ? t("edit") : t("add")}</button>
         </form>
-        <button onClick={() => navigate("/profil")}>Retour</button>
+        <button onClick={() => navigate("/profil")}>{t("back")}</button>
         </div>
     );
 };

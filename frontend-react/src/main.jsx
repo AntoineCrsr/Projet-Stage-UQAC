@@ -20,10 +20,10 @@ import ResultatRechercheTrajet from "./pages/ResultatRechercheTrajet";
 import AjouterAvis from "./pages/AjouterAvis";
 import ProfilConducteur from "./pages/ProfilConducteur";
 
-import APropos from "./pages/APropos";
-import NotreEquipe from "./pages/NotreEquipe";
-import FAQ from "./pages/FAQ";
-import NousContacter from "./pages/NousContacter";
+import APropos from "./pages/footer/APropos";
+import NotreEquipe from "./pages/footer/NotreEquipe";
+import FAQ from "./pages/footer/FAQ";
+import NousContacter from "./pages/footer/NousContacter";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

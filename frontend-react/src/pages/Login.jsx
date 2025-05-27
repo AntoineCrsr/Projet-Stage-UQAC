@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./styles/login.css";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
+    const { t } = useTranslation("login");
+
     const [isLogin, setIsLogin] = useState(true); // Connexion ou inscription
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -129,41 +132,41 @@ const Login = () => {
     <div className="login-container">
       <div className="login-box">
         <button onClick={() => navigate("/")} className="btn-retour-accueil">
-        ← Retour à l’accueil
+        {t("return")}
         </button>
-        <h2>{isLogin ? "Connexion" : "Inscription"}</h2>
+        <h2>{isLogin ? t("login") : t("register")}</h2>
         <form onSubmit={handleSubmit}>
         {/* Formulaire de Connexion */}
           <div className="input-group">
             <label>Email</label>
-            <input type="email" placeholder="Entrez votre email"
+            <input type="email" placeholder={t("emailPlaceholder")}
               value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
 
             <div className="input-group">
-              <label>Mot de passe</label>
-              <input type="password" placeholder="Entrez votre mot de passe" 
+              <label>{t("password")}</label>
+              <input type="password" placeholder={t("passwordPlaceholder")}
               value={password} onChange={(e) => setPassword(e.target.value)}/>
             </div>
 
             {!isLogin && (
             <div className="input-group">
-              <label>Confirmez le mot de passe</label>
+              <label>{t("confirmPassword")}</label>
               <input
-                type="password" placeholder="Confirmez votre mot de passe"
+                type="password" placeholder={t("confirmPasswordPlaceholder")}
                 value={confirm} onChange={(e) => setConfirm(e.target.value)} />
             </div>
           )}
 
-            <button className="form" type="submit"> {isLogin ? "Se connecter" : "S'inscrire"} </button>
+            <button className="form" type="submit"> {isLogin ? t("submitLogin") : t("submitRegister")} </button>
           </form>
         {error && <p className="error">{error}</p>}
 
         {/* basculer entre le formulaire de Connexion et d'Inscription */}
         <p className="toggle-text">
-          {isLogin ? "Pas encore inscrit ?" : "Déjà un compte ?"}{" "}
+          {isLogin ? t("notRegistered") : t("alreadyHaveAccount") }{" "}
           <span onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? "Créez un compte" : "Connectez-vous"}
+            {isLogin ? t("createAccount") : t("loginAccount")}
           </span>
         </p>
       </div>

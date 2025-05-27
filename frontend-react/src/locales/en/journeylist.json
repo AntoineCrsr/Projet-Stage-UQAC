@@ -1,0 +1,17 @@
+{
+    "title": "Available trips:",
+    "noJourney": "No trips available.",
+    "departure": "Departure",
+    "arrival": "Arrival",
+    "date": "Date DD/MM/YYYY",
+    "seats": "Remaining seat(s)",
+    "price": "Price",
+    "details": "Details/Booking",
+    "ended": "Trip completed",
+    "creator": "Your trip details",
+    "reserved": "Booked",
+    "full": "Trip full",
+    "book": "details/book",
+    "results": "Results for",
+    "noResults": "No journey found..."
+}

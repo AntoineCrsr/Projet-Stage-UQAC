@@ -1,0 +1,10 @@
+{
+    "title": "Laisser un avis",
+    "punctuality": "Ponctualité :",
+    "security": "Sécurité :",
+    "comfort": "Confort :",
+    "courtesy": "Courtoisie :",
+    "message": "Commentaire :",
+    "placeholder": "Votre message (optionnel)",
+    "submit": "Envoyer l'avis"
+}

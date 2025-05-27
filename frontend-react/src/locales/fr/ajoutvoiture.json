@@ -1,0 +1,14 @@
+{
+    "title": "Ajouter un véhicule",
+    "modify": "Modifier un véhicule",
+    "name": "Nom du véhicule",
+    "brand": "Marque",
+    "model": "Modèle",
+    "year": "Année",
+    "color": "Couleur",
+    "license": "Plaque d'immatriculation",
+    "airConditioning": "Climatisation",
+    "add": "Ajouter",
+    "edit": "Modifier",
+    "back": "Retour"
+}

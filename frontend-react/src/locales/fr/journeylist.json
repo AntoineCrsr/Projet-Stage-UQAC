@@ -1,0 +1,17 @@
+{
+    "title": "Liste des trajets disponibles :",
+    "noJourney": "Aucun trajet disponible.",
+    "departure": "Départ",
+    "arrival": "Arrivée",
+    "date": "Date JJ/MM/AAAA",
+    "seats": "Place(s) restante(s)",
+    "price": "Prix",
+    "details": "Détails/Réservation",
+    "ended": "Trajet terminé",
+    "creator": "Détails de votre trajet",
+    "reserved": "Déjà réservé",
+    "full": "Trajet complet",
+    "book": "détails/réserver",
+    "results": "Résultats pour",
+    "noResults": "Aucun trajet trouvé..."
+}

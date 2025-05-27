@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./styles/creerTrajet.css";
 
+import { useTranslation } from "react-i18next";
+
 const CreerTrajet = () => {
+  const { t } = useTranslation("creertrajet");
+
   const { journeyId } = useParams();
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -149,28 +153,35 @@ const CreerTrajet = () => {
 
   return (
     <div className="creer-trajet-container">
-      <h2>{journeyId ? "Modifier un trajet" : "Créer un trajet"}</h2>
+      <h2>{journeyId ? t("modify") : t("title")}</h2>
       <form onSubmit={handleSubmit} className="creer-trajet-form">
-        <label>Véhicule :</label>
+        <label>{t("vehicle")}</label>
         <select name="carId" value={form.carId} onChange={handleChange} required>
-          <option value="">Choisir votre véhicule</option>
+          <option value="">{t("vehiclePlaceholder")}</option>
           {cars.map((car) => (
             <option key={car._id} value={car._id}>
               {car.name} ({car.manufacturer} {car.model})
             </option>
           ))}
         </select>
-
-        <input type="text" name="startingCity" placeholder="Ville de départ" value={form.startingCity} onChange={handleChange} required />
-        <input type="text" name="startingAddress" placeholder="Addresse de départ" value={form.startingAddress} onChange={handleChange} required />
-        <input type="text" name="arrivalCity" placeholder="Ville d’arrivée" value={form.arrivalCity} onChange={handleChange} required />
-        <input type="text" name="arrivalAddress" placeholder="Addresse d’arrivée" value={form.arrivalAddress} onChange={handleChange} required />
-        <input type="datetime-local" placeholder="Date de départ et horaire" name="date" value={form.date} onChange={handleChange} required />
-        <input type="number" name="totalSeats" min="1" placeholder="Places totales du véhicule" value={form.totalSeats} onChange={handleChange} required />
-        <input type="number" name="left" min="1" placeholder="Places disponibles pour le trajet" value={form.left} onChange={handleChange} required />
-        <input type="number" name="price" step="0.01" placeholder="Prix (en $ CAD)" value={form.price} onChange={handleChange} required />
-
-        <button type="submit">{journeyId ? "Modifier le trajet" : "Créer le trajet"}</button>
+        {t("startingCity")}
+        <input type="text" name="startingCity" placeholder={t("startingCity")} value={form.startingCity} onChange={handleChange} required />
+        {t("startingAddress")}
+        <input type="text" name="startingAddress" placeholder={t("startingAddress")} value={form.startingAddress} onChange={handleChange} required />
+        {t("arrivalCity")}
+        <input type="text" name="arrivalCity" placeholder={t("arrivalCity")} value={form.arrivalCity} onChange={handleChange} required />
+        {t("arrivalAddress")}
+        <input type="text" name="arrivalAddress" placeholder={t("arrivalAddress")} value={form.arrivalAddress} onChange={handleChange} required />
+        {t("departureDateTime")}
+        <input type="datetime-local" placeholder={t("departureDateTime")} name="date" value={form.date} onChange={handleChange} required />
+        {t("totalSeats")}
+        <input type="number" name="totalSeats" min="1" placeholder={t("totalSeats")} value={form.totalSeats} onChange={handleChange} required />
+        {t("availableSeats")}
+        <input type="number" name="left" min="1" placeholder={t("availableSeats")} value={form.left} onChange={handleChange} required />
+        {t("price")}
+        <input type="number" name="price" step="0.01" placeholder={t("price")} value={form.price} onChange={handleChange} required />
+        
+        <button type="submit">{journeyId ? t("modify") : t("create")}</button>
       </form>
     </div>
   );
