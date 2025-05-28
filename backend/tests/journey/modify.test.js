@@ -98,7 +98,7 @@ describe('PUT /api/journey/id', () => {
         expect(res.body.errors).toEqual({
             "journey": {
                 "code": "bad-request",
-                "name": "Le type des variables ne correspond pas aux attendus."
+                "name": "Le type des données ne correspond pas aux attendus."
             }
         })
     })

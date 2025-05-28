@@ -207,6 +207,8 @@ Si l'identifiant renseigné n'est pas dans un format valide (24 charactères a-z
 
 La requête doit contenir un starting (city + address), un arrival (city + address), un carId, une date (format ISO String), des seats (total + left), et un prix. 
 
+Si le type des données n'est pas valide (string, number etc.), renvoie une erreur 400 "bad-request" avec comme message "Le type des données ne correspond pas aux attendus."
+
 Si le type de ces attributs ne correspondent pas aux attendus, renvoi "bad-request", "Le type des variables ne correspond pas aux attendus."
 
 Si la requete ne contient au moins pas un de ces attributs, renvoie 400 avec code = "bad-request" et name = "La requête ne contient pas tous les attributs nécessaires à la création de l'objet.".
@@ -268,6 +270,8 @@ Si la journey n'appartient pas à l'utilisateur, renvoie 401 unauthorized, "Vous
 Si l'API Google de Vérification d'adresse renvoie un inputGranularity ou un validationGranularity qui ne vaut pas au moins PREMISE ou SUB_PREMISE, (ou PREMISE_PROXIMITY en supplément pour inputGranularity), renvoie un 400 code = "bad-request" et name = "L'adresse renseignée est invalide ou est trop imprécise.".
 
 Si la province d'une des deux adresses renseignées n'est pas au Québec, renvoie 400, "Le covoiturage doit avoir lieu au Québec.".
+
+Si le type des données n'est pas valide (string, number etc.), renvoie une erreur 400 "bad-request" avec comme message "Le type des données ne correspond pas aux attendus."
 
 Si tout convient, renvoie 200 sans body, avec header location. La journey doit être définie sur le state "w" (waiting), avec comme addresse le correctif de l'API GMAPS, et la ville correctif de l'API, pour starting et arrival, avec les cities en toLowerCase. 
 
