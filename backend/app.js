@@ -18,7 +18,18 @@ if (process.env.NODE_ENV !== 'test') {
 }
 const app = express()
 
-app.use(bodyParser.json())
+// Parseur JSON
+app.use(bodyParser.json({
+  verify: (req, res, buf, encoding) => {
+    try {
+      JSON.parse(buf.toString(encoding));
+    } catch (e) {
+      e.status = 400;
+      e.bodyParsingError = true;
+      throw e;
+    }
+  }
+}));
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use((req, res, next) => {
@@ -28,6 +39,16 @@ app.use((req, res, next) => {
     next();
   }
 );
+
+// Gestion des erreurs globales
+app.use((err, req, res, next) => {
+  if (err.bodyParsingError) {
+    return res.status(400).json({ "errors": {"internal": {"code": "bad-request", "name":"JSON mal formaté. Veuillez vérifier votre requête."}} });
+  }
+
+  console.error(err.stack);
+  res.status(500).json({ error: "Erreur interne du serveur." });
+});
 
 
 app.use('/api/auth', userRouter)

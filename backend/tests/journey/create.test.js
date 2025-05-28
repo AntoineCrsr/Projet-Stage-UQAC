@@ -124,7 +124,7 @@ describe('POST /api/journey/', () => {
         expect(res.body.errors).toEqual({
             "journey": {
                 "code": "bad-request",
-                "name": "Le type des variables ne correspond pas aux attendus."
+                "name": "Le type des données ne correspond pas aux attendus."
             }
         })
     })
@@ -278,7 +278,7 @@ describe('POST /api/journey/', () => {
                         validationGranularity: "PREMISE"
                     },
                     address: {
-                        formattedAddress: '999 Boulevard Talbot, Chicoutimi, ON G7H 4B5, Canada'
+                        formattedAddress: '999 Boulevard Talbot, Torronto, ON G7H 4B5, Canada'
                     }
                 }
             })
@@ -304,14 +304,13 @@ describe('POST /api/journey/', () => {
     })
 
 
-    it ("should return account not verified", async () => {
+    it ("should return 401 account not verified", async () => {
         let newbie = await UserFactory.createUser("hacker@gmail.com", "StrongPassword1234")
         await UserFactory.modifyBirth(newbie, "2003-02-12T20:52:39.890Z")
         await UserFactory.modifyName(newbie, "John", "Doe")
         await UserFactory.modifyPhone(newbie, "mobile", "+1", "641369490")
         await UserFactory.modifyGender(newbie, "femme")
-        // await UserFactory.validateNonceEmail(newbie)
-        // await UserFactory.validateNoncePhone(newbie) // Not valid email and phone
+        // Not valid email and phone
         await newbie.save()
 
         // Login 
