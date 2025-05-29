@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const multer = require('multer');
 
 const MIME_TYPES = {
@@ -8,7 +10,14 @@ const MIME_TYPES = {
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, 'images');
+    const dir = 'images';
+
+    // Vérifie si le dossier existe, sinon le crée
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true }); // recursive au cas où on voudrait créer une arborescence
+    }
+
+    callback(null, dir);
   },
   filename: (req, file, callback) => {
     const name = file.originalname.split(' ').join('_');
@@ -17,4 +26,4 @@ const storage = multer.diskStorage({
   }
 });
 
-module.exports = multer({storage: storage}).single('image');
+module.exports = multer({ storage: storage }).single('image');
