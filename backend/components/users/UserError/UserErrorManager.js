@@ -118,9 +118,11 @@ exports.getModificationError = (newUser, reqFile, reqProtocol, reqHost) => {
     if (newUser == undefined && (reqFile == undefined || reqProtocol == undefined || reqHost == undefined))
         return new ErrorReport(true, errorTable["missingArgModify"])
 
+    if (newUser == undefined)
+        return new ErrorReport(false)
+
     // Au moins un des attributs est présent dans newUser
-    if (newUser != undefined 
-        && newUser.email == undefined
+    if (newUser.email == undefined
         && newUser.password == undefined
         && newUser.gender == undefined
         && newUser.name == undefined
@@ -134,8 +136,7 @@ exports.getModificationError = (newUser, reqFile, reqProtocol, reqHost) => {
     ) return new ErrorReport(true, errorTable["missingArgModify"])
     
     // Type des paramètres
-    if ((newUser != undefined && typeof(newUser) !== "object")
-        || (newUser.email != undefined && typeof(newUser.email) !== "string")
+    if ((newUser.email != undefined && typeof(newUser.email) !== "string")
         || (newUser.password != undefined && typeof(newUser.password) !== "string")
         || (newUser.gender != undefined && typeof(newUser.gender) !== "string")
         || (newUser.name != undefined && typeof(newUser.name) !== "object")
