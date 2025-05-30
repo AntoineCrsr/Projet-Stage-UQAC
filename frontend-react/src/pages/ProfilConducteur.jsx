@@ -22,7 +22,7 @@ const ProfilConducteur = () => {
         .catch(err => console.error("Erreur avis conducteur :", err));
     }, [id]);
 
-    if (!driver) return <p>Chargement du profil du conducteur...</p>;
+    if (!driver) return <p>Chargement du profil du conducteur...</p>; // si l'api met du temps à répondre pour pas afficher d'erreurs
 
     return (
         <div className="profil-container">
