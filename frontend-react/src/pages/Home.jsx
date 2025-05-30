@@ -20,7 +20,6 @@ const Home = () => {
       )}
         <JourneyForm />
         <JourneyList />
-        {/*Faire attention l'entrée texte du form passe au dessus du header quand scroll*/}
       </main>
     </div>
   );
