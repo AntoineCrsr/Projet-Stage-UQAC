@@ -16,67 +16,23 @@ const Login = () => {
     
     // URL précédente ou fallback vers /
     const from = location.state?.from?.pathname || "/";
-
+    
     const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
+    
     if (!email || !password || (!isLogin && password !== confirm)) {
-      setError("Format d'email invalide ou mot de passe différents");
+      setError("Format d'email invalide ou mots de passe différents");
       return;
     }
-//sauvegarde au cas où si changement de la réponse de l'api, sinon version actuelle plus bas
-  //   const endpoint = isLogin ? "/api/auth/login" : "/api/auth/signup"; //Si l'user veut se login, appelle la route login, sinon signup
-  //   const payload = { user: { email, password } }; //charge les données dans la requete API
 
-  //   // Ne fonctionne pas car l'api ne renvoie pas de code ni de message, ce qui a pour conséquence que je n'ai rien à parser sur le front pour confirmer que ma creation passe bien
-  //   // donc message d'erreur et la creation ne passe pas meme si l'email et le mdp sont pris en compte.
-  //   try { //on attend la réponse de l'API
-  //     const res = await fetch(`http://localhost:3000${endpoint}`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(payload),
-  //     });
-
-  //     if (!res.ok) {
-  //       if (res.status === 409) {
-  //         throw new Error("Cet email est déjà utilisé.");
-  //       }
-  //       throw new Error("Erreur dans la requête");}
-
-  //     const data = await res.json();
-
-  //     // Stockage du token et de l'ID
-  //     localStorage.setItem("token", data.token); //il faut quand meme faire attention au localStorage pour les attaques XSS
-  //     localStorage.setItem("userId", data.id);  //mais bon c'est plus pratique pour l'instant et il n'y a pas vraiment de risque actuellement
-
-  //     if (isLogin){
-  //     // Récupérer les infos du user (nom, prénom...)
-  //     const userRes = await fetch(`http://localhost:3000/api/user/${data.id}`, {
-  //       headers: { Authorization: `Bearer ${data.token}` },
-  //     });
-  //     const userData = await userRes.json();
-
-  //     // Stocker le nom complet
-  //     localStorage.setItem("userName", `${userData.firstname} ${userData.lastname}`);
-
-  //     // Redirection vers la page précédente
-  //     navigate(from, { replace: true });
-  //     } else { //si pas login alors c'est qu'on créé un compte donc on part sur la suite du formulaire
-  //       navigate("/login/completion", { replace: true });
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //     setError(err.message);
-  //   }
-  // };
-  try { //changement apres avoir conclu qu'il fallait login apres le signup pour avoir un retour
-    if (isLogin) {
-      // Connexion simple
-      const res = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user: { email, password } }),
+    try { //changement apres avoir conclu qu'il fallait login apres le signup pour avoir un retour
+      if (isLogin) {
+        // Connexion simple
+        const res = await fetch("http://localhost:3000/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user: { email, password } }),
       });
 
       if (!res.ok) throw new Error("Échec de la connexion");
@@ -94,7 +50,7 @@ const Login = () => {
       window.dispatchEvent(new Event("storage"));
 
       navigate(from, { replace: true });
-    } else {
+      } else {
       // Inscription avec signup
       const signupRes = await fetch("http://localhost:3000/api/auth/signup", {
         method: "POST",
@@ -121,11 +77,11 @@ const Login = () => {
       //si pas login alors c'est qu'on créé un compte donc on part sur la suite du formulaire
       navigate("/login/completion", { replace: true });
     }
-  } catch (err) {
-    console.error(err);
-    setError(err.message);
-  }
-};
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    }
+  };
 
 
     return (
@@ -170,7 +126,6 @@ const Login = () => {
           </span>
         </p>
       </div>
-
     </div>
   );
 };
