@@ -115,10 +115,10 @@ const Profil = () => {
     navigate(`/modifier-voiture/${carId}`);
     };
 
-    const handleDeleteJourney = async (id) => {
+    const handleDeleteJourney = async (id) => { //async pour pouvoir faire le await
     if (!window.confirm("Voulez vous vraiment supprimer ce trajet ?")) return;
     try {
-        const res = await fetch(`http://localhost:3000/api/journey/${id}`, {
+        const res = await fetch(`http://localhost:3000/api/journey/${id}`, { //await de la verification avant de pouvoir faire autre chose
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
         });
@@ -130,9 +130,9 @@ const Profil = () => {
     }
     };
 
-    const handleValidateEmail = async () => {
+    const handleValidateEmail = async () => { //async pour pouvoir faire le await
         try {
-            const res = await fetch(`http://localhost:3000/api/auth/${userId}/emailValidation`, {
+            const res = await fetch(`http://localhost:3000/api/auth/${userId}/emailValidation`, { //await de la verification avant de pouvoir faire autre chose
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -148,9 +148,9 @@ const Profil = () => {
         }
     };
     
-    const handleValidatePhone = async () => {
+    const handleValidatePhone = async () => { //async pour pouvoir faire le await
         try {
-            const res = await fetch(`http://localhost:3000/api/auth/${userId}/phoneValidation`, {
+            const res = await fetch(`http://localhost:3000/api/auth/${userId}/phoneValidation`, { //await de la verification avant de pouvoir faire autre chose
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -166,11 +166,11 @@ const Profil = () => {
         }
     };
 
-    const handleCancelReservation = async (reservationId) => {
+    const handleCancelReservation = async (reservationId) => { //async pour pouvoir faire le await
     if (!window.confirm("Voulez-vous vraiment annuler cette réservation ?")) return;
 
     try {
-        const res = await fetch(`http://localhost:3000/api/reservation/${reservationId}`, {
+        const res = await fetch(`http://localhost:3000/api/reservation/${reservationId}`, { //await de la suppression avant de pouvoir faire autre chose
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
         });
@@ -270,7 +270,7 @@ const Profil = () => {
                 <p><strong>{t('security')} :</strong> {r.securityRating}/5</p>
                 <p><strong>{t('comfort')} :</strong> {r.comfortRating}/5</p>
                 <p><strong>{t('courtesy')} :</strong> {r.courtesyRating}/5</p>
-                {r.message && <p><em>"{r.message}"</em></p>}
+                {r.message && <p>{t('comment')} : <em>{r.message}</em></p>}
             </div>
             ))}
         </div>

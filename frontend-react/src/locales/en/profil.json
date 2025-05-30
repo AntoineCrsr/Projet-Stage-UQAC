@@ -73,5 +73,6 @@
     "female": "Female",
     "other": "Other",
 
-    "update": "Update"
+    "update": "Update",
+    "comment" : "Comment"
 }
