@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "./styles/profil.css";
 import { useTranslation } from 'react-i18next';
 
-
-
 const Profil = () => {
     const { t } = useTranslation('profil');
 
@@ -211,15 +209,15 @@ const Profil = () => {
         <div className="profil-section">
         <strong>Email :</strong> {user.email}{" "}
         {user.hasVerifiedEmail ? (
-            <span title={t('verified')}>✅</span>
+            <span title={t('verified')}>✅</span> //Verification manuelle de l'email
         ) : (
             <button onClick={handleValidateEmail}>{t('verify')}</button>)}
         </div>
 
-        <div className="profil-section">
+        <div className="profil-section"> 
         <strong>{t('phone')}</strong> Type {user.phone.type} : {user.phone.prefix}{user.phone.number}{" "}
         {user.hasVerifiedPhone ? (
-            <span title={t('verified')}>✅</span>
+            <span title={t('verified')}>✅</span> //Verification manuelle du téléphone
         ) : (
             <button onClick={handleValidatePhone}>{t('verify')}</button>)}
         </div>
@@ -238,7 +236,7 @@ const Profil = () => {
             <input
             type="checkbox"
             checked={isStudent}
-            readOnly // empeche l'user de le modifier s'il n'est pas sur la page dédiée
+            readOnly // empeche l'user de le modifier s'il n'est pas sur la page de modif
             />
             {t('student')}
         </label>
@@ -249,7 +247,7 @@ const Profil = () => {
         <textarea
             value={aboutMe}
             placeholder={t('describe')}
-            readOnly // empeche l'user de le modifier s'il n'est pas sur la page dédiée
+            readOnly // empeche l'user de le modifier s'il n'est pas sur la page de modif
         />
         <button onClick={() => navigate("/modifier-profil")}>{t('editProfile')}</button>
         </div>
@@ -262,10 +260,10 @@ const Profil = () => {
         <div className="profil-info"> {t('votes')} : {user.rating?.nbRating}</div>
 
         <h3>{t('reviewsTitle')}</h3>
-        {reviews.length === 0 ? (
+        {reviews.length === 0 ? ( //Conteneur scrollable de tous les avis laissés par les passagers au conducteur
         <p>{t('noReviews')}</p>
         ) : (
-        <div className="review-scrollable">
+        <div className="review-scrollable"> 
             {reviews.map((r, index) => (
             <div key={index} className="review-card">
                 <p><strong>{t('punctuality')} :</strong> {r.punctualityRating}/5</p>
