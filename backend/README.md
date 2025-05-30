@@ -1,4 +1,8 @@
-To run the API:
+Run the Backend:
+
+#### Using Docker
+
+Commands:
 
 ```
 docker build -t api-uqac-project .
@@ -7,4 +11,15 @@ docker run -d -p 3000:3000 api-uqac-project
 
 ```
 
-Without docker, just run "nodemon" or "node server.js" being in the backend folder. 
+If it doesn't work, sometimes the problem come from docker itself, you just have to run docker desktop and it works.
+
+#### Using node
+
+```
+cd backend
+
+npm install
+
+node server
+
+```
