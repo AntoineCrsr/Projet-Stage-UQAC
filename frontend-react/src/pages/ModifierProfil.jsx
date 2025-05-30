@@ -50,7 +50,7 @@ const ModifierProfil = () => {
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setForm((prev) => ({
-        ...prev,
+        ...prev, //recupère les valeurs précédentes pour les remplir dans le form
         [name]: type === "checkbox" ? checked : value,
         }));
     };
@@ -75,12 +75,12 @@ const ModifierProfil = () => {
             },
             };
         
-            formData.append("user", JSON.stringify(userData));
-            if (selectedFile) {
+            formData.append("user", JSON.stringify(userData)); //obligé de passer à un formData 
+            if (selectedFile) { //pour pouvoir gerer les images de profil
             formData.append("image", selectedFile);
             }
         
-            fetch(`http://localhost:3000/api/auth/${userId}`, {
+            fetch(`http://localhost:3000/api/auth/${userId}`, { //requete de mise à jour des infos de l'user
             method: "PUT",
             headers: {
                 Authorization: `Bearer ${token}`,
