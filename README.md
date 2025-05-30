@@ -16,13 +16,7 @@ README.md # Documentation (ce fichier)
 
 ## Prérequis
 
-Avant de lancer le projet, assurez-vous d’avoir installé :
-
-- Node.js (version ≥ 18)
-- npm
-- MongoDB
-  -VSCode pour ouvrir le projet
-  -Eventuellement DockerDesktop pour l'API si vous décidez de ne pas le lancer avec node.
+Avant de lancer le projet, assurez-vous d’avoir installé npm
 
 ## Installation
 
@@ -32,24 +26,23 @@ https://github.com/AntoineCrsr/Projet-Stage-UQAC.git
 ### Backend :
 
 Ensuite il faudra se mettre à la racine du projet et aller tout d'abord dans les dossier backend,
-puis en tapant la commande : npm install
-
+puis en tapant la commande npm install
+```
 cd .\backend\
 npm install
+node serveur
+```
 
-Une fois que les téléchargements sont terminés, vous pourrez lancer le serveur avec node serveur, ou aller voir dans le readme du dossier backend pour savoir comment le lancer avec l'API
-
-D'ailleurs il vous faudra le .env du projet pour avoir accès à l'API, qui vous sera transmis à part pour des raisons de
-sécurité.
+D'ailleurs il vous faudra le .env du projet pour avoir accès à l'API, qui vous sera transmis à part pour des raisons de sécurité.
 
 ### Frontend :
 
 Il faudra faire la même chose dans le dossier frontend, donc revenir à la racine du projet et faire :
-
+```
 cd .\frontend-react\ 
 npm install
-
-et enfin : npm run dev
+npm run dev
+```
 Ce qui va lancer le site et vous avez juste à cliquer sur le lien affiché dans le terminal après avoir tappé cette dernière commande.
 
 ## A propos des tests
