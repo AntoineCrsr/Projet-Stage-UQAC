@@ -3,12 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./styles/ajouteravis.css";
 
 import { useTranslation } from "react-i18next";
-
+//cette page permet seulement de laisser un avis sur le conducteur UNE seule fois
+//si l'avis existe déjà, l'envoie de l'avis sera tout simplement refusé, mais l'user ne pourra pas modifier son précédent avis non plus
 const AjouterAvis = () => {
-    const { t } = useTranslation("ajouteravis");
+    const { t } = useTranslation("ajouteravis"); //récupère les traduction de la page dans la const t pour l'i18n 👈
 
     const { id: reviewedId } = useParams();
-    const [form, setForm] = useState({
+    const [form, setForm] = useState({ //défini des valeurs par défaut au form pour donner l'exemple
         punctualityRating: 0,
         securityRating: 0,
         comfortRating: 0,
@@ -21,7 +22,7 @@ const AjouterAvis = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
+        setForm(prev => ({ ...prev, [name]: value })); //prev pour récuperer les valeurs avant la modif soit les 0...
     };
 
     const handleSubmit = async (e) => {
@@ -67,6 +68,7 @@ const AjouterAvis = () => {
     return (
         <form onSubmit={handleSubmit} className="form-avis">
         <h3>{t("title")}</h3>
+
         <label>{t("punctuality")}</label>
         <input type="number" name="punctualityRating" min="0" max="5" value={form.punctualityRating} onChange={handleChange} required />
 
@@ -78,10 +80,8 @@ const AjouterAvis = () => {
 
         <label>{t("courtesy")}</label>
         <input type="number" name="courtesyRating" min="0" max="5" value={form.courtesyRating} onChange={handleChange} required />
-
         <label>{t("message")}</label>
-        <textarea name="message" value={form.message} onChange={handleChange} placeholder="Votre message (optionnel)" />
-
+        <textarea name="message" value={form.message} onChange={handleChange} placeholder="Votre commentaire (optionnel)" />
         <button type="submit">{t("submit")}</button>
         </form>
     );
