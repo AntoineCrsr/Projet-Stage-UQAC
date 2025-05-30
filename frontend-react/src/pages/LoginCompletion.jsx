@@ -82,7 +82,7 @@ const LoginCompletion = () => {
       // MAJ nom localstorage
       localStorage.setItem("userName", `${firstName} ${lastName}`);
       window.dispatchEvent(new Event("storage"));
-      navigate("/"); // retour à l'accueil une fois le formulaire complété (pas encore testé)
+      navigate("/"); // retour à l'accueil une fois le formulaire complété
     } catch (err) {
       console.error(err);
       setError("Erreur lors de l'envoi des données");
