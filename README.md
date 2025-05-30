@@ -5,10 +5,14 @@ Application web de covoiturage conçue dans le cadre d’un projet de stage à l
 ## Structure du projet
 
 Projet-Stage-UQAC/
-├── backend/ # API Node.js (Express + MongoDB)
-├── frontend-react/ # Frontend React avec Vite
-├── README.md # Documentation (ce fichier)
-└── .gitignore
+
+backend/ # API Node.js (Express + MongoDB)
+
+frontend-react/ # Frontend React avec Vite
+
+README.md # Documentation (ce fichier)
+
+.gitignore
 
 ## Prérequis
 
@@ -26,6 +30,7 @@ Récuperer le .zip du projet ou aller le cloner directement sur le git du projet
 https://github.com/AntoineCrsr/Projet-Stage-UQAC.git
 
 Backend :
+
 Ensuite il faudra se mettre à la racine du projet et aller tout d'abord dans les dossier backend,
 puis en tapant la commande : npm install
 
@@ -38,6 +43,7 @@ D'ailleurs il vous faudra le .env du projet pour avoir accès à l'API, qui vous
 sécurité.
 
 Frontend :
+
 Il faudra faire la même chose dans le dossier frontend, donc revenir à la racine du projet et faire :
 
 cd .\frontend-react\
