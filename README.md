@@ -39,14 +39,14 @@ npm install
 
 Une fois que les téléchargements sont terminés, vous pourrez lancer le serveur avec node serveur, ou aller voir dans le readme du dossier backend pour savoir comment le lancer avec l'API
 
-D'ailleurs il vous faudra le .env du projet pour avoir accès à l'API, qui vous sera transmis à part pour des raisons de
+-D'ailleurs il vous faudra le .env du projet pour avoir accès à l'API, qui vous sera transmis à part pour des raisons de
 sécurité.
 
 ### Frontend :
 
 Il faudra faire la même chose dans le dossier frontend, donc revenir à la racine du projet et faire :
 
-cd .\frontend-react\ 
+cd .\frontend-react\
 npm install
 
 et enfin : npm run dev
