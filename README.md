@@ -57,5 +57,10 @@ De nombreux tests ont été effectué coté API pour vérifier le bon fonctionne
 Ils se trouvent dans le sous dossier du backend nommé tests.
 
 Merci beaucoup !
+Voici le clap de fin pour notre projet !
+
+Ce projet a été une expérience technique enrichissante mais aussi une source de réflexion pour répondre à un besoin concret basé sur nos expériences et la situation actuelle.
+
+Nous sommes fiers du résultat de notre projet même si nous souhaitions encore l'améliorer, et nous sommes heureux d’avoir collaboré de manière constructive tout le long de ce dernier ainsi que d’avoir enrichi nos compétences dans ce domaine du développement web.
 
 Antoine Crauser et Victor Jost
