@@ -29,7 +29,7 @@ Avant de lancer le projet, assurez-vous d’avoir installé :
 Récuperer le .zip du projet ou aller le cloner directement sur le git du projet :
 https://github.com/AntoineCrsr/Projet-Stage-UQAC.git
 
-Backend :
+### Backend :
 
 Ensuite il faudra se mettre à la racine du projet et aller tout d'abord dans les dossier backend,
 puis en tapant la commande : npm install
@@ -42,11 +42,11 @@ Une fois que les téléchargements sont terminés, vous pourrez lancer le serveu
 D'ailleurs il vous faudra le .env du projet pour avoir accès à l'API, qui vous sera transmis à part pour des raisons de
 sécurité.
 
-Frontend :
+### Frontend :
 
 Il faudra faire la même chose dans le dossier frontend, donc revenir à la racine du projet et faire :
 
-cd .\frontend-react\
+cd .\frontend-react\ 
 npm install
 
 et enfin : npm run dev
