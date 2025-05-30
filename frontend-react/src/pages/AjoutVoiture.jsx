@@ -41,7 +41,7 @@ const AjoutVoiture = () => {
 const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setCar((prev) => ({
-    ...prev,//garder les anciennes valeurs
+    ...prev,//mettre les valeurs de bases du form donc ici vide
     [name]: type === "checkbox" ? checked : value,
     }));
 };

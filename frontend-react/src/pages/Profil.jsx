@@ -22,7 +22,7 @@ const Profil = () => {
 
     useEffect(() => {
         if (userId) {
-            fetch(`http://localhost:3000/api/review?reviewedId=${userId}`, {
+            fetch(`http://localhost:3000/api/review?reviewedId=${userId}`, { //récupération des avis laissé à l'user
             headers: { Authorization: `Bearer ${token}` },
             })
             .then(res => res.json())
@@ -38,7 +38,7 @@ const Profil = () => {
         return;
     }
 
-    fetch(`http://localhost:3000/api/auth/${userId}?private=true`, {
+    fetch(`http://localhost:3000/api/auth/${userId}?private=true`, { //récupération des infos de l'user
         headers: { Authorization: `Bearer ${token}` },
     })
         .then((res) => res.json())
@@ -48,7 +48,7 @@ const Profil = () => {
         setAboutMe(data.aboutMe || "");
         if (data.imageUrl) setImagePreview(data.imageUrl);
 
-        fetch(`http://localhost:3000/api/reservation?userId=${userId}`, {
+        fetch(`http://localhost:3000/api/reservation?userId=${userId}`, { //récupération des réservations de l'user
         headers: { Authorization: `Bearer ${token}` },
         })
         .then(res => res.json())
@@ -72,7 +72,7 @@ const Profil = () => {
         })
         .catch(err => console.error("Erreur chargement des réservations :", err));
 
-        fetch(`http://localhost:3000/api/journey`, {
+        fetch(`http://localhost:3000/api/journey`, { //récupération des trajets de l'user
         headers: { Authorization: `Bearer ${token}` }
         })
         .then((res) => res.json())
@@ -85,7 +85,7 @@ const Profil = () => {
         })
         .catch(err => console.error("Erreur lors du chargement des trajets :", err));
 
-        fetch(`http://localhost:3000/api/car?userId=${userId}`, {
+        fetch(`http://localhost:3000/api/car?userId=${userId}`, { //récupération des voitures de l'user
         headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => res.json())
@@ -253,10 +253,10 @@ const Profil = () => {
         </div>
 
         <h3>{t('ratingsTitle')}</h3>
-        <div className="profil-info"> {t('punctuality')} : {user.rating?.punctualityRating ?? "Pas encore évalué"}/5</div>
-        <div className="profil-info"> {t('security')} : {user.rating?.securityRating ?? "Pas encore évalué"}/5</div>
-        <div className="profil-info"> {t('comfort')} : {user.rating?.comfortRating ?? "Pas encore évalué"}/5</div>
-        <div className="profil-info"> {t('courtesy')} : {user.rating?.courtesyRating ?? "Pas encore évalué"}/5</div>
+        <div className="profil-info"> {t('punctuality')} : {user.rating?.punctualityRating ?? t('noValues')}/5</div>
+        <div className="profil-info"> {t('security')} : {user.rating?.securityRating ?? t('noValues')}/5</div>
+        <div className="profil-info"> {t('comfort')} : {user.rating?.comfortRating ?? t('noValues')}/5</div>
+        <div className="profil-info"> {t('courtesy')} : {user.rating?.courtesyRating ?? t('noValues')}/5</div>
         <div className="profil-info"> {t('votes')} : {user.rating?.nbRating}</div>
 
         <h3>{t('reviewsTitle')}</h3>

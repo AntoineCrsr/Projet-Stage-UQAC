@@ -21,7 +21,7 @@ const ResultatRechercheTrajet = () => {
 
     useEffect(() => {
         if (starting && arrival) {
-        fetch(`http://localhost:3000/api/journey?starting=${starting}&arrival=${arrival}`)
+        fetch(`http://localhost:3000/api/journey?starting=${starting}&arrival=${arrival}`) //récupération des trajets avec les villes spécifiées
             .then(res => res.json())
             .then(data => setResults(Array.isArray(data) ? data : []))
             .catch(err => console.error("Erreur lors de la recherche :", err));
@@ -30,7 +30,7 @@ const ResultatRechercheTrajet = () => {
 
     useEffect(() => {
         if (token && userId) {
-        fetch(`http://localhost:3000/api/reservation?userId=${userId}`, {
+        fetch(`http://localhost:3000/api/reservation?userId=${userId}`, { //permet à l'user de reserver le trajet
             headers: { Authorization: `Bearer ${token}` },
         })
             .then(res => res.json())

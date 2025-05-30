@@ -50,7 +50,7 @@ const ModifierProfil = () => {
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setForm((prev) => ({
-        ...prev, //recupère les valeurs précédentes pour les remplir dans le form
+        ...prev, //recupère les valeurs pour les remplir dans le form (vide ou celles précédentes si modif)
         [name]: type === "checkbox" ? checked : value,
         }));
     };

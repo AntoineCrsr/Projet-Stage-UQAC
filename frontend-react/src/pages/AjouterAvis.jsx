@@ -34,7 +34,7 @@ const AjouterAvis = () => {
         }
     
         try {
-        const res = await fetch("http://localhost:3000/api/review", {
+        const res = await fetch("http://localhost:3000/api/review", { //envoie l'avis
             method: "POST",
             headers: {
             "Content-Type": "application/json",

@@ -11,12 +11,12 @@ const ProfilConducteur = () => {
     const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/auth/${id}`)
+        fetch(`http://localhost:3000/api/auth/${id}`)  //récupération des infos du conducteur
         .then(res => res.json())
         .then(data => setDriver(data))
         .catch(err => console.error("Erreur profil conducteur :", err));
 
-        fetch(`http://localhost:3000/api/review?reviewedId=${id}`)
+        fetch(`http://localhost:3000/api/review?reviewedId=${id}`) //récupération des avis laissés au conducteur
         .then(res => res.json())
         .then(data => setReviews(data))
         .catch(err => console.error("Erreur avis conducteur :", err));

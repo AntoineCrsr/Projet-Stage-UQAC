@@ -83,7 +83,7 @@ const CreerTrajet = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value })); //remplaces les valeurs par défaut par les valeurs récupérées pour la modif
   };
 
   const handleSubmit = async (e) => {

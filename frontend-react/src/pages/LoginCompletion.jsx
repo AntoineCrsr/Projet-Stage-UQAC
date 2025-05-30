@@ -30,7 +30,8 @@ const LoginCompletion = () => {
 
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
-    console.log("USER ID:", userId);
+    //console.log("USER ID:", userId);
+
     if (!token || !userId) {
       setError("Informations utilisateur manquantes. Veuillez vous reconnecter.");
       return;
@@ -60,22 +61,19 @@ const LoginCompletion = () => {
           },
         }),
     });
-      console.log(res)
+      //console.log(res)
       if (res.status === 400) {
         setError("Champs invalides");
         return;
       }
-
       if (res.status === 401) {
         setError("Non autorisé, vous devez avoir au moins 16 ans");
         return;
       }
-
       if (res.status === 409) {
         setError("téléphone déjà utilisé");
         return;
       }
-
       if (!res.ok) {
         throw new Error("Erreur lors de la mise à jour");
       }
