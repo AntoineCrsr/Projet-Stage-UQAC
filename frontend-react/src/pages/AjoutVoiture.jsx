@@ -52,7 +52,7 @@ const handleSubmit = async (e) => {
     const formData = new FormData();
     formData.append("car", JSON.stringify(car)); // test du formDATA pour l'eventuel ajout des images pour la suite
 
-    const url = carId //si l'id est renseigné, alors ba envoyer la modif, sinon envoie la creation
+    const url = carId //si l'id est renseigné, alors va envoyer la modif, sinon envoie la creation
         ? `http://localhost:3000/api/car/${carId}` : "http://localhost:3000/api/car";
 
     const method = carId ? "PUT" : "POST"; //precise la methode pour le fetch
